@@ -200,6 +200,45 @@ The default for \verb|\cxtArrowStyle| is \verb|\footnotesize|. In the above
 example we have changed it using \verb|\renewcommand| in order to make the
 arrows red. The default colour is black. 
 
+You can define your own charactiers using \verb|\cxtMakeChar|. It
+works like \verb|\newcommand| but defines a single Character as in the
+following example:
+\bigbreak 
+
+\noindent\begin{minipage}{.45\textwidth}
+\begin{verbatim}
+\begin{cxt}%
+\cxtMakeChar{v}{\rlap{$\vee$}\phantom{$\times$}}%
+\cxtMakeChar{\wedge}{\rlap{$\wedge$}\phantom{$\times$}}%
+\renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}%
+\cxtName{Formula 1}%
+\att{1.}%
+\att{2.}%
+\atr{disqualified}%
+\obj{xbv}{Hamilton}
+\obj{\wedge xb}{Alonso}
+\obj{bxx}{Massa}
+\end{cxt}
+\end{verbatim}
+\end{minipage}
+\hfill
+\begin{minipage}{.40\textwidth}
+\strut\par\strut\par\strut\par\strut\par
+\begin{cxt}%
+\cxtMakeChar{v}{\rlap{$\vee$}\phantom{$\times$}}%
+\cxtMakeChar{\wedge}{\rlap{$\wedge$}\phantom{$\times$}}%
+\renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}%
+\cxtName{Formula 1}%
+\att{1.}%
+\att{2.}%
+\atr{disqualified}%
+\obj{xbv}{Hamilton}
+\obj{\wedge xb}{Alonso}
+\obj{bxx}{Massa}
+\end{cxt}
+\end{minipage}
+\bigbreak
+
 \section{Including Burmeister context files}
 
 The package |cxtinput| allows to use context files in Burmeister

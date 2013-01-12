@@ -33,3 +33,8 @@ Changed October 2007:
     \ColorNode{} is usually used outside the diagram environment. It may be
     used inside, but then the coloured nodes will be overwritten by those
     generated with \end{diagram}.    
+
+Changed by Tobias Schlemmer 2008:
+
+--- environment cxt:
+    Allow an arbitrary number of attributes

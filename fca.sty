@@ -70,38 +70,22 @@
 \raisebox{.5\cxt@nameraise}{#1}}}}%
 %
 \newcommand{\obj}[2]{\ifthenelse{\boolean{@ttributes}}%
-{\setboolean{@ttributes}{false}\cxt@tabdef\cxtn@me&%
+{\setboolean{@ttributes}{false}\cxt@tabdef\cxtn@me%&%
 \cxt@tabtop\\\hline\hline}{}#2\cxt@Zeile{#1}\\\hline}%
 %
-\newcommand{\att}[1]{\ifthenelse{\boolean{@ttributes}}{%
-\settoheight{\@ttnameheight}{#1}\adjcxt@name%
-\ifcase\value{cxt@mAnz}%
-\def\cxt@maName{#1}\def\cxt@tabtop{\cxt@maName}\or%
-\def\cxt@mbName{\cxt@maName&#1}\def\cxt@tabtop{\cxt@mbName}\or%
-\def\cxt@mcName{\cxt@mbName&#1}\def\cxt@tabtop{\cxt@mcName}\or%
-\def\cxt@mdName{\cxt@mcName&#1}\def\cxt@tabtop{\cxt@mdName}\or%
-\def\cxt@meName{\cxt@mdName&#1}\def\cxt@tabtop{\cxt@meName}\or%
-\def\cxt@mfName{\cxt@meName&#1}\def\cxt@tabtop{\cxt@mfName}\or%
-\def\cxt@mgName{\cxt@mfName&#1}\def\cxt@tabtop{\cxt@mgName}\or%
-\def\cxt@mhName{\cxt@mgName&#1}\def\cxt@tabtop{\cxt@mhName}\or%
-\def\cxt@miName{\cxt@mhName&#1}\def\cxt@tabtop{\cxt@miName}\or%
-\def\cxt@mjName{\cxt@miName&#1}\def\cxt@tabtop{\cxt@mjName}\or%
-\def\cxt@mkName{\cxt@mjName&#1}\def\cxt@tabtop{\cxt@mkName}\or%
-\def\cxt@mlName{\cxt@mkName&#1}\def\cxt@tabtop{\cxt@mlName}\or%
-\def\cxt@mmName{\cxt@mlName&#1}\def\cxt@tabtop{\cxt@mmName}\or%
-\def\cxt@mnName{\cxt@mmName&#1}\def\cxt@tabtop{\cxt@mnName}\or%
-\def\cxt@moName{\cxt@mnName&#1}\def\cxt@tabtop{\cxt@moName}\or%
-\def\cxt@mpName{\cxt@moName&#1}\def\cxt@tabtop{\cxt@mpName}\or%
-\def\cxt@mqName{\cxt@mpName&#1}\def\cxt@tabtop{\cxt@mqName}\or%
-\def\cxt@mrName{\cxt@mqName&#1}\def\cxt@tabtop{\cxt@mrName}\or%
-\def\cxt@msName{\cxt@mrName&#1}\def\cxt@tabtop{\cxt@msName}\or%
-\def\cxt@mtName{\cxt@msName&#1}\def\cxt@tabtop{\cxt@mtName}\fi%
-\stepcounter{cxt@mAnz}}%
-{\PackageWarning{fca}{Attribute following object in cxt-environment%
-has been ignored}{}}}%
+\newcommand{\att}[1]{%
+  \ifthenelse{\boolean{@ttributes}}{%
+    \settoheight{\@ttnameheight}{#1}\adjcxt@name%
+    \expandafter\def\expandafter\cxt@tabtop\expandafter{%
+      \cxt@tabtop&#1}%
+    \stepcounter{cxt@mAnz}}%
+  {\PackageWarning{fca}{Attribute following object in cxt-environment%
+      has been ignored}{}}}%
 \newcommand{\atr}[1]{\att{\begin{turn}{90}#1~~\end{turn}}}%
 %
-\def\cxt@tabdef{\begin{tabular}{|l||*{\value{cxt@mAnz}}{c|}}\hline}%
+\def\cxt@tabtop{}
+\def\cxt@tabdef{\tabcolsep0.5ex\relax%
+\begin{tabular}{|l||*{\value{cxt@mAnz}}{c|}}\hline}%
 %
 \def\cxt@aPunkt{&\phantom{\cxt@Kreuz}}%
 \def\cxt@aKreuz{&\cxt@Kreuz}%

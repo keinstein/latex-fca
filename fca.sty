@@ -66,12 +66,12 @@
 %
 \newcommand{\cxtName}[1]{%
 \def\cxtn@me{\multicolumn{1}{|c||}{\settoheight{\@ttnameheight}{#1}%
-\addtolength{\cxt@nameraise}{-1.5\@ttnameheight}%
+\addtolength{\cxt@nameraise}{-1\@ttnameheight}%
 \raisebox{.5\cxt@nameraise}{#1}}}}%
 %
 \newcommand{\obj}[2]{\ifthenelse{\boolean{@ttributes}}%
 {\setboolean{@ttributes}{false}\cxt@tabdef\cxtn@me%&%
-\cxt@tabtop\\\hline\hline}{}#2\cxt@Zeile{#1}\\\hline}%
+\cxt@tabtop\strut\\\hline\hline}{}#2\strut\cxt@Zeile{#1}\\\hline}%
 %
 \newcommand{\att}[1]{%
   \ifthenelse{\boolean{@ttributes}}{%

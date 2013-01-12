@@ -56,11 +56,11 @@ The text on the left leads to the output on the right.\bigbreak
 
 \noindent\begin{minipage}{.45\textwidth}
 \begin{verbatim}
-\begin{cxt}%
-\cxtName{Formula 1}%
-\att{1.}%
-\att{2.}%
-\atr{disqualified}%
+\begin{cxt}
+\cxtName{Formula 1}
+\att{1.}
+\att{2.}
+\atr{disqualified}
 \obj{x..}{Hamilton}
 \obj{.x.}{Alonso}
 \obj{.xx}{Massa}
@@ -69,11 +69,11 @@ The text on the left leads to the output on the right.\bigbreak
 \end{minipage}
 \hfill
 \begin{minipage}{.40\textwidth}
-\begin{cxt}%
-\cxtName{Formula 1}%
-\att{1.}%
-\att{2.}%
-\atr{disqualified}%
+\begin{cxt}
+\cxtName{Formula 1}
+\att{1.}
+\att{2.}
+\atr{disqualified}
 \obj{x..}{Hamilton}
 \obj{.x.}{Alonso}
 \obj{.xx}{Massa}
@@ -85,10 +85,10 @@ The text on the left leads to the output on the right.\bigbreak
 an optional alignment parameter, that is passed to the tabular
 environment (see there for further documentation). The tabular is
 defined as soon as the first \verb|\obj| command is given. Spaces in the 
-preceding lines are not ignored (in this version). Therefore, each line should
-be ended with a \texttt{\%}\ . (To be repaired in later versions).
-\medbreak
- 
+preceding lines are not ignored in general. The standard macros have
+been designed to ignore following spaces. But this cannot be extended
+to other macros. Therefore, each line that contains individual
+(non-cxt-code) should be ended with a \texttt{\%}\ .
 
 A short demonstration of the alignment parameter:
 \medbreak

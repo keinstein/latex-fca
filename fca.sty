@@ -67,7 +67,7 @@
 \newcommand{\cxtName}[1]{%
 \def\cxtn@me{\multicolumn{1}{|c||}{\settoheight{\@ttnameheight}{#1}%
 \addtolength{\cxt@nameraise}{-1\@ttnameheight}%
-\raisebox{.5\cxt@nameraise}{#1}}}}%
+\raisebox{.5\cxt@nameraise}{#1}}}\ignorespaces}%
 %
 \newcommand{\obj}[2]{\ifthenelse{\boolean{@ttributes}}%
 {\setboolean{@ttributes}{false}\cxt@tabdef\cxtn@me%&%
@@ -80,7 +80,9 @@
       \cxt@tabtop&#1}%
     \stepcounter{cxt@mAnz}}%
   {\PackageWarning{fca}{Attribute following object in cxt-environment%
-      has been ignored}{}}}%
+      has been ignored}{}}%
+  \ignorespaces
+}%
 \newcommand{\atr}[1]{\att{\begin{turn}{90}#1~~\end{turn}}}%
 %
 \def\cxt@tabtop{}
@@ -115,7 +117,7 @@
 \newenvironment{cxt}[1][t]{%
   \Reset@cxtDefaults
   \def\cxt@align{#1}%
-}{\hline\end{tabular}}%
+  \ignorespaces}{\hline\end{tabular}}%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %

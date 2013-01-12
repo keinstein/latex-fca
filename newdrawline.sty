@@ -1,0 +1,48 @@
+%
+%    package newdrawline
+%
+%    defines drawline without epic, eepic, but using pict2e, 
+%    to enforce pdfLaTeX compatibility
+%
+\RequirePackage{ifthen,pict2e,calc}%
+\newlength{\fcadl@ea}%
+\newlength{\fcadl@za}%
+\newlength{\fcadl@eb}%
+\newlength{\fcadl@zb}%
+\newlength{\fcadl@dx}%
+\newlength{\fcadl@dy}%
+\newcounter{fcadl@cx}%
+\newcounter{fcadl@cy}%
+\def\fcadrawline(#1,#2)(#3,#4){%
+\setlength{\fcadl@ea}{#1pt}%
+\setlength{\fcadl@za}{#3pt}%
+\setlength{\fcadl@dx}{\fcadl@za - \fcadl@ea}%
+\setcounter{fcadl@cx}{\fcadl@dx}%
+%
+\setlength{\fcadl@eb}{#2pt}%
+\setlength{\fcadl@zb}{#4pt}%
+\setlength{\fcadl@dy}{\fcadl@zb - \fcadl@eb}%
+\setcounter{fcadl@cy}{\fcadl@dy}%
+%
+\whiledo{%
+\(\value{fcadl@cx}< -999\)\OR%
+\(999 < \value{fcadl@cx}\)\OR%
+\(\value{fcadl@cy}< -999\)\OR%
+\(999 < \value{fcadl@cy}\)}%
+{%
+\divide\fcadl@dx by 2\setcounter{fcadl@cx}{\fcadl@dx}%
+\divide\fcadl@dy by 2\setcounter{fcadl@cy}{\fcadl@dy}%
+}%
+%
+\setlength{\fcadl@dx}{\fcadl@za - \fcadl@ea}%
+\ifthenelse{\fcadl@dx > 0}{%
+\put(#1,#2){\line(\value{fcadl@cx},\value{fcadl@cy}){\strip@pt\fcadl@dx}}%
+}{\ifthenelse{\fcadl@dx < 0}{%
+\setlength{\fcadl@dx}{-\fcadl@dx}%
+\put(#1,#2){\line(\value{fcadl@cx},\value{fcadl@cy}){\strip@pt\fcadl@dx}}%
+}{\setlength{\fcadl@dy}{\fcadl@zb - \fcadl@eb}%
+\ifthenelse{\fcadl@dy>0}%
+{\put(#1,#2){\line(0,1){\strip@pt\fcadl@dy}}}%
+{\setlength{\fcadl@dy}{-\fcadl@dy}\put(#3,#4){\line(0,1){\strip@pt\fcadl@dy}}%
+}}}}%
+%

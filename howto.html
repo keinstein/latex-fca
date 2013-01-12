@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+  <title>How to install fca.sty</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="GENERATOR" content="Quanta Plus">
+</head>
+<body>
+  <h2>How to use <b>fca.sty</b></h2>
+  <p>It is assumed that LaTeX runs on your computer. Download <b>fca.sty</b>, 
+  <b>newdrawline.sty</b>, and <b>fcadoc.tex</b>. Put the three files in the same folder and run 
+  LaTeX or pdfLaTeX on <b>fcadoc.tex</b>.
+  This should run without errors, and the resulting file will give you instructions of how
+  to use fca.sty. If LaTeX does not compile fcadoc.tex, you need an expert.</p>
+  <p>With pdfLaTeX the output will be in .pdf format, and can be displayed with kpdf or
+  the Adobe Reader.</p>
+  <p>As the result of running LaTeX on your <b>.tex</b>-file, you get a <b>.dvi</b>-file. 
+  Note that fcadoc.tex uses some special effects that most <b>.dvi</b>-viewers cannot handle 
+  (like colour, rotated text, and white fill). To get a better impression of your results, 
+  use <b>dvips</b> to translate your file to a <b>.ps</b>-file. Afterwards, you may use 
+  <b>ps2pdf</b> to obtain a <b>.pdf</b>-file.</p>
+  <p>If you use fca.sty more often, you should put it somewhere where LaTeX finds it. 
+<ul><li>
+  Under Linux, you may e.g. create a folder ~/texmf/tex/fcastyle and put the files fca.sty and 
+  newdrawline.sty in there. LaTeX should  find them automatically.</li>
+ <li>Mac users may try the same for ~/library/texmf/tex/latex/fcastyle . </li>
+ <li>For Windows, the path depends on your LaTeX distribution.</li>
+</ul>
+</body>
+</html>

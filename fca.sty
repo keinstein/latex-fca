@@ -1,0 +1,531 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% This is file `fca.sty' : LaTeX macros for Formal Concept Analysis           %
+%                                                                             %
+%      Copyright  Bernhard Ganter   5/03                                      %
+%      Version of                   10/07                                     %
+%                                                                             %
+%  This program is provided under the terms of the                            %
+%  LaTeX Project Public License distributed from CTAN                         %
+%  archives in directory macros/latex/base/lppl.txt.                          %
+%                                                                             %
+%  This package contains two environments, called cxt and diagram,            %
+%  for typesetting formal contexts and order diagrams,                        %
+%  and a few macros for frequently used symbols in FCA.                       %
+%                                                                             %
+%  Short descriptions are given below. A recent version of this file          %
+%  as well as a file named fcadoc.tex                                         %
+%  should be available at   www.math.tu-dresden.de/~ganter                    %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+\NeedsTeXFormat{LaTeX2e}%                                                     %
+\ProvidesPackage{fca}[2006/09/01 v2.1 Formal Concept Analysis macros]%        %
+\RequirePackage{amssymb,epic,pict2e,color,ifthen,rotating,xspace,newdrawline}%%
+%                                                                             %
+%                                                                             %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%  environment cxt for making small cross-tables for Formal Concept Analysis  %
+%                                                                             %
+%  The environment is useful for typesetting  cross-tables                    %
+%  of small formal contexts ( max. 20 attributes ).                           %
+%                                                                             %
+%  To typeset a formal context with attributes 1., 2., disqualified           %
+%  and objects Alonso, Schumacher, Montoya, try                               %
+%                                                                             %
+%  \begin{cxt}%                                                               %
+%  \cxtName{Formula 1}%                                                       %
+%  \att{1.}%                                                                  %
+%  \att{2.}%                                                                  %
+%  \atr{disqualified}%                                                        %
+%  \obj{x..}{Alonso}                                                          %
+%  \obj{.x.}{Schumacher}                                                      %
+%  \obj{.xx}{Montoya}                                                         %
+%  \end{cxt}                                                                  %
+%                                                                             %
+%   Attribute definitions must precede object definitions !                   %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\newcommand{\cxt@Kreuz}{$\times$}%
+\newcommand{\cxt@Punkt}{}%
+\newcommand{\cxtArrowStyle}{\footnotesize}
+\newcommand{\cxt@down}{\cxtArrowStyle$\Runterpfeil$}%
+\newcommand{\cxt@up}{\cxtArrowStyle$\Hochpfeil$}%
+\newcommand{\cxt@both}{\cxtArrowStyle$\Doppelpfeil$}%
+\newcounter{cxt@mAnz}%
+\newboolean{@ttributes}%
+\newlength{\cxt@nameraise}%
+\newlength{\@ttnameheight}%
+%
+\newcommand{\adjcxt@name}{%
+\ifthenelse{\cxt@nameraise<\@ttnameheight}%
+{\setlength{\cxt@nameraise}{\@ttnameheight}}{}}%
+%
+\newcommand{\cxtName}[1]{%
+\def\cxtn@me{\multicolumn{1}{|c||}{\settoheight{\@ttnameheight}{#1}%
+\addtolength{\cxt@nameraise}{-1.5\@ttnameheight}%
+\raisebox{.5\cxt@nameraise}{#1}}}}%
+%
+\newcommand{\obj}[2]{\ifthenelse{\boolean{@ttributes}}%
+{\setboolean{@ttributes}{false}\cxt@tabdef\cxtn@me&%
+\cxt@tabtop\\\hline\hline}{}#2\cxt@Zeile{#1}\\\hline}%
+%
+\newcommand{\att}[1]{\ifthenelse{\boolean{@ttributes}}{%
+\settoheight{\@ttnameheight}{#1}\adjcxt@name%
+\ifcase\value{cxt@mAnz}%
+\def\cxt@maName{#1}\def\cxt@tabtop{\cxt@maName}\or%
+\def\cxt@mbName{\cxt@maName&#1}\def\cxt@tabtop{\cxt@mbName}\or%
+\def\cxt@mcName{\cxt@mbName&#1}\def\cxt@tabtop{\cxt@mcName}\or%
+\def\cxt@mdName{\cxt@mcName&#1}\def\cxt@tabtop{\cxt@mdName}\or%
+\def\cxt@meName{\cxt@mdName&#1}\def\cxt@tabtop{\cxt@meName}\or%
+\def\cxt@mfName{\cxt@meName&#1}\def\cxt@tabtop{\cxt@mfName}\or%
+\def\cxt@mgName{\cxt@mfName&#1}\def\cxt@tabtop{\cxt@mgName}\or%
+\def\cxt@mhName{\cxt@mgName&#1}\def\cxt@tabtop{\cxt@mhName}\or%
+\def\cxt@miName{\cxt@mhName&#1}\def\cxt@tabtop{\cxt@miName}\or%
+\def\cxt@mjName{\cxt@miName&#1}\def\cxt@tabtop{\cxt@mjName}\or%
+\def\cxt@mkName{\cxt@mjName&#1}\def\cxt@tabtop{\cxt@mkName}\or%
+\def\cxt@mlName{\cxt@mkName&#1}\def\cxt@tabtop{\cxt@mlName}\or%
+\def\cxt@mmName{\cxt@mlName&#1}\def\cxt@tabtop{\cxt@mmName}\or%
+\def\cxt@mnName{\cxt@mmName&#1}\def\cxt@tabtop{\cxt@mnName}\or%
+\def\cxt@moName{\cxt@mnName&#1}\def\cxt@tabtop{\cxt@moName}\or%
+\def\cxt@mpName{\cxt@moName&#1}\def\cxt@tabtop{\cxt@mpName}\or%
+\def\cxt@mqName{\cxt@mpName&#1}\def\cxt@tabtop{\cxt@mqName}\or%
+\def\cxt@mrName{\cxt@mqName&#1}\def\cxt@tabtop{\cxt@mrName}\or%
+\def\cxt@msName{\cxt@mrName&#1}\def\cxt@tabtop{\cxt@msName}\or%
+\def\cxt@mtName{\cxt@msName&#1}\def\cxt@tabtop{\cxt@mtName}\fi%
+\stepcounter{cxt@mAnz}}%
+{\PackageWarning{fca}{Attribute following object in cxt-environment%
+has been ignored}{}}}%
+\newcommand{\atr}[1]{\att{\begin{turn}{90}#1~~\end{turn}}}%
+%
+\def\cxt@tabdef{\begin{tabular}{|l||*{\value{cxt@mAnz}}{c|}}\hline}%
+%
+\def\cxt@aPunkt{&\phantom{\cxt@Kreuz}}%
+\def\cxt@aKreuz{&\cxt@Kreuz}%
+\def\cxt@adown{&\rlap{\cxt@down}\phantom{\cxt@Kreuz}}%
+\def\cxt@aup{&\rlap{\cxt@up}\phantom{\cxt@Kreuz}}%
+\def\cxt@aboth{&\rlap{\cxt@both}\phantom{\cxt@Kreuz}}%
+%
+\def\cxt@stop{}%
+\def\readcxt@zeile#1{\ifx#1\cxt@stop\let\next=\relax\else%
+\ifx#1x\cxt@aKreuz%
+\else\ifx#1X\cxt@aKreuz%
+\else\ifx#1b\cxt@aboth%
+\else\ifx#1u\cxt@aup%
+\else\ifx#1d\cxt@adown%
+\else\cxt@aPunkt\fi\fi\fi\fi\fi%
+\let\next=\readcxt@zeile\fi\next}%
+\def\cxt@Zeile#1{\readcxt@zeile#1\cxt@stop}%
+%
+\newcommand{\Reset@cxtDefaults}{%
+\setlength{\cxt@nameraise}{0pt}%
+\setlength{\@ttnameheight}{0pt}%
+\setcounter{cxt@mAnz}{0}%
+\setboolean{@ttributes}{true}%
+\newcommand{\cxtn@me}{}}%
+%
+\newenvironment{cxt}{\Reset@cxtDefaults}{\hline\end{tabular}}%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%                  end of cxt environment definition                          %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%       environment diagram for making diagrams of ordered sets and graphs    %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%       To obtain a diagram for the concept lattice of the formal context     %
+%       above, try this:                                                      %
+%                                                                             %
+%{\unitlength 1.2mm                                                           %
+%\begin{diagram}{40}{55}                                                      %
+% \Node{1}{20}{10}                                                            %
+% \Node{2}{35}{20}                                                            %
+% \Node{3}{5}{30}                                                             %
+% \Node{4}{35}{40}                                                            %
+% \Node{5}{20}{50}                                                            %
+% \Edge{1}{2}                                                                 %
+% \Edge{1}{3}                                                                 %
+% \Edge{2}{4}                                                                 %
+% \Edge{3}{5}                                                                 %
+% \Edge{4}{5}                                                                 %
+% \leftAttbox{3}{2}{2}{1.}                                                    %
+% \rightAttbox{2}{2}{2}{disqualified}                                         %
+% \rightAttbox{4}{2}{2}{2.}                                                   %
+% \leftObjbox{3}{2}{2}{Alonso}                                                %
+% \rightObjbox{2}{2}{2}{Montoya}                                              %
+% \rightObjbox{4}{2}{2}{Schumacher}                                           %
+%\end{diagram}}                                                               %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%  The syntax of the commands is                                              %
+%                                                                             %
+%  \begin{diagram}{width}{height}                                             %
+%                                                                             %
+%  \Node{number}{xcoordinate}{ycoordinate} % (nodenumbers from 0 to 50)       %
+%                                                                             %
+%  \Edge{nodenumber1}{nodenumber2}                                            %
+%                                                                             %
+%  \leftAttbox{nodenumber}{xoffset}{yoffset}{text1 \\ text2 \\ ... }          %
+%                                                                             %
+%   similarly: \rightAttbox, \centerAttbox,                                   %
+%              \leftObjbox,  \centerObjbox, \rightObjbox.                     %
+%                                                                             %
+%   \end{diagram}                                                             %
+%                                                                             %
+%  The circle size can be changed with the \CircleSize command.               %
+%  The value must be a positive integer, which will be mutiplied              %
+%  by \unitlength. The default is                                             %
+%                                                                             %
+%  \CircleSize{4}.                                                            %
+%                                                                             %
+%  A helpful command when fine tuning a diagram is                            %
+%                                                                             %
+%  \Numbers.                                                                  %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%     You may wish to permanently adjust the following values to your         %
+%     personal preferences. They can also be changed inside each diagram      %
+%     environment using \renewcommand.                                        %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\fca@Defaults}{%   Do not change this line!                       %
+\newcommand{\ObjectLabelStyle}{\small\baselineskip6pt\rm}%                    %
+\newcommand{\AttributeLabelStyle}{\small\baselineskip6pt\it}%                 %
+\newcommand{\LabelBoxWidth}{40mm}}%                                           %
+\newboolean{fca@dots}\setboolean{fca@dots}{true}%                             %
+\newcommand{\diagramXoffset}{0}%                                              %
+\newcommand{\diagramYoffset}{0}%                                              %
+\newcommand{\fca@edgethickness}{.8pt}%                                        %
+\newcommand{\fca@nodethickness}{1pt}%                                         %
+\newcommand{\fca@nodecolor}{white}%                                           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%     Changing the default values                                             %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\NodeThickness}[1]{\def\fca@nodethickness{#1}}%                   %
+\newcommand{\EdgeThickness}[1]{\def\fca@edgethickness{#1}}%                   %
+\newcommand{\NodeColor}[1]{\def\fca@nodecolor{#1}}%                           %
+\newcommand{\Numbers}{\setboolean{fca@CircledNumbers}{true}%                  %
+\addtocounter{fca@CircleDiameter}{2}}%                                        %
+\newcommand{\CircleSize}[1]{\setcounter{fca@CircleDiameter}{#1}}%             %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcounter{fca@minNode}%
+\newcounter{fca@maxNode}%
+\newcounter{fca@runNode}%
+\newboolean{fca@CircledNumbers}%
+\newcounter{fca@CircleDiameter}%
+\newcounter{fca@AuxCounter}%
+\newcounter{fca@BuxCounter}%
+\def\fca@adjNode#1{%
+\ifthenelse{#1<\value{fca@minNode}}{\setcounter{fca@minNode}{#1}}{}%
+\ifthenelse{\value{fca@maxNode}<#1}{\setcounter{fca@maxNode}{#1}}{}}%
+\def\Node#1#2#3{\fca@adjNode{#1}\ifcase#1%
+\def\fca@xaa{#2}\def\fca@yaa{#3}\or%
+\def\fca@xab{#2}\def\fca@yab{#3}\or%
+\def\fca@xac{#2}\def\fca@yac{#3}\or%
+\def\fca@xad{#2}\def\fca@yad{#3}\or%
+\def\fca@xae{#2}\def\fca@yae{#3}\or%
+\def\fca@xaf{#2}\def\fca@yaf{#3}\or%
+\def\fca@xag{#2}\def\fca@yag{#3}\or%
+\def\fca@xah{#2}\def\fca@yah{#3}\or%
+\def\fca@xai{#2}\def\fca@yai{#3}\or%
+\def\fca@xaj{#2}\def\fca@yaj{#3}\or%
+\def\fca@xak{#2}\def\fca@yak{#3}\or%
+\def\fca@xal{#2}\def\fca@yal{#3}\or%
+\def\fca@xam{#2}\def\fca@yam{#3}\or%
+\def\fca@xan{#2}\def\fca@yan{#3}\or%
+\def\fca@xao{#2}\def\fca@yao{#3}\or%
+\def\fca@xap{#2}\def\fca@yap{#3}\or%
+\def\fca@xaq{#2}\def\fca@yaq{#3}\or%
+\def\fca@xar{#2}\def\fca@yar{#3}\or%
+\def\fca@xas{#2}\def\fca@yas{#3}\or%
+\def\fca@xat{#2}\def\fca@yat{#3}\or%
+\def\fca@xau{#2}\def\fca@yau{#3}\or%
+\def\fca@xav{#2}\def\fca@yav{#3}\or%
+\def\fca@xaw{#2}\def\fca@yaw{#3}\or%
+\def\fca@xax{#2}\def\fca@yax{#3}\or%
+\def\fca@xay{#2}\def\fca@yay{#3}\or%
+\def\fca@xaz{#2}\def\fca@yaz{#3}\or%
+\def\fca@xba{#2}\def\fca@yba{#3}\or%
+\def\fca@xbb{#2}\def\fca@ybb{#3}\or%
+\def\fca@xbc{#2}\def\fca@ybc{#3}\or%
+\def\fca@xbd{#2}\def\fca@ybd{#3}\or%
+\def\fca@xbe{#2}\def\fca@ybe{#3}\or%
+\def\fca@xbf{#2}\def\fca@ybf{#3}\or%
+\def\fca@xbg{#2}\def\fca@ybg{#3}\or%
+\def\fca@xbh{#2}\def\fca@ybh{#3}\or%
+\def\fca@xbi{#2}\def\fca@ybi{#3}\or%
+\def\fca@xbj{#2}\def\fca@ybj{#3}\or%
+\def\fca@xbk{#2}\def\fca@ybk{#3}\or%
+\def\fca@xbl{#2}\def\fca@ybl{#3}\or%
+\def\fca@xbm{#2}\def\fca@ybm{#3}\or%
+\def\fca@xbn{#2}\def\fca@ybn{#3}\or%
+\def\fca@xbo{#2}\def\fca@ybo{#3}\or%
+\def\fca@xbp{#2}\def\fca@ybp{#3}\or%
+\def\fca@xbq{#2}\def\fca@ybq{#3}\or%
+\def\fca@xbr{#2}\def\fca@ybr{#3}\or%
+\def\fca@xbs{#2}\def\fca@ybs{#3}\or%
+\def\fca@xbt{#2}\def\fca@ybt{#3}\or%
+\def\fca@xbu{#2}\def\fca@ybu{#3}\or%
+\def\fca@xbv{#2}\def\fca@ybv{#3}\or%
+\def\fca@xbw{#2}\def\fca@ybw{#3}\or%
+\def\fca@xbx{#2}\def\fca@ybx{#3}\or%
+\def\fca@xby{#2}\def\fca@yby{#3}\or%
+\def\fca@xbz{#2}\def\fca@ybz{#3}\fi}%
+\def\fca@getNode#1{%
+\ifcase#1%
+\def\fca@x{\fca@xaa}\or\def\fca@x{\fca@xab}\or\def\fca@x{\fca@xac}\or%
+\def\fca@x{\fca@xad}\or\def\fca@x{\fca@xae}\or\def\fca@x{\fca@xaf}\or%
+\def\fca@x{\fca@xag}\or\def\fca@x{\fca@xah}\or\def\fca@x{\fca@xai}\or%
+\def\fca@x{\fca@xaj}\or\def\fca@x{\fca@xak}\or\def\fca@x{\fca@xal}\or%
+\def\fca@x{\fca@xam}\or\def\fca@x{\fca@xan}\or\def\fca@x{\fca@xao}\or%
+\def\fca@x{\fca@xap}\or\def\fca@x{\fca@xaq}\or\def\fca@x{\fca@xar}\or%
+\def\fca@x{\fca@xas}\or\def\fca@x{\fca@xat}\or\def\fca@x{\fca@xau}\or%
+\def\fca@x{\fca@xav}\or\def\fca@x{\fca@xaw}\or\def\fca@x{\fca@xax}\or%
+\def\fca@x{\fca@xay}\or\def\fca@x{\fca@xaz}\or%
+\def\fca@x{\fca@xba}\or\def\fca@x{\fca@xbb}\or\def\fca@x{\fca@xbc}\or%
+\def\fca@x{\fca@xbd}\or\def\fca@x{\fca@xbe}\or\def\fca@x{\fca@xbf}\or%
+\def\fca@x{\fca@xbg}\or\def\fca@x{\fca@xbh}\or\def\fca@x{\fca@xbi}\or%
+\def\fca@x{\fca@xbj}\or\def\fca@x{\fca@xbk}\or\def\fca@x{\fca@xbl}\or%
+\def\fca@x{\fca@xbm}\or\def\fca@x{\fca@xbn}\or\def\fca@x{\fca@xbo}\or%
+\def\fca@x{\fca@xbp}\or\def\fca@x{\fca@xbq}\or\def\fca@x{\fca@xbr}\or%
+\def\fca@x{\fca@xbs}\or\def\fca@x{\fca@xbt}\or\def\fca@x{\fca@xbu}\or%
+\def\fca@x{\fca@xbv}\or\def\fca@x{\fca@xbw}\or\def\fca@x{\fca@xbx}\or%
+\def\fca@x{\fca@xby}\or\def\fca@x{\fca@xbz}\fi%
+\ifcase#1%
+\def\fca@y{\fca@yaa}\or\def\fca@y{\fca@yab}\or\def\fca@y{\fca@yac}\or%
+\def\fca@y{\fca@yad}\or\def\fca@y{\fca@yae}\or\def\fca@y{\fca@yaf}\or%
+\def\fca@y{\fca@yag}\or\def\fca@y{\fca@yah}\or\def\fca@y{\fca@yai}\or%
+\def\fca@y{\fca@yaj}\or\def\fca@y{\fca@yak}\or\def\fca@y{\fca@yal}\or%
+\def\fca@y{\fca@yam}\or\def\fca@y{\fca@yan}\or\def\fca@y{\fca@yao}\or%
+\def\fca@y{\fca@yap}\or\def\fca@y{\fca@yaq}\or\def\fca@y{\fca@yar}\or%
+\def\fca@y{\fca@yas}\or\def\fca@y{\fca@yat}\or\def\fca@y{\fca@yau}\or%
+\def\fca@y{\fca@yav}\or\def\fca@y{\fca@yaw}\or\def\fca@y{\fca@yax}\or%
+\def\fca@y{\fca@yay}\or\def\fca@y{\fca@yaz}\or%
+\def\fca@y{\fca@yba}\or\def\fca@y{\fca@ybb}\or\def\fca@y{\fca@ybc}\or%
+\def\fca@y{\fca@ybd}\or\def\fca@y{\fca@ybe}\or\def\fca@y{\fca@ybf}\or%
+\def\fca@y{\fca@ybg}\or\def\fca@y{\fca@ybh}\or\def\fca@y{\fca@ybi}\or%
+\def\fca@y{\fca@ybj}\or\def\fca@y{\fca@ybk}\or\def\fca@y{\fca@ybl}\or%
+\def\fca@y{\fca@ybm}\or\def\fca@y{\fca@ybn}\or\def\fca@y{\fca@ybo}\or%
+\def\fca@y{\fca@ybp}\or\def\fca@y{\fca@ybq}\or\def\fca@y{\fca@ybr}\or%
+\def\fca@y{\fca@ybs}\or\def\fca@y{\fca@ybt}\or\def\fca@y{\fca@ybu}\or%
+\def\fca@y{\fca@ybv}\or\def\fca@y{\fca@ybw}\or\def\fca@y{\fca@ybx}\or%
+\def\fca@y{\fca@yby}\or\def\fca@y{\fca@ybz}\fi}%
+\def\fca@getNodeb#1{\ifcase#1%
+\def\fca@u{\fca@xaa}\or\def\fca@u{\fca@xab}\or\def\fca@u{\fca@xac}\or%
+\def\fca@u{\fca@xad}\or\def\fca@u{\fca@xae}\or\def\fca@u{\fca@xaf}\or%
+\def\fca@u{\fca@xag}\or\def\fca@u{\fca@xah}\or\def\fca@u{\fca@xai}\or%
+\def\fca@u{\fca@xaj}\or\def\fca@u{\fca@xak}\or\def\fca@u{\fca@xal}\or%
+\def\fca@u{\fca@xam}\or\def\fca@u{\fca@xan}\or\def\fca@u{\fca@xao}\or%
+\def\fca@u{\fca@xap}\or\def\fca@u{\fca@xaq}\or\def\fca@u{\fca@xar}\or%
+\def\fca@u{\fca@xas}\or\def\fca@u{\fca@xat}\or\def\fca@u{\fca@xau}\or%
+\def\fca@u{\fca@xav}\or\def\fca@u{\fca@xaw}\or\def\fca@u{\fca@xax}\or%
+\def\fca@u{\fca@xay}\or\def\fca@u{\fca@xaz}\or%
+\def\fca@u{\fca@xba}\or\def\fca@u{\fca@xbb}\or\def\fca@u{\fca@xbc}\or%
+\def\fca@u{\fca@xbd}\or\def\fca@u{\fca@xbe}\or\def\fca@u{\fca@xbf}\or%
+\def\fca@u{\fca@xbg}\or\def\fca@u{\fca@xbh}\or\def\fca@u{\fca@xbi}\or%
+\def\fca@u{\fca@xbj}\or\def\fca@u{\fca@xbk}\or\def\fca@u{\fca@xbl}\or%
+\def\fca@u{\fca@xbm}\or\def\fca@u{\fca@xbn}\or\def\fca@u{\fca@xbo}\or%
+\def\fca@u{\fca@xbp}\or\def\fca@u{\fca@xbq}\or\def\fca@u{\fca@xbr}\or%
+\def\fca@u{\fca@xbs}\or\def\fca@u{\fca@xbt}\or\def\fca@u{\fca@xbu}\or%
+\def\fca@u{\fca@xbv}\or\def\fca@u{\fca@xbw}\or\def\fca@u{\fca@xbx}\or%
+\def\fca@u{\fca@xby}\or\def\fca@u{\fca@xbz}\fi%
+\ifcase#1%
+\def\fca@v{\fca@yaa}\or\def\fca@v{\fca@yab}\or\def\fca@v{\fca@yac}\or%
+\def\fca@v{\fca@yad}\or\def\fca@v{\fca@yae}\or\def\fca@v{\fca@yaf}\or%
+\def\fca@v{\fca@yag}\or\def\fca@v{\fca@yah}\or\def\fca@v{\fca@yai}\or%
+\def\fca@v{\fca@yaj}\or\def\fca@v{\fca@yak}\or\def\fca@v{\fca@yal}\or%
+\def\fca@v{\fca@yam}\or\def\fca@v{\fca@yan}\or\def\fca@v{\fca@yao}\or%
+\def\fca@v{\fca@yap}\or\def\fca@v{\fca@yaq}\or\def\fca@v{\fca@yar}\or%
+\def\fca@v{\fca@yas}\or\def\fca@v{\fca@yat}\or\def\fca@v{\fca@yau}\or%
+\def\fca@v{\fca@yav}\or\def\fca@v{\fca@yaw}\or\def\fca@v{\fca@yax}\or%
+\def\fca@v{\fca@yay}\or\def\fca@v{\fca@yaz}\or%
+\def\fca@v{\fca@yba}\or\def\fca@v{\fca@ybb}\or\def\fca@v{\fca@ybc}\or%
+\def\fca@v{\fca@ybd}\or\def\fca@v{\fca@ybe}\or\def\fca@v{\fca@ybf}\or%
+\def\fca@v{\fca@ybg}\or\def\fca@v{\fca@ybh}\or\def\fca@v{\fca@ybi}\or%
+\def\fca@v{\fca@ybj}\or\def\fca@v{\fca@ybk}\or\def\fca@v{\fca@ybl}\or%
+\def\fca@v{\fca@ybm}\or\def\fca@v{\fca@ybn}\or\def\fca@v{\fca@ybo}\or%
+\def\fca@v{\fca@ybp}\or\def\fca@v{\fca@ybq}\or\def\fca@v{\fca@ybr}\or%
+\def\fca@v{\fca@ybs}\or\def\fca@v{\fca@ybt}\or\def\fca@v{\fca@ybu}\or%
+\def\fca@v{\fca@ybv}\or\def\fca@v{\fca@ybw}\or\def\fca@v{\fca@ybx}\or%
+\def\fca@v{\fca@yby}\or\def\fca@v{\fca@ybz}\fi}%
+%
+\newcommand{\Edge}[2]{\fca@getNode{#1}\fca@getNodeb{#2}%
+{\linethickness{\fca@edgethickness}%
+\fcadrawline(\fca@x,\fca@y)(\fca@u,\fca@v)}}%
+%
+\def\fca@changeaValue#1#2#3{\setcounter{fca@AuxCounter}{#1}%
+\addtocounter{fca@AuxCounter}{#2}\def#3{\value{fca@AuxCounter}}}%
+\def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
+\addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
+\newcommand{\NoDots}{\setboolean{fca@dots}{false}}
+%
+\def\leftAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+\begin{picture}(#2,#3)(#2,0)%
+\put(0,#3){\makebox(0,0)[rb]{\begin{minipage}{\LabelBoxWidth}%
+\raggedleft\AttributeLabelStyle#4\end{minipage}}}%
+\fca@changebValue{#3}{-1}{\fca@u}%
+\ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,\fca@u)(#2,0)}}{}%
+\end{picture}}}%
+%
+\def\centerAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+\begin{picture}(#2,#3)(0,0)%
+\put(#2,#3){\makebox(0,0)[cb]{\begin{minipage}{\LabelBoxWidth}%
+\centering\AttributeLabelStyle#4\end{minipage}}}%
+\fca@changeaValue{#2}{0}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
+\ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(\fca@u,\fca@v)(0,0)}}{}%
+\end{picture}}}%
+%
+\def\rightAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+\begin{picture}(#2,#3)(0,0)%
+\put(#2,#3){\makebox(0,0)[lb]{\begin{minipage}{\LabelBoxWidth}%
+\raggedright\AttributeLabelStyle#4\end{minipage}}}%
+\fca@changeaValue{#2}{-1}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
+\ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,0)(\fca@u,\fca@v)}}{}%
+\end{picture}}}%
+%
+\def\leftObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+\begin{picture}(#2,#3)(#2,#3)%
+\put(0,0){\makebox(0,0)[rt]{\begin{minipage}{\LabelBoxWidth}%
+\raggedleft\ObjectLabelStyle#4\end{minipage}}}%
+\ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,1)(#2,#3)}}{}%
+\end{picture}}}%
+%
+\def\centerObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+\begin{picture}(#2,#3)(0,#3)%
+\put(#2,0){\makebox(0,0)[ct]{\begin{minipage}{\LabelBoxWidth}%
+\centering\ObjectLabelStyle#4\end{minipage}}}%
+\ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(#2,1)}}{}%
+\end{picture}}}%
+%
+\def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+\begin{picture}(#2,#3)(0,#3)%
+\put(#2,0){\makebox(0,0)[lt]{\begin{minipage}{\LabelBoxWidth}%
+\raggedright\ObjectLabelStyle#4\end{minipage}}}%
+\fca@changeaValue{#2}{-1}{\fca@u}%
+\ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(\fca@u,1)}}{}%
+\end{picture}}}%
+%
+\def\fca@ResetDefaults{\setcounter{fca@minNode}{60}%
+\setcounter{fca@maxNode}{0}%
+\setcounter{fca@CircleDiameter}{4}%
+\setboolean{fca@CircledNumbers}{false}%
+\fca@Defaults}%
+%
+\def\ColorNode#1{{%
+\linethickness{\fca@nodethickness}%
+\color{#1}{\circle*{\value{fca@CircleDiameter}}}%
+\color{black}{\circle{\value{fca@CircleDiameter}}}}}%
+%
+\def\fca@circle{{%
+\linethickness{\fca@nodethickness}%
+\color{\fca@nodecolor}{\circle*{\value{fca@CircleDiameter}}}%
+\color{black}{\circle{\value{fca@CircleDiameter}}}}}%
+%
+\def\fca@DrawCircles{\setcounter{fca@runNode}{\value{fca@minNode}}%
+\stepcounter{fca@maxNode}%
+\whiledo{\value{fca@runNode}<\value{fca@maxNode}}%
+{\fca@getNode{\value{fca@runNode}}%
+\put(\fca@x,\fca@y){\fca@circle}%
+\ifthenelse{\boolean{fca@CircledNumbers}}%
+{\put(\fca@x,\fca@y){\makebox(0,0){\tiny\arabic{fca@runNode}}}}{}%
+\stepcounter{fca@runNode}}}%
+%
+\newenvironment{diagram}[2]%
+{\fca@ResetDefaults%
+\noindent\begin{picture}(#1,#2)(\diagramXoffset,\diagramYoffset)}%
+{\fca@DrawCircles\end{picture}}%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%               End of diagram environment definition.                        %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%                  Some simple macros for FCA-text.                           %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\providecommand{\GMI}{(G,M,\relI)}
+\newcommand{\context}[1][K]{\ensuremath{\mathbb{#1}}}
+\providecommand{\'}{\ensuremath{\sp\prime}}% derivation operator
+\providecommand{\extent}[1]{\textrm{ext}(#1)}
+\providecommand{\intent}[1]{\textrm{int}(#1)}
+\providecommand{\extents}[1]{\textrm{Ext}(#1)}
+\providecommand{\intents}[1]{\textrm{Int}(#1)}
+\providecommand{\BV}{\underline{{\mathfrak B}}}
+\providecommand{\CL}{\BV}
+\providecommand{\BGMI}{{\mathfrak B} (G,M,\relI)}
+\providecommand{\CGMI}{\BGMI}
+\providecommand{\BVGMI}{\BV (G,M,\relI)}
+\providecommand{\CLGMI}{\BVGMI}
+\providecommand{\HNI}{(H,N,\relI \cap\; H{\times}N)}
+\providecommand{\relI}{\mathrel{I}}
+\providecommand{\notI}{\mathrel{\mbox{\rlap{\char'40}%
+{\it I}\hspace*{-0.09em}\raisebox{.27ex}{\char'40}}}}% 
+%
+\providecommand{\bigtimes}{\mathop{%
+\mathchoice{\raisebox{-2pt}{\huge$\times$}}{\mbox{\LARGE$\times$}}%
+{\raisebox{0pt}{\Large$\times$}}{\times}}\displaylimits}%
+%
+\providecommand{\Runterpfeil}{\mathrel{\swarrow}}
+\providecommand{\DownArrow}{\Runterpfeil}
+\providecommand{\Hochpfeil}{\mathrel{\nearrow}}
+\providecommand{\UpArrow}{\Hochpfeil}
+\providecommand{\IRunterpfeil}{\mathrel{\searrow}}
+\providecommand{\IDownArrow}{\IRunterpfeil}
+\providecommand{\IHochpfeil}{\mathrel{\nwarrow}}
+\providecommand{\IUpArrow}{\IHochpfeil}
+\providecommand{\Doppelpfeil}{\mathrel{\!\!\rlap{$\;\nearrow$}\swarrow}}
+\providecommand{\DoubleArrow}{\Doppelpfeil}
+%
+\newcommand{\DDPfeil}{\mathrel{\mathchoice%
+{\mbox{$\displaystyle\swarrow\hspace{-.7em}\swarrow$}}
+{\mbox{$\textstyle\swarrow\hspace{-.7em}\swarrow$}}
+{\mbox{$\scriptstyle\swarrow\hspace{-.5em}\swarrow$}}
+{\mbox{$\scriptscriptstyle\swarrow\hspace{-.35em}\swarrow$}}}}
+%
+\newcommand{\NDDPfeil}{\mathrel{\mathchoice%
+{\mbox{$\displaystyle\swarrow\hspace{-.7em}\swarrow%
+\hspace{-1.2em}\backslash\hspace{.4em}$}}
+{\mbox{$\textstyle\swarrow\hspace{-.7em}\swarrow
+\hspace{-1.1em}\backslash\hspace{.4em}$}}
+{\mbox{$\scriptstyle\swarrow\hspace{-.5em}\swarrow 
+\hspace{-.6em}\backslash\hspace{.2em}$}}
+{\mbox{$\scriptscriptstyle\swarrow\hspace{-.35em}\swarrow
+\hspace{-.5em}\backslash\hspace{.1em}$}}}}
+%
+\providecommand{\DPfeil}{\DDPfeil}
+\providecommand{\NDPfeil}{\NDDPfeil}
+\newcommand{\DDArrow}{\DDPfeil}
+\newcommand{\NDDArrow}{\NDDPfeil}
+\providecommand{\Semi}{\mathrel{\mbox{\tiny\rlap{\raisebox{2.0ex}%
+{$\bigtriangledown$}}\raisebox{-0.0ex}{$\bigtriangleup$}}}}
+\def\ovee{\mbox{\small$\mathrel{\hspace{.35em}\raisebox{-1pt}%
+{$\smash{\vee}$}\hspace*{-.835em}\bigcirc\hspace{.2em}}$}}
+\def\owedge{\mbox{\small$\mathrel{\hspace{.35em}\smash{\wedge}%
+\hspace*{-.835em}\bigcirc\hspace{.2em}}$}}
+%
+\providecommand{\ptimes}[1]{\mathrel{\stackrel{#1}{\times}}}
+%
+\providecommand{\FCA}{Formal Concept Analysis\xspace}
+\providecommand{\FBA}{Formale Begriffsanalyse\xspace}
+\providecommand{\FnBA}{Formalen Begriffsanalyse\xspace}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%                End of fca.sty style file definitions                        %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

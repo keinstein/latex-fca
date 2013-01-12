@@ -1,0 +1,35 @@
+
+Changed March 2005:
+
+--- environment diagram:
+    dotted lines for lables are now always in \thinlines - format
+    \Nodots command suppresses dotted lines 
+    Note: The range of \Nodots can be restricted to a single label by 
+          using brackets,  e.g., {\Nodots\leftAttbox{4}{2}{3}{text}}
+ 
+
+Changed September 2006:
+
+--- environment diagram:
+    We no longer use eepic, because it is not fully compatible with pdfLaTeX.
+    Instead, we use the pict2e.sty package and a handmade newdrawline.sty 
+    package that reimplements eepic's  \drawline command.
+    Other changes: 
+    --  \Nodots renamed \NoDots
+    --  The thickness of edges and of nodes can be changed. 
+        This can be done individually for each edge, but only simultaneously 
+        for nodes.
+        The preset valued are slightly larger than before (0.8pt, 1.2pt).
+
+Changed October 2007:
+
+--- environment diagram:
+    Two new commands, \NodeColor{} and \ColorNode{} are introduced. 
+    \NodeColor{color} sets the colour of all diagram nodes to the colour name 
+    used as argument. 
+    \ColorNode{color} produces a single node of the respective 
+    colour. It is used with the \put command of the LaTeX picture environment.
+    For example: \put(10,20){\ColorNode{green}}. 
+    \ColorNode{} is usually used outside the diagram environment. It may be
+    used inside, but then the coloured nodes will be overwritten by those
+    generated with \end{diagram}.    

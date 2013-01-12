@@ -84,8 +84,9 @@
 \newcommand{\atr}[1]{\att{\begin{turn}{90}#1~~\end{turn}}}%
 %
 \def\cxt@tabtop{}
-\def\cxt@tabdef{\tabcolsep0.5ex\relax%
-\begin{tabular}{|l||*{\value{cxt@mAnz}}{c|}}\hline}%
+\def\cxt@tabdef{\expandafter\cxt@tabdef@\cxt@align}
+\def\cxt@tabdef@#1{\tabcolsep0.5ex\relax%
+\begin{tabular}[#1]{|l||*{\value{cxt@mAnz}}{c|}}\hline}%
 %
 \def\cxt@aPunkt{&\phantom{\cxt@Kreuz}}%
 \def\cxt@aKreuz{&\cxt@Kreuz}%
@@ -111,7 +112,10 @@
 \setboolean{@ttributes}{true}%
 \newcommand{\cxtn@me}{}}%
 %
-\newenvironment{cxt}{\Reset@cxtDefaults}{\hline\end{tabular}}%
+\newenvironment{cxt}[1][t]{%
+  \Reset@cxtDefaults
+  \def\cxt@align{#1}%
+}{\hline\end{tabular}}%
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %

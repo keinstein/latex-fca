@@ -81,11 +81,65 @@ The text on the left leads to the output on the right.\bigbreak
 \end{minipage}
 \bigbreak
 
-\texttt{cxt} generates a tabular of the appropriate format. The tabular is
+\texttt{cxt} generates a tabular of the appropriate format. It takes
+an optional alignment parameter, that is passed to the tabular
+environment (see there for further documentation). The tabular is
 defined as soon as the first \verb|\obj| command is given. Spaces in the 
 preceding lines are not ignored (in this version). Therefore, each line should
 be ended with a \texttt{\%}\ . (To be repaired in later versions).
 \medbreak
+ 
+
+A short demonstration of the alignment parameter:
+\medbreak
+
+\noindent\begin{minipage}{.45\textwidth}
+\begin{verbatim}
+\begin{cxt}[t]
+\cxtName{Formula 1}
+\att{1.}
+\att{2.}
+\atr{disqualified}
+\obj{x..}{Hamilton}
+\obj{.x.}{Alonso}
+\obj{.xx}{Massa}
+\end{cxt}
+\end{verbatim}
+\end{minipage}
+\hfill
+\begin{minipage}{.45\textwidth}
+\begin{verbatim}
+\begin{cxt}[b]
+\cxtName{Formula 1}%
+\att{1.}%
+\att{2.}%
+\atr{disqualified}%
+\obj{x..}{Hamilton}
+\obj{.x.}{Alonso}
+\obj{.xx}{Massa}
+\end{cxt}
+\end{verbatim}
+\end{minipage}
+
+\noindent\hfill\begin{cxt}[t]
+\cxtName{Formula 1}
+\att{1.}
+\att{2.}
+\atr{disqualified}
+\obj{x..}{Hamilton}
+\obj{.x.}{Alonso}
+\obj{.xx}{Massa}
+\end{cxt}%
+\begin{cxt}[b]
+\cxtName{Formula 1}
+\att{1.}
+\att{2.}
+\atr{disqualified}
+\obj{x..}{Hamilton}
+\obj{.x.}{Alonso}
+\obj{.xx}{Massa}
+\end{cxt}\hfill\strut
+\bigbreak
  
 The commands within a \texttt{cxt}--environment are
 

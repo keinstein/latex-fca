@@ -6,6 +6,20 @@
 \usepackage[T1]{fontenc}
 \usepackage[english]{babel}
 \usepackage{lmodern}
+\usepackage{xcolor}
+\usepackage[%
+   colorlinks=false,
+   allbordercolors={0.9 0.9 0.9},
+   breaklinks=true,
+   ]{hyperref}
+\hypersetup{
+   pdfauthor = {Bernhard Ganter},
+   pdfkeywords = {FCA LaTeX sytle diagrame context},
+   pdftitle = {fca.sty – LaTeX macros for Formal Concept Analysis},
+   pdfsubject = {LaTeX style file for typesetting formal contexts and
+     concept latticees}
+}
+
 \RequirePackage{stmaryrd}
 \def\fcastyle{\texttt{fca.sty}\xspace}
 \title{\fcastyle\\\LaTeX--macros for Formal Concept Analysis\\
@@ -33,6 +47,8 @@ A recent version of \texttt{fca.sty} should be available from
 \end{abstract}
 %
 %
+\tableofcontents
+
 \section{Environment \texttt{cxt}}
 What this (very simple) environment does can be guessed from an example:
 The text on the left leads to the output on the right.\bigbreak

@@ -200,16 +200,17 @@ The default for \verb|\cxtArrowStyle| is \verb|\footnotesize|. In the above
 example we have changed it using \verb|\renewcommand| in order to make the
 arrows red. The default colour is black. 
 
-You can define your own charactiers using \verb|\cxtMakeChar|. It
-works like \verb|\newcommand| but defines a single Character as in the
-following example:
+You can define your own markers using \verb|\cxtMakeChar|. It
+works like \verb|\newcommand| but defines a single Character. For
+single signs use \verb|\cxtrlap| in order to give it an apropriate
+size as in the following example:
 \bigbreak 
 
 \noindent\begin{minipage}{.45\textwidth}
 \begin{verbatim}
 \begin{cxt}%
-\cxtMakeChar{v}{\rlap{$\vee$}\phantom{$\times$}}%
-\cxtMakeChar{\wedge}{\rlap{$\wedge$}\phantom{$\times$}}%
+\cxtMakeChar{v}{\cxtrlap{$\vee$}}%
+\cxtMakeChar{\wedge}{\cxtrlap{$\wedge$}}%
 \renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}%
 \cxtName{Formula 1}%
 \att{1.}%
@@ -238,6 +239,48 @@ following example:
 \end{cxt}
 \end{minipage}
 \bigbreak
+
+
+For many-valued contexts you have two options. On the one hand you can
+define a marker with one argument that typesets its argument. On the
+other hand there is a macro \verb|\freeobj| that takes a tabular row
+as argument instead of the usual markers. Single character nubers are
+predefined to work as themselves. The following examples
+illustrates such a setting:
+
+\bigbreak 
+
+\noindent\begin{minipage}{.45\textwidth}
+\begin{verbatim}
+\begin{cxt}%
+\cxtMakeChar{w}[1]{#1}%
+\cxtName{Formula 1}%
+\att{1.}%
+\att{2.}%
+\atr{disqualified}%
+\obj{5bw1}{Hamilton}
+\obj{w2xw{77}}{Alonso}
+\freeobj{1&2&3}{Massa}
+\end{cxt}
+\end{verbatim}
+\end{minipage}
+\hfill
+\begin{minipage}{.40\textwidth}
+\strut\par\strut\par
+\begin{cxt}%
+\cxtMakeChar{w}[1]{\cxtrlap{#1}}%
+\cxtName{Formula 1}%
+\att{1.}%
+\att{2.}%
+\atr{disqualified}%
+\obj{5bw1}{Hamilton}
+\obj{w2xw{77}}{Alonso}
+\freeobj{\cxtrlap{1}&2&3}{Massa}
+\end{cxt}
+\end{minipage}
+\bigbreak
+
+
 
 \section{Including Burmeister context files}
 

@@ -73,6 +73,18 @@
 {\setboolean{@ttributes}{false}\cxt@tabdef\cxtn@me%&%
 \cxt@tabtop\strut\\\hline\hline}{}#2\strut\cxt@Zeile{#1}\\\hline}%
 %
+
+\newcommand{\freeobj}[2]{%
+  \ifthenelse{\boolean{@ttributes}}%
+  {%
+    \setboolean{@ttributes}{false}%
+    \cxt@tabdef
+    \cxtn@me%&%
+    \cxt@tabtop\\\hline\hline
+  }{}%
+  #2&#1\\\hline
+}%
+
 \newcommand{\att}[1]{%
   \ifthenelse{\boolean{@ttributes}}{%
     \settoheight{\@ttnameheight}{#1}\adjcxt@name%
@@ -93,37 +105,72 @@
 }%
 % 
 \def\cxt@stop{}%
-\def\cxt@aPunkt{\phantom{\cxt@Kreuz}}%
 \def\cxt@aKreuz{\cxt@Kreuz}%
-\def\cxt@adown{\rlap{\cxt@down}\phantom{\cxt@Kreuz}}%
-\def\cxt@aup{\rlap{\cxt@up}\phantom{\cxt@Kreuz}}%
-\def\cxt@aboth{\rlap{\cxt@both}\phantom{\cxt@Kreuz}}%
+\def\cxtphantom{\phantom{\cxt@Kreuz}}%
+\def\cxtrlap#1{%
+  \settowidth\@tempdima{\cxtphantom}%
+  \hbox to \@tempdima{\hss #1\hss}%
+}%
+\def\cxt@adown{\cxtrlap{\cxt@down}}%
+\def\cxt@aup{\cxtrlap{\cxt@up}}%
+\def\cxt@aboth{\cxtrlap{\cxt@both}}%
 %
-\def\cxtMakeChar#1{%
-  \expandafter\newcommand\csname cxt@char@\string#1 \endcsname%
+
+\def\cxt@M@kechar@newcommand{%
+  \newcommand*%
 }
-\cxtMakeChar .{\cxt@aPunkt}
+\def\cxt@Makechar@newcommand#1{%
+  \expandafter
+  \cxt@M@kechar@newcommand
+  \csname cxt@char@\string#1 \endcsname
+}
+\def\cxtM@keChar#1[#2][#3]#4{%
+  \cxt@Makechar@newcommand{#1}[{#2}][{#3}]{#4\readcxt@zeile}%
+}
+\def\cxtMakeCh@r#1[#2]#3{%
+  \cxt@Makechar@newcommand{#1}[{#2}]{#3\readcxt@zeile}%
+}
+\def\cxtMakeChar@@#1[#2]{%
+  \@ifnextchar[{\cxtM@keChar{#1}[{#2}]}{\cxtMakeCh@r{#1}[{#2}]}%
+}
+\def\cxtMakeChar@#1#2{%
+  \cxt@Makechar@newcommand{#1}{#2\readcxt@zeile}%
+}
+\def\cxtMakeChar#1{%
+  \@ifnextchar[{\cxtMakeChar@@{#1}}{\cxtMakeChar@{#1}}%
+}
+\cxtMakeChar .{\cxtphantom}
 \cxtMakeChar x{\cxt@aKreuz}
 \cxtMakeChar X{\cxt@aKreuz}
 \cxtMakeChar b{\cxt@aboth}
 \cxtMakeChar u{\cxt@aup}
 \cxtMakeChar d{\cxt@adown}
+\@for \tmp:= 0,1,2,3,4,5,6,7,8,9\do{
+  \edef\@tmp{\noexpand\cxtMakeChar\tmp{%
+      \noexpand\cxtrlap\tmp}}%
+  \@tmp
+}
 
 \def\cxt@executechar#1{%
   &\@ifundefined{cxt@char@\string#1 }{%
-    \cxt@aPunkt%
+    \let\cxt@tmp=\cxt@aPunkt%
   }{%
+    \expandafter\let\expandafter\cxt@tmp
     \csname cxt@char@\string#1 \endcsname
   }%
+  \cxt@tmp
 }
 \def\readcxt@zeile#1{%
   \ifx#1\cxt@stop
+    \let\cxt@zeile@excecutechar\@gobble
   \else
-    \cxt@executechar{#1}%
-    \expandafter\readcxt@zeile
+    \let\cxt@zeile@excecutechar\cxt@executechar
   \fi
+  \cxt@zeile@excecutechar{#1}%
 }%
-\def\cxt@Zeile#1{\readcxt@zeile#1\cxt@stop}%
+\def\cxt@Zeile#1{%
+  \readcxt@zeile#1\cxt@stop
+}%
 % 
 \newcommand{\Reset@cxtDefaults}{%
   \setlength{\cxt@nameraise}{0pt}%

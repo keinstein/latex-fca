@@ -1,0 +1,250 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% This is file `cxtinput.sty' : LaTeX macros for Formal Concept Analysis      %
+%     input of Burmeister format contexts                                     %
+%                                                                             %
+%      Copyright  Tobias Schlemmer 5/09                                       %
+%      Version of                  1/12                                       %
+%                                                                             %
+%  This program is provided under the terms of the                            %
+%  LaTeX Project Public License distributed from CTAN                         %
+%  archives in directory macros/latex/base/lppl.txt.                          %
+%                                                                             %
+%  This package defines the macro \cxtinput, which can input a context        %
+%  file in Burmeister format                                                  %
+%                                                                             %
+% Usage:                                                                      %
+% \begin{cxt}                                                                 %
+% \cxtAlignBottom                                                             %
+% \end{cxt}                                                                   %
+%                                                                             %
+% Known bugs:                                                                 %
+% • The end of the .cex file is not correctly detected.                       %
+%   You will get the error message: Runaway argument?                         %
+%    ! File ended while scanning use of \cxt@input@getline.                   %
+%                                                                             %
+% TODO:                                                                       %
+%  • Make everything configurable                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+\NeedsTeXFormat{LaTeX2e}%                                                     %
+\ProvidesPackage{cxtinput}[2012/01/08 v0.2 Input of contexts in Burmeister format]%        %
+% We extend the fca package
+\RequirePackage{fca}%%
+
+% used counters
+\newcount\cxt@input@obj
+\newcount\cxt@input@attr
+\newcount\cxt@input@line
+\newtoks\cxt@input@contextlines
+\cxt@input@line0
+\cxt@input@contextlines{}%
+
+% The end user macro
+\newcommand\cxtinput[1]{%
+%  \begingroup
+  \cxt@input@contextlines{}%
+  \cxt@input@save@nl@active%
+  \cxt@input@make@nl@active%
+  \cxt@input@input{#1}%
+  \cxt@input@restore@nl%
+  \xdef\cxt@input@tempa{\the\cxt@input@contextlines}%
+  %\aftergroup
+  \cxt@input@tempa%
+%  \endgroup%
+}
+
+% Macro holding the command for the next line
+\def\cxt@input@newline{}
+
+
+\def\cxt@input@head{%
+ \cxt@input@getline\cxt@input@check@B
+}
+
+% Check the “B” at the beginning of the file
+\def\cxt@input@check@B#1{%
+  \def\tempa{B}\def\tempb{#1}%
+  \ifx\tempa\tempb
+  \typeout{Burmeister format detected}%
+  \else
+    \cxt@input@error{No Burmeister format detected}{The \string\cxtinput macro can input Burmeister .cxt files only.}%
+  \fi
+  \def\cxt@input@newline{%
+    \cxt@input@getline{\cxt@input@match@mptyline\cxt@input@readobjcount}%
+  }%
+}
+ 
+% Check for an empty line and continue with command #2 afterwards
+\def\cxt@input@match@mptyline#1#2{%
+  \edef\tempa{#2}%
+  \ifx\tempa\@empty
+ \else
+    \cxt@input@error{Error in Burmeister format.}{At the current position an empty line is expected.}%
+  \fi
+  \def\cxt@input@newline{%
+    \cxt@input@getline{#1}%
+  }%
+}
+
+% Read number of objects from the file
+\def\cxt@input@readobjcount#1{%
+ \cxt@input@obj=#1\relax
+ \def\cxt@input@newline{%
+   \cxt@input@getline\cxt@input@readattrcount%
+ }%
+}
+
+% Read number of attributes
+\def\cxt@input@readattrcount#1{%
+  \def\cxt@input@newline{%
+    \cxt@input@getline{\cxt@input@match@mptyline\cxt@input@readobjects}%
+  }%
+  \cxt@input@attr=#1\relax
+}
+
+% initializes the reading of the object names
+\def\cxt@input@readobjects{%
+  \ifnum\cxt@input@obj>0\relax
+    \def\cxt@input@newline{%
+      \cxt@input@getline\cxt@input@readobjname
+   }%
+   \@tempcnta=1\relax
+   \let\tempa\cxt@input@readobjname%
+ \else
+    \let\tempa\cxt@input@readattributes%
+  \fi
+ \tempa
+}
+
+% Read the object names
+\def\cxt@input@readobjname#1{%
+   \expandafter\def\csname cxt@input@objname@\the\@tempcnta\endcsname{#1}%
+   \ifnum\@tempcnta < \cxt@input@obj
+    \advance\@tempcnta by 1\relax
+ \else
+    \def\cxt@input@newline{%
+      \cxt@input@getline\cxt@input@readattributes%
+    }%
+  \fi
+}
+
+% Initialize reading of attibute names
+\def\cxt@input@readattributes{%
+  \ifnum\cxt@input@attr>0\relax
+    \def\cxt@input@newline{%
+      \cxt@input@getline\cxt@input@readattrname
+    }%
+    \@tempcnta=1\relax
+    \def\tempa{\cxt@input@readattrname}%
+  \else
+    \def\tempa{\cxt@input@readcontext}%
+  \fi
+  \tempa
+}
+
+% Read the attribute names and store \atr macros for each attribute
+\def\cxt@input@readattrname#1{%
+  \cxt@input@appendtotok{#1}\atr%
+ \ifnum\@tempcnta < \cxt@input@attr
+    \advance\@tempcnta by 1\relax
+ \else
+    \def\cxt@input@newline{%
+      \cxt@input@getline\cxt@input@readcontext
+    }%
+  \fi
+}
+
+% initalize reading of the cross table
+\def\cxt@input@readcontext{%
+ \ifnum\cxt@input@obj>0\relax
+    \def\cxt@input@newline{\cxt@input@getline\cxt@input@readcontextline}%
+    \@tempcnta=1\relax
+    \def\tempa{\cxt@input@readcontextline}%
+  \else
+    \def\tempa{}%
+  \fi
+  \tempa
+}
+
+% Read cross table and store \obj macros for each object
+\def\cxt@input@readcontextline#1{%
+  \expandafter\expandafter\expandafter\cxt@input@appendtotok
+  \expandafter\expandafter\expandafter{%
+    \csname cxt@input@objname@\the\@tempcnta\endcsname}%
+  {\obj{#1}}%
+ \ifnum\@tempcnta < \cxt@input@obj
+ \advance\@tempcnta by 1\relax
+ \else
+    \let\cxt@input@newline\relax
+    \let\cxt@input@endoffile\relax
+  \fi
+}
+
+% add some stuff to the token register
+% needed to have some tool, which can be used with \expandierter
+\def\cxt@input@appendtotok#1#2{%
+  \expandafter\cxt@input@contextlines\expandafter{%
+     \the\cxt@input@contextlines
+     #2{#1}%
+   }%  
+}
+
+\def\cxt@input@error#1#2{%
+  \PackageError{cxtinput}{At line \the\cxt@input@line : #1}{#2}%
+  \def\cxt@input@newline{}%
+}%
+
+% Some end of file mark
+\def\cxt@input@endoffile{%
+  \cxt@input@error{unexpected end of file}{The context file is somehow inconsistent.\MessageBreak
+The last lines of it seem to be lost.}%
+}
+
+% macro for usage with \ifx
+\def\cxt@input@@endoffile{\cxt@input@endoffile}
+
+% swich catcode of newline to runtime mode
+\begingroup%
+\catcode`\^^M\active%
+%
+% Define a macro to save the catcode.
+% Define a macro to set the catcode.
+\gdef\cxt@input@make@nl@active{%
+  \catcode`\^^M\active%
+%  \let\cxt@input@oldcr^^M%
+%  \def^^M{\cxt@input@newline}%
+}%
+
+\gdef\cxt@input@save@nl@active{%
+  \chardef\cxt@input@catcode@nl=\catcode`\^^M%
+%  \let\cxt@input@oldcr^^M%
+%  \def^^M{\cxt@input@newline}%
+}%
+%
+% Define a macro to set the catcode.
+\gdef\cxt@input@restore@nl{%
+  \catcode`\^^M\cxt@input@catcode@nl\relax%
+%  \let\cxt@input@oldcr^^M%
+%  \def^^M{\cxt@input@newline}%
+}%
+
+\cxt@input@make@nl@active%
+%
+% reads a line from the context file.
+\long\gdef\cxt@input@getline #1#2^^M{%
+  \advance\cxt@input@line by 1\relax%
+  \def\tempa{#2}%
+  \ifx\tempa\cxt@input@@endoffile%
+     \tempa%
+  \fi%
+  #1{#2}%
+ \cxt@input@newline%
+}%
+%
+% read the inputfile and use its content as argument for \cxt@input@head
+\gdef\cxt@input@input#1{%
+  \expandafter\cxt@input@head\@@input #1 %
+  \cxt@input@endoffile%
+}
+\endgroup%

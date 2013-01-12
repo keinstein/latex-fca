@@ -1,6 +1,7 @@
 \documentclass[12pt]{article}
 \usepackage{a4,color}
 \usepackage{fca}
+\usepackage{cxtinput}
 %\selectlanguage{english}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -144,6 +145,71 @@ as in the following example:\bigbreak
 The default for \verb|\cxtArrowStyle| is \verb|\footnotesize|. In the above
 example we have changed it using \verb|\renewcommand| in order to make the
 arrows red. The default colour is black. 
+
+\section{Including Burmeister context files}
+
+The package |cxtinput| allows to use context files in Burmeister
+format to be included directly in a \LaTeX{} document. It's usage is
+as simple as possible. In order to allow for certain customizations it
+needs to be issued inside a |cxt| environment.
+
+\noindent\begin{minipage}{.45\textwidth}
+\begin{verbatim}
+\documentclass{article}
+\usepackage{fca,cxtinput}
+\begin{document}
+\begin{cxt}%
+\cxtName{Formula 1}%
+\cxtinput{formula1.cxt}%
+\end{cxt}
+\end{document}
+\end{verbatim}
+\end{minipage}
+\hfill
+\begin{minipage}{.40\textwidth}
+\strut\par\strut\par
+\begin{cxt}%
+\cxtName{Formula 1}%
+\cxtinput{formula1.cxt}%
+\end{cxt}
+\end{minipage}
+\bigbreak
+
+Unrotated attribute names can be achieved using the following code:
+
+\noindent\begin{minipage}{.45\textwidth}
+\begin{verbatim}
+\documentclass{article}
+\usepackage{fca,cxtinput}
+\begin{document}
+\begin{cxt}%
+\cxtName{Formula 1}%
+\cxtinput{formula1.cxt}%
+\end{cxt}
+
+\begin{cxt}%
+\cxtName{Formula 2}%
+\cxtinput{formula1.cxt}%
+\end{cxt}
+\end{document}
+\end{verbatim}
+\end{minipage}
+\hfill
+\begin{minipage}{.40\textwidth}
+\strut\par\strut\par
+\begin{cxt}%
+\cxtName{Formula 1}%
+\renewcommand{\atr}{\att}%
+\cxtinput{formula1.cxt}%
+\end{cxt}
+
+\bigskip
+\begin{cxt}
+\cxtName{Formula 2}%
+\cxtinput{formula1.cxt}%
+\end{cxt}
+\end{minipage}
+\bigbreak
 
 \section{Environment \texttt{diagram}}
 The \texttt{diagram} environment helps typesetting diagrams of concept

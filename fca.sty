@@ -107,6 +107,7 @@ has been ignored}{}}}%
 %
 \def\cxt@aPunkt{&\phantom{\cxt@Kreuz}}%
 \def\cxt@aKreuz{&\cxt@Kreuz}%
+\def\cxt@aGrayKreuz{&\cellcolor[gray]{0.8}\cxt@Kreuz}%
 \def\cxt@adown{&\rlap{\cxt@down}\phantom{\cxt@Kreuz}}%
 \def\cxt@aup{&\rlap{\cxt@up}\phantom{\cxt@Kreuz}}%
 \def\cxt@aboth{&\rlap{\cxt@both}\phantom{\cxt@Kreuz}}%
@@ -115,6 +116,7 @@ has been ignored}{}}}%
 \def\readcxt@zeile#1{\ifx#1\cxt@stop\let\next=\relax\else%
 \ifx#1x\cxt@aKreuz%
 \else\ifx#1X\cxt@aKreuz%
+\else\ifx#1G\cxt@aGrayKreuz%
 \else\ifx#1b\cxt@aboth%
 \else\ifx#1u\cxt@aup%
 \else\ifx#1d\cxt@adown%

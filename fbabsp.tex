@@ -1,0 +1,314 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[german,british]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fba}
+\usetikzlibrary{fit}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{decorations.footprints}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{decorations.fractals}
+%
+%
+\begin{document}
+%
+%-----------------------------------------------------------------------------
+% The original test file
+%-----------------------------------------------------------------------------
+%
+%
+%\begin{figure}[p]
+%  \begin{center}
+%\raisebox{-20mm}{\unitlength 1mm
+%\begin{diagram}{35}{40}
+%\Node{1}{20}{5}
+%\Node{2}{5}{20}
+%\Node{3}{30}{15}
+%\Node{4}{30}{25}
+%\Node{5}{20}{35}
+%\Edge{1}{2}
+%\Edge{1}{3}
+%\Edge{2}{5}
+%\Edge{3}{4}
+%\Edge{4}{5}
+%\leftObjbox{1}{2}{2}{0}
+%\leftObjbox{2}{2}{2}{$a$}
+%\rightObjbox{3}{2}{2}{$b$}
+%\rightObjbox{4}{2}{2}{$c$}
+%\leftObjbox{5}{3}{0}{1}
+%\rightObjbox{5}{3}{0}{2}
+%\centerObjbox{5}{0}{0}{0}
+%\rightAttbox{5}{3}{0}{3}
+%\leftAttbox{5}{3}{0}{1}
+%\centerAttbox{5}{0}{0}{0}
+%\end{diagram}}
+%{\footnotesize
+%\begin{cxt}
+%  \att{$a$}
+%  \att{$b$}
+%  \att{$c$}
+%  \obj{x..}{$a$}
+%  \obj{.xx}{$b$}
+%  \obj{..x}{$c$}
+%\end{cxt}}
+% \quad
+%{\footnotesize
+%\begin{cxt}
+%  \atr{$(a,1)$}
+%  \atr{$(b,1)$}
+%  \atr{$(c,1)$}
+%  \atr{$(a,2)$}
+%  \atr{$(b,2)$}
+%  \atr{$(c,2)$}
+%  \obj{x..x..}{$(a,1)$}
+%  \obj{.xx.xx}{$(b,1)$}
+%  \obj{..x..x}{$(c,1)$}
+%  \obj{xxxx..}{$(a,2)$}
+%  \obj{xxx.xx}{$(b,2)$}
+%  \obj{xxx..x}{$(c,2)$}
+%\end{cxt}}
+%\caption{A small lattice, its standard context, and the formal context
+%for its order relation.}
+%\end{center}
+%\end{figure}
+%
+%\end{document}
+%
+%-----------------------------------------------------------------------------
+% The original test file (slightly adjusted)
+%-----------------------------------------------------------------------------
+%
+\begin{figure}[p]
+  \begin{center}
+\raisebox{-20mm}{\setlength{\unitlength}{0.25em} %1mm
+\begin{diagram}{35}{40}
+\Node{1}{20}{5}
+\Node{2}{5}{20}
+\Node{3}{30}{15}
+\Node{4}{30}{25}
+\Node{5}{20}{35}
+\Edge{1}{2}
+\Edge{1}{3}
+\Edge{2}{5}
+\Edge{3}{4}
+\Edge{4}{5}
+\leftObjbox{1}{2}{2}{0}
+\leftObjbox{2}{2}{2}{$a$}
+\rightObjbox{3}{2}{2}{$b$}
+\rightObjbox{4}{2}{2}{$c$}
+\leftObjbox{5}{3}{0}{1}
+\rightObjbox{5}{3}{0}{2}
+\centerObjbox{5}{0}{0}{0}
+\rightAttbox{5}{3}{0}{3}
+\leftAttbox{5}{3}{0}{1}
+\centerAttbox{5}{0}{0}{0}
+\end{diagram}}
+{\footnotesize
+\begin{cxt}
+  \att{$a$}
+  \att{$b$}
+  \att{$c$}
+  \obj{x..}{$a$}
+  \obj{.xx}{$b$}
+  \obj{..x}{$c$}
+\end{cxt}}
+ \quad
+{\footnotesize
+\begin{cxt}
+  \atr{$(a,1)$}
+  \atr{$(b,1)$}
+  \atr{$(c,1)$}
+  \atr{$(a,2)$}
+  \atr{$(b,2)$}
+  \atr{$(c,2)$}
+  \obj{x..x..}{$(a,1)$}
+  \obj{.xx.xx}{$(b,1)$}
+  \obj{..x..x}{$(c,1)$}
+  \obj{xxxx..}{$(a,2)$}
+  \obj{xxx.xx}{$(b,2)$}
+  \obj{xxx..x}{$(c,2)$}
+\end{cxt}}
+\caption{A small lattice, its standard context, and the formal context
+for its order relation.\protect\\ 
+Note that there is a small difference compared to how labels have been aligned up to the previous version of the package. The shift parameters used to be applied with reference to the center of the vertex of the lattice they belong to. Now the reference point lies on the edge of this vertex, at the point, where the dotted line starts that connects the vertex and the label. In particular this causes that, for instance, the bottom label ``0'' protrudes over the margin of the picture, an effect that does not occur with the old definitions (or with the option ``\texttt{notikz}''). In this sense the new version is \textbf{not downward compatible}.
+}
+\end{center}
+\end{figure}
+%
+%
+%-----------------------------------------------------------------------------
+% Demonstrating some new things
+%-----------------------------------------------------------------------------
+%
+%
+\begin{figure}[p]
+  \begin{center}
+\raisebox{-20mm}{\setlength{\unitlength}{0.25em} %1mm
+\begin{diagram}[scale=1]{35}{40}
+\Numbers
+\Node{1}{20}{5}
+\Node[fill=magenta!30]{2}{5}{20}
+\Node{3}{30}{15}
+\NoNumbers
+{% scoping change of \CircleSize
+\CircleSize{3.1}
+\Node{4}{30}{25}
+}
+\Node[ball color=green]{5}{20}{35}
+{\color{blue}\Edge{1}{2}}% this does not work any more, 
+                         % but the version below is nicer anyway
+\Edge[blue]{1}{2}
+{% scoping change of \EdgeThickness, overriding with explicit option
+\EdgeThickness{3pt}
+\Edge[line width=8pt, red]{1}{3}
+}
+\Edge[orange, dashdotted] {2}{5}
+\EdgeThickness{5pt}
+\Edge{3}{4}
+\EdgeThickness{1pt}
+\Edge{4}{5}
+\NoDots
+\leftObjbox[fill=blue!15]{1}{2}{2}{Labels can be filled.}
+% the following shows that shifting by equal amount in x and y direction
+% can be achieved also using \LabelDistance
+\leftObjbox[text=red]{2}{2}{2}{Shifting equally in x and y direction
+ can be achieved also by using \texttt{\textbackslash LabelDistance}.}%
+\LabelDistance{2.8284271247}% the factor occurring here is 2*sqrt(2)
+\leftObjbox{2}{0}{0}{Shifting equally in x}%
+\LabelDistance{0}% change it back to normal
+\WithDots
+\leftAttbox{2}{2}{2}{Numbered nodes can be filled.\par  Some labels can have dots, while some others don't have them.}
+\leftAttbox{5}{2}{4}{Nodes can be filled with fancy stuff.}
+\rightObjbox{4}{4.56656}{2}{We can shift labels by fractions.}
+\rightAttbox{4}{4.56656}{2}{Node sizes can be changed temporarily or globally.}
+\LabelDistance{2.82}% demonstrate \LabelDistance
+\rightObjbox{3}{2}{2}{We can add an additional 
+                      \texttt{\textbackslash LabelDistance}.}
+%
+%
+\end{diagram}}
+\caption{Showing more advanced features.}
+\end{center}
+\end{figure}
+%
+%
+%-----------------------------------------------------------------------------
+% Demonstrating some more advanced features
+%-----------------------------------------------------------------------------
+%
+%
+\begin{figure}[p]
+  \begin{center}
+\raisebox{-20mm}{\setlength{\unitlength}{0.25em} %1mm
+\begin{diagram}[scale=1]{35}{}%{40}
+\selectlanguage{german}
+\Node{1}{20}{5}
+\Node{2}{5}{20}
+\Node{3}{30}{15}
+\Node{4}{30}{25}
+\Node{5}{20}{35}
+\Edge{1}{2}
+\Edge{1}{3}
+\Edge[bend left]{2}{5}
+\Edge{3}{4}
+\Edge[double]{4}{5}
+%additional things will be stacked on top
+\draw[red, ultra thick,->,>=stealth] (1) to[bend right=60] (4.-30);
+\LabelDistance{2}%
+\rightAttbox{5}{2}{0}{Manueller {\tt xshift=} vermeidet hier (unten) dots auf der Kante.}
+\rightAttBox[xshift=2\unitlength]{1}{Manueller {\tt xshift=}\\ vermeidet hier (unten)\\ dots auf der Kante.}
+\rightObjBox{1}{Oben sieht man alte und\\ neue Box im Vergleich.\\ Kleine hinterlegte Boxen\\ sind m\"oglich (hier: \textcolor{red!15}{rosa}).\\Da die Bildgr\"oﬂe nicht\\ vollst\"andig angegeben\\ wurde, \\wird sie automatisch \\ bestimmt, einschlieﬂlich\\ der Labelboxen.}%
+\centerAttBox[fill=red!15]{4}{klein}%
+\leftAttBox{2}{Die neuen Labelboxen sind farbig hinterlegt.\\ Der Stil {\tt FCALabelStyle} kann angepaﬂt werden.\\ Sie nehmen so viel Platz ein, wie der Text benˆtigt,\\ und werden an {\tt\textbackslash\textbackslash} gebrochen.}
+\leftObjBox[text width=16em]{2}{Mit der Option {\tt text width=}{$\langle$L\"ange$\rangle$} kann auch eine feste Boxbreite erzwungen werden, dann mit automatischem Zeilenumbruch.}%
+\begin{pgfonlayer}{bg}
+%some background highlighting
+%needs: 
+%\usetikzlibrary{fit}
+%\usetikzlibrary{shapes.geometric}
+\begin{scope}[rotate=135, transform shape]
+\node[fill=blue!20,inner sep=3pt,ellipse,fit=(1) (2), pin={[pin distance=2em, pin edge={thick, draw=green, <-}]above:{highlighted nodes}}] (highlight) {};
+\end{scope}
+\end{pgfonlayer}
+%
+%	      	      
+\end{diagram}}
+\caption{Using old and new labels, additional \texttt{tikz} features like highlighting some nodes, arrows.\protect\\
+We did not specify a size for the picture. The bounding box is computed automatically (in the present case, it becomes so large that the picture does not fit on the line). If we specify one, then it is currently draw in red (for visualisation, this will be removed in the final version [just search for the word ``TODO'' in \texttt{fba.sty} and comment the line you found]).
+}
+\end{center}
+\end{figure}
+%
+%
+%-----------------------------------------------------------------------------
+% Using tikz for fun, not for fca
+%-----------------------------------------------------------------------------
+%
+%
+\begin{figure}[p]
+  \begin{center}
+\raisebox{-20mm}{\setlength{\unitlength}{0.25em} %1mm
+\begin{diagram}[scale=1]{35}{}%{40}
+\Numbers
+\Node{1}{20}{5}
+\Node{2}{5}{20}
+\Node{3}{30}{15}
+\Node{4}{30}{25}
+\Node[decoration={bumps, segment length=2.5pt, amplitude=1pt, mirror},decorate, ultra thin]{5}{20}{35}
+%uses \usetikzlibrary{decorations.footprints}
+\Edge[decoration={footprints,foot length=6pt,stride length=12pt,foot angle=35,foot of=gnome},decorate, ultra thin, fill,orange]{1}{2}
+\Edge{1}{3}
+\Edge{2}{5}
+\Edge{3}{4}
+\Edge[decorate, decoration=saw, segment length=3pt]{4}{5}
+%additional things will be stacked on top
+\draw[red, ultra thick,->,>=stealth] (1) to[bend right=60] (4.-30);
+\LabelDistance{10}%
+\rightObjBox[decoration={random steps,segment length=2mm},decorate]{1}{Many nice things are possible.}%
+\centerAttBox[fill=red!15, decoration={coil,aspect=0.3,segment length=2pt,amplitude=2pt}, decorate]{4}{small}%
+\begin{pgfonlayer}{bg}
+%some background hightlighting
+%needs: 
+%\usetikzlibrary{fit}
+%\usetikzlibrary{shapes.geometric}
+\begin{scope}[rotate=135, transform shape]
+\node[fill=blue!20,inner sep=3pt,ellipse,fit=(1) (2), pin={[name=my pin coord,inner sep=0pt, outer sep=0pt, minimum size=0pt,pin distance=2em, pin edge={thick, draw=green, <-}]above:{}}] (highlight) {};
+\end{scope}
+\end{pgfonlayer}
+\coordinate[label={[fill=gray!10, draw=blue, dashed, thin]below left:{a gnome walked on this edge}}] (just for the label) at (my pin coord);
+%	      	      
+\end{diagram}}
+\caption{Getting crazy.}
+\end{center}
+\end{figure}
+%
+%
+%
+%-----------------------------------------------------------------------------
+% An example from the old documentation
+%-----------------------------------------------------------------------------
+%
+%
+%
+\begin{figure}
+\begin{center}
+{\unitlength .7mm
+\begin{diagram}{40}{15}
+\Node{0}{20}{10}
+\leftAttbox{0}{1}{1}{left\\
+attribute\\ label}
+\rightAttbox{0}{10}{10}{right
+attri-\\ bute label}
+\rightObjbox{0}{20}{5}{right\\
+object\\ label}
+\centerObjbox{0}{0}{5}{centered\\
+object label}
+\end{diagram}}
+\end{center}
+\caption{Example from the documentation of \texttt{fca.sty}.}
+\end{figure}
+
+\end{document}
+
+
+

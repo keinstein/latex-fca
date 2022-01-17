@@ -21,7 +21,7 @@
 %                                                                             %
 \NeedsTeXFormat{LaTeX2e}%                                                     %
 \ProvidesPackage{fca}[2006/09/01 v2.1 Formal Concept Analysis macros]%        %
-\RequirePackage{amssymb,epic,pict2e,color,ifthen,rotating,xspace,newdrawline}%%
+\RequirePackage{amssymb,epic,pict2e,graphics,color,ifthen,rotating,xspace,newdrawline}%%
 %                                                                             %
 %                                                                             %
 %                                                                             %
@@ -65,6 +65,7 @@
   \ifthenelse{\cxt@nameraise<\@ttnameheight}%
   {\setlength{\cxt@nameraise}{\@ttnameheight}}{}}%
 %
+\newcommand{\cxtAlignBottom}{\def\cxt@align{b}}
 \newcommand{\cxtName}[1]{%
   \def\cxtn@me{%
     \multicolumn{1}{|c||}{%
@@ -110,7 +111,7 @@
       has been ignored}{}}%
   \ignorespaces
 }%
-\newcommand{\atr}[1]{\att{\begin{turn}{90}#1~~\end{turn}}}%
+\newcommand{\atr}[1]{\att{\rotatebox{90}{#1~~}}}%
 %
 \def\cxt@tabtop{}
 \def\cxt@tabdef{\expandafter\cxt@tabdef@\cxt@align}
@@ -527,7 +528,7 @@
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %
-% Some simple macros for% FCA-text.                                           %
+% Some simple macros for FCA texts.                                           %
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %

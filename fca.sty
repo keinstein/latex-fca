@@ -97,7 +97,8 @@
 \def\cxt@mqName{\cxt@mpName&#1}\def\cxt@tabtop{\cxt@mqName}\or%
 \def\cxt@mrName{\cxt@mqName&#1}\def\cxt@tabtop{\cxt@mrName}\or%
 \def\cxt@msName{\cxt@mrName&#1}\def\cxt@tabtop{\cxt@msName}\or%
-\def\cxt@mtName{\cxt@msName&#1}\def\cxt@tabtop{\cxt@mtName}\fi%
+\def\cxt@mtName{\cxt@msName&#1}\def\cxt@tabtop{\cxt@mtName}\or%
+\def\cxt@muName{\cxt@mtName&#1}\def\cxt@tabtop{\cxt@muName}\fi%
 \stepcounter{cxt@mAnz}}%
 {\PackageWarning{fca}{Attribute following object in cxt-environment%
 has been ignored}{}}}%
@@ -120,7 +121,7 @@ has been ignored}{}}}%
 \else\ifx#1b\cxt@aboth%
 \else\ifx#1u\cxt@aup%
 \else\ifx#1d\cxt@adown%
-\else\cxt@aPunkt\fi\fi\fi\fi\fi%
+\else\cxt@aPunkt\fi\fi\fi\fi\fi\fi%
 \let\next=\readcxt@zeile\fi\next}%
 \def\cxt@Zeile#1{\readcxt@zeile#1\cxt@stop}%
 %

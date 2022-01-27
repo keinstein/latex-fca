@@ -1,0 +1,68 @@
+2022-01-17  Tobias Schlemmer <keinstein@users.sourceforge.net>
+
+	* fca.sty: Use the graphics package from standard latex for
+	rotations
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* fca.sty: Do some source code formatting and indention.
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* fca.sty, fcadoc.tex: Provide some tools for many-valued contexts.
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* fca.sty, fcadoc.tex: Allow users to define their own markers.
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* fcadoc.tex: Some optical fixes for fcadoc.
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* README.md: Add real information to readme.
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* fca.sty, fcadoc.tex: Ignore spaces after \begin{cxt}, \cxtName,
+	\att, and \atr.
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* fca.sty, fcadoc.tex: Add optional parameter to influence alignment
+	of a formal context
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* fca.sty: Fix positioning of context names to match the postiton of
+	horizontal attribute names.
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* cxtinput.sty, fcadoc.tex, formula1.cxt: Add cxtinput to direclty
+	parse Burmeister context files.
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* fcadoc.tex: Add hyperref support to documentation.
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* fcadoc.tex: Update LaTeX header to in include babel and lmodern
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* changelog.txt, fca.sty, fcadoc.tex: Allow an arbitrary number of
+	attributes in the environment cxt.
+
+2013-01-12  Tobias Schlemmer <keinstein@users.berlios.de>
+
+	* changelog.txt, conexp2fca.pas, cxt2fca.pas, fca.sty, fcadoc.tex,
+	howto.html, newdrawline.sty: Initial commit. Includes Ganter's
+	original version.
+
+2013-01-11  keinstein <keinstein_junior@gmx.net>
+
+	* Initial commit
+

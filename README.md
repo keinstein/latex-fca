@@ -23,29 +23,106 @@ conexp2fca.pas: The Free Pascal source code of the program.
 
 Installation
 ============
-How to use fca.sty
 
-It is assumed that LaTeX runs on your computer. Download fca.sty,
-newdrawline.sty, and fcadoc.tex. Put the three files in the same folder and run
-LaTeX or pdfLaTeX on fcadoc.tex. This should run without errors, and the
-resulting file will give you instructions of how to use fca.sty. If LaTeX does
-not compile fcadoc.tex, you need an expert.
+The repository is structured according to the TDS. You can copy the
+subdirs into your user specific tex tree. You can find it by issuing
+the command
+```
+kpsexpand '$TEXMFHOME'
+```
+in a suitable shell that knows about your TeX installation.
+On MacOS, Linux, Unix and similar systems this should be the case out
+of the box. Windows users must open a special shell environment which
+can usually be found in the start menu.
 
-With pdfLaTeX the output will be in .pdf format, and can be displayed with kpdf
-or the Adobe Reader.
+Note that the user TeX tree is not necessarily empty. You can merge the
+trees of different packages in that case.
 
-As the result of running LaTeX on your .tex-file, you get a .dvi-file. Note
-that fcadoc.tex uses some special effects that most .dvi-viewers cannot handle
-(like colour, rotated text, and white fill). To get a better impression of your
-results, use dvips to translate your file to a .ps-file. Afterwards, you may
-use ps2pdf to obtain a .pdf-file.
+After copying the files you should make shure that the package can be
+loaded. Some TeX trees contain a file named `ls-R`. This is an index of
+all relevant files in that tree. You can safely remove that index. In
+that case TeX will search the tree instead of the index file for files
+and packages. This can be very time consuming when you have a very
+large textree in `TEXMFHOME`. In that case you can regenerate the index
+by issuing the command
+```
+mktexlsr /path/to/TEMFHOME
+```
+when you have a *nix shell, the complete command would look like
+```
+mktexlsr "$(kpsexpand '$TEXMFHOME')"
+```
+Remember, that you have to regenerate that index everytime you install
+a package in your local tex tree.
 
-If you use fca.sty more often, you should put it somewhere where LaTeX finds
-it.
+Now, you can go into the folder `source/latex/latex-fca` and run
+```
+pdflatex latex-fca.dtx
+```
+this should generate some files in the current folder and the
+documentation
+```
+latex-fca.pdf
+```
 
-  • Under Linux, you may e.g. create a folder ~/texmf/tex/fcastyle and put the
-    files fca.sty and newdrawline.sty in there. LaTeX should find them
-    automatically.
-  • Mac users may try the same for ~/library/texmf/tex/latex/fcastyle .
-  • For Windows, the path depends on your LaTeX distribution.
+Development
+===========
 
+For development you should use git:
+```
+git clone https://github.com/keinstein/latex-fca
+cd latex-fca
+```
+
+For the following commands we assume, you are inside the base
+directory of the repository.
+
+It is advised to clone the GitHub repository and add it
+as a remote repository. Please, refer to the git documentation
+about remote repositories.
+
+Now you should create the necessary folders:
+```
+mkdir -p "$(kpsexpand '$TEXMFHOME')"/{source,tex,doc}/latex/fca
+```
+
+Now you should configure `docstrip.sty` to use this structure. You are
+doing so by creating a file named `docstrip.cfg`. This file depends on
+your TeX installation. That's why we assume a *nix TDS installation
+e.g. TeXLive. In the shell you could generate this file using the
+following commands:
+```
+TDSBASEDIR="$(kpsexpand '$TEXMFHOME')"
+cat >docstrip.cfg <<EOF
+\BaseDirectory{$TSDBASEDIR}
+\UseTDS
+EOF
+```
+It remains to make the necessary files available:
+```
+ln -s source/latex/latex-fca.dtx .
+ln -s "$(kpsexpand '$TEXMFHOME')"/doc/latex/fca/formula1.cxt .
+```
+
+When all these preparations are done you can install the updated
+package and generate the documentation with:
+```
+latex latex-fca.dtx
+```
+
+There is only one file to edit: `source/latex/latex-fca.dtx`
+all other files are generated from this single file. So if you want to
+make changes you must edit `source/latex/latex-fca.dtx`.
+
+You can submit your changes to the maintainer in two ways:
+1. You can make a unified diff file between the original
+   `latex-fca.dtx` and your changed version. Then you can open a new
+   issue on https://github.com/keinstein/latex-fca/issues/new and
+   attach the diff file.
+
+2. It is preferred to push your changes with the help of git to GitHub
+   and open a pull request on
+   https://github.com/keinstein/latex-fca/compare. This makes it easy
+   to discuss and merge the changes. Once the changes in
+   `latex-fca.dtx` are merged it is easy to regenerate the whole TDS
+   structure from that commit.

@@ -1,0 +1,2026 @@
+% \iffalse meta-comment
+% vim: textwidth=75
+%<*internal>
+\iffalse
+%</internal>
+%<*readme>
+        |
+-------:| -----------------------------------------------------------------
+    fca:| Typesetting Formal Concep Analysis with LaTeX
+ Author:| Bernhard Ganter
+        | Tobias Schlemmer <keinstein@users.sf.net>   
+ E-mail:| keinstein@users.sf.net
+License:| Released under the LaTeX Project Public License v1
+    See:| http://www.latex-project.org/lppl.txt
+
+
+Short description:
+
+  Formal Concept Analysis (FCA) is a mathematical field based on the
+  theory of lattices and ordered sets, with applications in data
+  analysis and knowledge processing. To simplify typesetting of
+  FCA-related text, \fcastyle provides two environments and some
+  simple macros, just for convenience. \fcastyle offers nothing that
+  you could not do without. The two environments are
+
+  - cxt     : for typesetting small formal contexts as cross-tables, and
+  - diagram : for making line diagrams of concept lattices.
+              This environment may be of some interest for other
+              surposes as well, since it can also be used for
+              arbitrary ordered sets and graphs.
+%</readme>
+%<*internal>
+\fi
+\def\nameofplainTeX{plain}
+\ifx\fmtname\nameofplainTeX\else
+  \expandafter\begingroup
+\fi
+%</internal>
+%<*install>
+\input docstrip
+
+\iftrue
+          
+ This program is provided under the terms of the                             %
+ LaTeX Project Public License distributed from CTAN                          %
+ archives in directory macros/latex/base/lppl.txt.                           %
+ \else
+ 
+This work may be distributed and/or modified under the
+conditions of the LaTeX Project Public License (LPPL), either
+version 1.3c of this license or (at your option) any later
+version.  The latest version of this license is in the file:
+
+http://www.latex-project.org/lppl.txt
+
+\fi
+
+\preamble
+ latex-fca.dtx
+ Copyright ℂ 2022 Ernst-Schröder-Zentrum
+                  für Begriffliche Wissensverarbeitung
+ Authors: Bernhard Ganter
+          Tobias Schlemmer
+
+ This program is provided under the terms of the
+ LaTeX Project Public License distributed from CTAN
+ archives in directory macros/latex/base/lppl.txt.
+
+ This work is "maintained" (as per LPPL maintenance status) by
+ Tobias Schlemmer <keinstein@users.sf.net>.
+
+ This work consists of the files
+   latex-fca.dtx and
+   latex-fca.ins
+
+ and the derived files
+   cxtinput.sty,
+   fca.sty,
+   formula1.cxt.
+
+\endpreamble
+
+\askforoverwritefalse
+
+\usedir{tex/latex/fca}
+\generate{%
+        \file{cxtinput.sty}{%
+                \usepreamble\defaultpreamble
+                \usepostamble\defaultpostamble
+                \from{latex-fca.dtx}{cxtinput.sty,package}}
+        \file{fca.sty}{%
+                \usepreamble\defaultpreamble
+                \usepostamble\defaultpostamble
+                \from{latex-fca.dtx}{fca.sty,package}}
+            }
+\usedir{doc/latex/fca}
+\generate{%
+  \file{formula1.cxt}{
+    \nopreamble\nopostamble
+    \from{latex-fca.dtx}{formula1.cxt}}
+}
+%</install>
+%<install>\endbatchfile
+%<*internal>
+\usedir{source/latex/fca}
+\generate{
+  \file{\jobname.ins}{\from{\jobname.dtx}{install}}
+}
+\nopreamble\nopostamble
+\usedir{doc/latex/fca}
+\generate{
+  \file{README.txt}{\from{\jobname.dtx}{readme}}
+}
+\ifx\fmtname\nameofplainTeX
+  \expandafter\endbatchfile
+\else
+  \expandafter\endgroup
+\fi
+%</internal>
+% \fi
+% \iffalse
+%<*package>
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+%</package>
+% \fi
+% \iffalse
+% Doc-Source file to use with LaTeX2e
+% Copyright (C) 2022 Tobias Schlemmer, all rights reserved.
+% \fi
+% \iffalse
+%<*driver>
+\ProvidesFile{latex-fca.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<fca.sty>\ProvidesPackage{fca}
+%<cxtinput.sty>\ProvidesPackage{cxtinput}
+%<*package>
+    [2022/02/26 v2.2
+%</package>
+%<*fca.sty|driver>
+Formal Concept Analysis macros]
+%</fca.sty|driver>
+%<cxtinput.sty> Reading formal contexts is Burmeister format]
+%<*driver>
+%</driver>
+%<*driver>
+% Hack around the convention to use the vertical bar for macro names.
+% This clashes with the tabular environment.
+\edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|}%
+\documentclass{ltxdoc}
+\def\catcodebarltxdoc{\noexpand\catcode`|=\active}%
+\usepackage{a4,color}
+\usepackage{fca}
+\usepackage{cxtinput}
+\AddToHook{env/cxt/before}{%
+  \catcodebarlatex
+}
+\AddToHook{env/cxt/after}{%
+  \catcodebarltxdoc
+}
+\makeatletter
+% \selectlanguage{english}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{xcolor}
+% \usepackage[%
+%   colorlinks=false,
+%   allbordercolors={0.9 0.9 0.9},
+%   breaklinks=true,
+%   ]{hyperref}
+
+\RequirePackage{stmaryrd}
+\usepackage[numbered]{hypdoc}
+\hypersetup{
+   pdfauthor = {Bernhard Ganter},
+   pdfkeywords = {FCA LaTeX sytle diagrame context},
+   pdftitle = {fca.sty – LaTeX macros for Formal Concept Analysis},
+   pdfsubject = {LaTeX style file for typesetting formal contexts and
+     concept latticees}
+}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\def\fcastyle{\texttt{fca.sty}\xspace}
+\fcaparseversion{latex-fca.dtx}
+\title{\fcastyle\\\LaTeX--macros for Formal Concept Analysis\\
+  \fcacurrentversionversion}
+\author{Bernhard Ganter\thanks{TU Dresden\\Ernst-Schröder-Zentrum
+    f\"ur Begriffliche Wissensverarbeitung}\\
+  Tobias Schlemmer}
+\date{\fcacurrentversiondate}
+\begin{document}
+\DocInput{latex-fca.dtx}
+\end{document}
+%</driver>
+% \fi
+% \maketitle
+% \begin{abstract}
+%   \FCA (FCA) is a mathematical field based on the theory of lattices
+%   and ordered sets, with applications in data analysis and knowledge
+%   processing.  To simplify typesetting of FCA-related text,
+%   \fcastyle provides two environments and some simple macros, just
+%   for convenience. \fcastyle offers nothing that you could not do
+%   without. The two environments are
+% \begin{description}
+% \item[cxt] for typesetting small formal contexts as cross-tables, and
+% \item [diagram] for making line diagrams of concept lattices. This environment
+%  may be of some interest for other purposes as well, since it can also be
+%  used for ordered sets and graphs.
+% \end{description}
+% A recent version of \texttt{fca.sty} should be available from
+% \begin{center}
+%  \url{https://github.com/keinstein/latex-fca}
+% \end{center}
+% \end{abstract}
+% 
+% 
+% \tableofcontents
+% 
+% \section{Environment \texttt{cxt}}
+% \DescribeEnv{cxt}
+% What this (very simple) environment does can be guessed from an example:
+% The text on the left leads to the output on the right.\bigbreak
+% 
+% \noindent\begin{minipage}{.45\textwidth}
+% \begin{verbatim}
+% \begin{cxt}
+% \cxtName{Formula 1}
+% \att{1.}
+% \att{2.}
+% \atr{disqualified}
+% \obj{x..}{Hamilton}
+% \obj{.x.}{Alonso}
+% \obj{.xx}{Massa}
+% \end{cxt}
+% \end{verbatim}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{.40\textwidth}
+% \begin{cxt}
+% \cxtName{Formula 1}
+% \att{1.}
+% \att{2.}
+% \atr{disqualified}
+% \obj{x..}{Hamilton}
+% \obj{.x.}{Alonso}
+% \obj{.xx}{Massa}
+% \end{cxt}
+% \end{minipage}
+% \bigbreak
+% 
+% \texttt{cxt} generates a tabular of the appropriate format. It takes
+% an optional alignment parameter, that is passed to the tabular
+% environment (see there for further documentation). The tabular is
+% defined as soon as the first |\obj| command is given. Spaces in the 
+% preceding lines are not ignored in general. The standard macros have
+% been designed to ignore following spaces. But this cannot be extended
+% to other macros. Therefore, each line that contains individual
+% (non-cxt-code) should be ended with a \texttt{\%}\ .
+% 
+% A short demonstration of the alignment parameter:
+% \medbreak
+% 
+% \noindent\begin{minipage}{.45\textwidth}
+% \begin{verbatim}
+% \begin{cxt}[t]
+% \cxtName{Formula 1}
+% \att{1.}
+% \att{2.}
+% \atr{disqualified}
+% \obj{x..}{Hamilton}
+% \obj{.x.}{Alonso}
+% \obj{.xx}{Massa}
+% \end{cxt}
+% \end{verbatim}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{.45\textwidth}
+% \begin{verbatim}
+% \begin{cxt}[b]
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{x..}{Hamilton}
+% \obj{.x.}{Alonso}
+% \obj{.xx}{Massa}
+% \end{cxt}
+% \end{verbatim}
+% \end{minipage}
+% 
+% \noindent\hfill\begin{cxt}[t]
+% \cxtName{Formula 1}
+% \att{1.}
+% \att{2.}
+% \atr{disqualified}
+% \obj{x..}{Hamilton}
+% \obj{.x.}{Alonso}
+% \obj{.xx}{Massa}
+% \end{cxt}%
+% \begin{cxt}[b]
+% \cxtName{Formula 1}
+% \att{1.}
+% \att{2.}
+% \atr{disqualified}
+% \obj{x..}{Hamilton}
+% \obj{.x.}{Alonso}
+% \obj{.xx}{Massa}
+% \end{cxt}\hfill\strut
+% \bigbreak
+% 
+% The commands within a \texttt{cxt}--environment are
+% 
+% \begin{description}
+% \item[]|\cxtName{}|\quad Define the text for the upper left cell of the
+%  table. Optional. The default is no text.
+% \item[]|\att{}|\quad Give an attribute name. These names are processed
+%  in the order in which they are given. Attribute names given after an
+%  |\obj|  command are ignored.
+% \item[]|\atr{}|\quad Same as |\att{}|, but with rotated text.
+% \item[]|\obj{}{}|\quad Give an object's name and its incidence vector,
+%  consisting of dots and `x'es. The incidences come first, for better
+%  alignment. The length of each incidence vector must be the number of
+%  attributes. 
+% 
+% Each  instance of |\obj| is directly translated to a row of the
+% |tabular|-environment. It is therefore possible to mix  |\obj|
+% commands with usual  |tabular|-commands.
+% \end{description}
+% \texttt{cxt} can handle an arbitrary number of attributes.
+% \bigbreak
+% 
+% The arrow relations may also be used. Instead of \texttt{x} and \texttt{.},
+% type \texttt{d} (for ``down''), \texttt{u} (``up''), or \texttt{b} (``both''), 
+% as in the following example:\bigbreak 
+% 
+% \noindent\begin{minipage}{.45\textwidth}
+% \begin{verbatim}
+% \begin{cxt}%
+% \renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{xbd}{Hamilton}
+% \obj{uxb}{Alonso}
+% \obj{bxx}{Massa}
+% \end{cxt}
+% \end{verbatim}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{.40\textwidth}
+% \strut\par\strut\par
+% \begin{cxt}%
+% \renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{xbd}{Hamilton}
+% \obj{uxb}{Alonso}
+% \obj{bxx}{Massa}
+% \end{cxt}
+% \end{minipage}
+% \bigbreak
+% 
+% The default for |\cxtArrowStyle| is |\footnotesize|. In the above
+% example we have changed it using |\renewcommand| in order to make the
+% arrows red. The default colour is black. 
+% 
+% You can define your own markers using |\cxtMakeChar|. It
+% works like |\newcommand| but defines a single Character. For
+% single signs use |\cxtrlap| in order to give it an apropriate
+% size as in the following example:
+% \bigbreak 
+% 
+% \noindent\begin{minipage}{.45\textwidth}
+% \begin{verbatim}
+% \begin{cxt}%
+% \cxtMakeChar{v}{\cxtrlap{$\vee$}}%
+% \cxtMakeChar{\wedge}{\cxtrlap{$\wedge$}}%
+% \renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}%
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{xbv}{Hamilton}
+% \obj{\wedge xb}{Alonso}
+% \obj{bxx}{Massa}
+% \end{cxt}
+% \end{verbatim}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{.40\textwidth}
+% \strut\par\strut\par\strut\par\strut\par
+% \begin{cxt}%
+% \cxtMakeChar{v}{\rlap{$\vee$}\phantom{$\times$}}%
+% \cxtMakeChar{\wedge}{\rlap{$\wedge$}\phantom{$\times$}}%
+% \renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}%
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{xbv}{Hamilton}
+% \obj{\wedge xb}{Alonso}
+% \obj{bxx}{Massa}
+% \end{cxt}
+% \end{minipage}
+% \bigbreak
+% 
+% 
+% For many-valued contexts you have two options. On the one hand you can
+% define a marker with one argument that typesets its argument. On the
+% other hand there is a macro |\freeobj| that takes a tabular row
+% as argument instead of the usual markers. Single character nubers are
+% predefined to work as themselves. The following examples
+% illustrates such a setting:
+% 
+% \bigbreak 
+% 
+% \noindent\begin{minipage}{.45\textwidth}
+% \begin{verbatim}
+% \begin{cxt}%
+% \cxtMakeChar{w}[1]{#1}%
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{5bw1}{Hamilton}
+% \obj{w2xw{77}}{Alonso}
+% \freeobj{1&2&3}{Massa}
+% \end{cxt}
+% \end{verbatim}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{.40\textwidth}
+% \strut\par\strut\par
+% \begin{cxt}%
+% \cxtMakeChar{w}[1]{\cxtrlap{#1}}%
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{5bw1}{Hamilton}
+% \obj{w2xw{77}}{Alonso}
+% \freeobj{\cxtrlap{1}&2&3}{Massa}
+% \end{cxt}
+% \end{minipage}
+% \bigbreak
+% 
+% 
+% 
+% \section{Including Burmeister context files}
+% 
+% The package |cxtinput| allows to use context files in Burmeister
+% format to be included directly in a \LaTeX{} document. It's usage is
+% as simple as possible. In order to allow for certain customizations it
+% needs to be issued inside a |cxt| environment.
+% \medbreak
+% 
+% \noindent\begin{minipage}{.45\textwidth}
+% \begin{verbatim}
+% \documentclass{article}
+% \usepackage{fca,cxtinput}
+% \begin{document}
+% \begin{cxt}%
+% \cxtName{Formula 1}%
+% \cxtinput{formula1.cxt}%
+% \end{cxt}
+% \end{document}
+% \end{verbatim}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{.40\textwidth}
+% \begin{cxt}%
+%   \cxtName{Formula 1}%
+%   \cxtinput{formula1.cxt}%
+% \end{cxt}
+% \end{minipage}
+% \bigbreak
+% 
+% Unrotated attribute names can be achieved using the following code:
+% 
+% \noindent\begin{minipage}{.45\textwidth}
+% \begin{verbatim}
+% \documentclass{article}
+% \usepackage{fca,cxtinput}
+% \begin{document}
+% \begin{cxt}%
+% \cxtName{Formula 1}%
+% \cxtinput{formula1.cxt}%
+% \end{cxt}
+% 
+% \begin{cxt}%
+% \cxtName{Formula 2}%
+% \cxtinput{formula1.cxt}%
+% \end{cxt}
+% \end{document}
+% \end{verbatim}
+% \end{minipage}
+% \hfill
+% \begin{minipage}{.40\textwidth}
+% \strut\par\strut\par
+% \begin{cxt}%
+% \cxtName{Formula 1}%
+% \renewcommand{\atr}{\att}%
+% \cxtinput{formula1.cxt}%
+% \end{cxt}
+% 
+% \bigskip
+% \begin{cxt}
+% \cxtName{Formula 2}%
+% \cxtinput{formula1.cxt}%
+% \end{cxt}
+% \end{minipage}
+% \bigbreak
+% 
+% \section{Environment \texttt{diagram}}
+% The \texttt{diagram} environment helps typesetting diagrams of concept
+% lattices, but can be used for ordered sets and graphs as well. Again we start
+% with a small example (for which we have set |\unitlength 1.2mm|):
+% \bigbreak
+% 
+% \noindent\begin{minipage}{.55\textwidth}
+% \begin{verbatim}
+% \begin{diagram}{40}{55}
+% \Node{1}{20}{10}
+% \Node{2}{35}{20}
+% \Node{3}{5}{30}
+% \Node{4}{35}{40}
+% \Node{5}{20}{50}
+% \Edge{1}{2}
+% \Edge{1}{3}
+% \Edge{2}{4}
+% \Edge{3}{5}
+% \Edge{4}{5}
+% \Numbers
+% \leftAttbox{3}{2}{2}{1.}
+% \rightAttbox{2}{2}{2}{disqualified}
+% \rightAttbox{4}{2}{2}{2.}
+% \leftObjbox{3}{2}{2}{Hamilton}
+% \rightObjbox{2}{2}{2}{Massa}
+% \rightObjbox{4}{2}{2}{Alonso}
+% \end{diagram}
+% \end{verbatim}
+% \end{minipage}\hfill
+% \begin{minipage}{.45\textwidth}
+% {\unitlength 1.2mm\begin{diagram}{40}{55}
+% \Node{1}{20}{10}\Node{2}{35}{20}\Node{3}{5}{30}\Node{4}{35}{40}\Node{5}{20}{50}
+% \Edge{1}{2}\Edge{1}{3}\Edge{2}{4}\Edge{3}{5}\Edge{4}{5}
+% %\Numbers
+% \leftAttbox{3}{2}{2}{1.} \rightAttbox{2}{2}{2}{disqualified}
+% \rightAttbox{4}{2}{2}{2.} \leftObjbox{3}{2}{2}{Hamilton}
+% \rightObjbox{2}{2}{2}{Massa} \rightObjbox{4}{2}{2}{Alonso}
+% \end{diagram}}
+% \end{minipage}
+% \bigbreak
+% 
+% Here are the commands of the \texttt{diagram}--environment:
+% \begin{description}
+% \item[]|\begin{diagram}{width}{height}|\quad
+% translates to \par
+% |\begin{picture}(width,height)(\diagramXoffset,\diagramYoffset)|.
+% 
+% 
+% The offsets are zero by default. They can be modified using
+% |\renewcommand|. Note that the diagram dimensions do not take the lables
+% into account, these may overlap. Putting an |\fbox| around the above
+% diagram yields (with |\unitlength .7mm|)
+% \begin{center}
+%  \fbox{\unitlength .7mm\begin{diagram}{40}{55}
+% \Node{1}{20}{10}\Node{2}{35}{20}\Node{3}{5}{30}\Node{4}{35}{40}\Node{5}{20}{50}
+% \Edge{1}{2}\Edge{1}{3}\Edge{2}{4}\Edge{3}{5}\Edge{4}{5}
+% %\Numbers
+% \leftAttbox{3}{2}{2}{1.} \rightAttbox{2}{2}{2}{disqualified}
+% \rightAttbox{4}{2}{2}{2.} \leftObjbox{3}{2}{2}{Hamilton}
+% \rightObjbox{2}{2}{2}{Massa} \rightObjbox{4}{2}{2}{Alonso}
+% \end{diagram}}\end{center}
+% \item[]|\Node{nodenumber}{xpos}{ypos}|\quad
+% Puts a circle at position \texttt{(xpos,ypos)} of the picture. 
+% These circles are drawn when |\end{diagram}| is invoked. The default
+% diameter of the circles is 4 (times |\unitlength|). It can be changed
+% (for all circles) with |\CircleSize{}|. The argument must be an integer.
+% The node numbers must be different, consecutive between 0 and 51, but need not
+% necessarily be given in ascending order. 
+% 
+% \item[]|\Numbers|\quad Puts numbers inside circles.  While working on a
+%  diagram it can be helpful to have a picture with numbered 
+% nodes. The result of the following command sequence is shown on the right:
+% 
+% \begin{minipage}{.6\textwidth}
+% \begin{verbatim}
+% \fbox{\unitlength .7mm
+% \begin{diagram}{40}{55}
+% \Node{5}{20}{10}
+% \Node{6}{35}{20}
+% \Node{4}{5}{30}
+% \Node{8}{35}{40}
+% \Node{7}{20}{50}
+% \Numbers
+% \end{diagram}}
+% \end{verbatim}
+% \end{minipage} \hfill
+% \begin{minipage}{.25\textwidth}
+% \fbox{\unitlength .7mm\begin{diagram}{40}{55}
+% \Node{5}{20}{10}\Node{6}{35}{20}\Node{4}{5}{30}\Node{8}{35}{40}\Node{7}{20}{50}
+% \Numbers\end{diagram}}\end{minipage}
+% 
+% We recommend to remove the |\Numbers|--command when the diagram is
+% ready. In most cases it is not a good idea to put text inside the nodes of a diagram. 
+% 
+% \item[]|\Edge{nodenumber1}{nodenumber2}|\quad
+% Puts a line between the two nodes with the given numbers. These must have been
+% declared earlier with a |\Node|--command. For nodes with coordinates
+% |(u,v)| and |(x,y)| the command translates to 
+% \begin{center}|\fcadrawline(u,v)(x,y)|.\end{center}
+% |\fcadrawline(u,v)(x,y)| is a pdf\LaTeX--compatible reimplementation of
+% the |\drawline| command, the latter provided by the \texttt{eepic}
+% package. 
+% 
+% The |\Edge|--command is executed immediately. It can be mixed with other
+% \texttt{picture}- and \texttt{eepic}--commands like |\spline|
+% (see the \texttt{eepic} manual).  
+% 
+% \item[]|\leftAttbox{nodenumber}{xoffset}{yoffset}{text1\\ text2\\ ...}|\quad\par
+% This is one of six commands 
+% \begin{center}
+%  \{|\left|, |\center|, |\right|\}$\times$\{|Attbox|,
+%  |Objbox|\}.\end{center}  These are used to put
+% text to diagram nodes. The |Attbox|--commands place the text above the
+% corresponding node, the |Objbox| below. Similarly, the text can be placed
+% to the left, be centered, or be placed to the right of the labelled node. All
+% this can be modified with the \texttt{xoffset, yoffset}--parameters. 
+% 
+% The offsets increase the placement effect. A |\rightObjbox|, which is
+% placed to the lower right of the corresponding node, will be moved even
+% further to the lower right if the offsets are positive. Similarly, positive
+% offsets will push a |\leftAttbox| even more to the upper left, etc.
+% 
+% The text of the label is put in a |\parbox|. It can be broken into
+% several lines using |\\|. The width of the |\parbox| is
+% |\LabelBoxWidth|, with a default value of 40mm. This can be changed using
+% |\renewcommand|.
+% 
+% The label text and the labelled node are connected with a dotted line.
+% Here is an example:
+% 
+% \begin{minipage}{.6\textwidth}
+% \begin{verbatim}
+% {\unitlength .7mm
+% \begin{diagram}{40}{15}
+% \Node{0}{20}{10}
+% \leftAttbox{0}{1}{1}{left\\ 
+% attribute\\ label}
+% \rightAttbox{0}{10}{10}{right
+% attri-\\ bute label}
+% \rightObjbox{0}{20}{5}{right\\ 
+% object\\ label}
+% \centerObjbox{0}{0}{5}{centered\\ 
+% object label}
+% \end{diagram}}
+% \end{verbatim}
+% \end{minipage}\hfill
+% \begin{minipage}{.3\textwidth}
+% {\unitlength .7mm
+% \begin{diagram}{40}{15}
+% \Node{0}{20}{10}
+% \leftAttbox{0}{1}{1}{left\\ attribute\\ label}
+% \rightAttbox{0}{10}{10}{right attri-\\ bute label}
+% \rightObjbox{0}{20}{5}{right\\ object\\ label}
+% \centerObjbox{0}{0}{5}{centered\\ object label}
+% \end{diagram}}
+% \end{minipage}
+% 
+% The style of the lables is given by
+% \begin{description}
+% \item[]|\ObjectLabelStyle|\hspace*{3.5ex}\quad 
+% Default: |\small\baselineskip6pt\rm|
+% \item[]|\AttributeLabelStyle|\quad 
+% Default: |\small\baselineskip6pt\it|.
+% \end{description}
+% These values can be changed with |\renewcommand|.
+% 
+% \item[]|\end{diagram}|\quad This concludes the diagram. The circles
+%  representing the nodes are drawn and filled with white. Everything inside
+%  such a circle (except for the numbers caused by the |\Numbers| command)
+%  is erased.
+% \end{description}
+% 
+% \subsection{Error messages}
+% Package error messages for the \texttt{diagram} environment are not yet
+% implemented. Errors usually are caused by using node numbers that have not
+% been defined earlier.
+% 
+% \subsection{Fine tuning}
+% You can change certain layout parameters either permanently (by modifying the
+% file \texttt{fca.sty}) or temporarily using the following commands:
+% \begin{trivlist}
+% \item |\CircleSize{}|,  \hspace*{3.5ex}\qquad Default: 4\qquad
+% (times |\unitlength|)
+% \item |\NodeColor{}|,  \qquad\qquad Default: white
+% \item |\NodeThickness{}|,  \qquad Default: 1.2pt
+% \item |\EdgeThickness{}|,  \qquad Default: .8pt
+% \item |\NoDots|,
+% \item |\renewcommand{\ObjectLabelStyle}{}|,
+% \item |\renewcommand{\AttributeLabelStyle}{}|, 
+% \item |\renewcommand{\LabelBoxWidth}{}|.    
+% \end{trivlist}
+% Except for the first three, these commands can be focussed to single instances,
+% using brackets. For example,
+% \begin{center}
+% |{\NoDots\centerObjbox{nodenumber}{xoffset}{yoffset}{labeltext}}|
+% \end{center}
+% generates a single centered object label without dotted line.
+% 
+% \subsection{pdf\LaTeX \ compatibility}
+% Version 2 of the \texttt{diagram} environment was designed to be pdf\LaTeX\
+% compatibile. It no longer uses \texttt{eepic.sty}, which is not supported by
+% pdf\LaTeX. Instead it uses \texttt{pict2e} and a |\fcadrawline| command,
+% that replaces \texttt{eepic}'s |\drawline|. 
+% 
+% \subsection{Problems with colour}
+% Since the diagrams are drawn using the \texttt{picture}--commands and the
+% \texttt{pict2e} package, we can combine with other packages, for example, with
+% the \texttt{color} package. This allows us to colour edges and text (but not
+% individual nodes, see \ref{subsec:colornode}).
+% However, \texttt{color} has a problem with spacing. Changing colors can cause
+% unwanted spaces, and these are particularly unpleasant in pictures. Have a
+% look at the following:\medbreak
+% 
+% \begin{minipage}{.6\textwidth}
+% \begin{verbatim}
+% {\unitlength 2mm
+% \begin{diagram}{20}{20}
+% \Node{1}{5}{5}  
+% \Node{2}{15}{15}  
+% {\color{red}\Edge{1}{2}}
+% {\color{blue}\Edge{1}{2}}
+% {\color{red}\Edge{1}{2}}
+% {\color{blue}\Edge{1}{2}}
+% \end{diagram}}
+% \end{verbatim}
+% \end{minipage}\hfill
+% \begin{minipage}{.3\textwidth}
+% {\unitlength 2mm
+% \begin{diagram}{20}{20}
+% \Node{1}{5}{5}  
+% \Node{2}{15}{15}  
+% {\color{red}\Edge{1}{2}}
+% {\color{blue}\Edge{1}{2}}
+% {\color{red}\Edge{1}{2}}
+% {\color{blue}\Edge{1}{2}}
+% \end{diagram}}
+% \end{minipage}
+% \medbreak 
+% 
+% \noindent This effect disappears when spaces are avoided. Here is a better
+% version:\medbreak 
+% 
+% \begin{minipage}{.6\textwidth}
+% \begin{verbatim}
+% {\unitlength 2mm
+% \begin{diagram}{20}{20}
+% \Node{1}{5}{5}  
+% \Node{2}{15}{15}  
+% {\color{red}\Edge{1}{2}}%
+% {\color{blue}\Edge{1}{2}}%
+% {\color{red}\Edge{1}{2}}%
+% \color{blue}\Edge{1}{2}}%
+% \end{diagram}
+% \end{verbatim}
+% \end{minipage}\hfill
+% \begin{minipage}{.3\textwidth}
+% {\unitlength 2mm
+% \begin{diagram}{20}{20}
+% \Node{1}{5}{5}  
+% \Node{2}{15}{15}  
+% {\color{red}\Edge{1}{2}}%
+% {\color{blue}\Edge{1}{2}}%
+% {\color{red}\Edge{1}{2}}%
+% {\color{blue}\Edge{1}{2}}%
+% \end{diagram}}
+% \end{minipage}
+% 
+% 
+% \subsection{Colouring nodes}
+% \label{subsec:colornode}
+% Nodes are filled with white by default. This can be changed to any other colour
+% using the command |\NodeColor{colorname}|. This color then applies to
+% \textbf{all nodes}. \texttt{colorname} must be a
+% color specification as  used by the \texttt{color} package.
+% \texttt{``red''}, \texttt{``blue''}, and \texttt{``green''} should usually
+% work. Other colors may be defined with the |\definecolor| command, see
+% the documentation of the \texttt{graphics} bundle. For finer colour
+% nuances use the \texttt{xcolor} package and its documentation.
+% 
+% \fcastyle does not support individual node colouring, but there is a trick to
+% do it nevertheless. Simply include the \texttt{diagram} environment into a 
+% \texttt{picture} environment and insert the coloured nodes after the diagram
+% is drawn. How this is done should become clear from the example
+% below. \fcastyle provides a command |\ColorNode{colorname}| for this.
+% It overwrites numbers generated by the |\Numbers| command.
+% \medbreak
+% 
+% \begin{minipage}{.6\textwidth}
+% \begin{verbatim}
+% {\definecolor{grey}{gray}{.8}
+% \unitlength 2mm
+% \NodeThickness{2.5pt}
+% \EdgeThickness{2.5pt}
+% \begin{picture}(20,20)%
+% \put(0,0){%
+% \begin{diagram}{20}{20}
+% \NodeColor{grey}
+% \Node{1}{5}{5}  
+% \Node{2}{15}{15}  
+% \Edge{1}{2}%
+% \end{diagram}}
+% \put(5,5){\ColorNode{green}}
+% \end{picture}}
+% \end{verbatim}
+% \end{minipage}\hfill
+% \begin{minipage}{.3\textwidth}
+% {\unitlength 2mm\definecolor{grey}{gray}{.8}
+% \NodeThickness{2.5pt}
+% \EdgeThickness{2.5pt}
+% \begin{picture}(20,20)%
+% \put(0,0){%
+% \begin{diagram}{20}{20}
+% \NodeColor{grey}
+% \Node{1}{5}{5}  
+% \Node{2}{15}{15}  
+% \Edge{1}{2}%
+% \end{diagram}}
+% \put(5,5){\ColorNode{green}}
+% \end{picture}}
+% \end{minipage}
+% 
+% \clearpage
+% \section{Some macros}
+% For a short description see Figure~\ref{fig:macros}.
+% \begin{figure}[p]
+%   \begin{center}
+%    \begin{tabular}{cll}\hline
+% Result&command& German version\\\hline
+% $\GMI$&|\GMI|&\\
+% $\context$&|\context|&\\
+% $\context[L]$&|\context[L]|&\\
+% $\CL$ &|\CL| &|\BV| \\
+% $\BVGMI$  &|\CLGMI| &|\BVGMI| \\
+% $\BGMI$  & |\CGMI|& |\BGMI|\\
+% $\extent{}$&|\extent{}|&\\
+% $\intent{}$&|\intent{}|&\\
+% $\extents{}$&|\extents{}|&\\
+% $\intents{}$&|\intents{}|&\\
+% $\HNI$   &|\HNI| & \\
+% $\relI$   &|\relI| & \\
+% $\notI$   &|\notI| & \\
+% $\bigtimes$   &|\bigtimes| & \\
+% $\Semi$   &|\Semi| & \\
+% $\Runterpfeil$   &|\DownArrow|&|\Runterpfeil| \\
+% $\Hochpfeil$   &|\UpArrow| &|\Hochpfeil| \\
+% $\Doppelpfeil$   &|\DoubleArrow| &|\Doppelpfeil| \\
+% $\IRunterpfeil$   &|\IDownArrow| &|\IRunterpfeil| \\
+% $\IHochpfeil$   &|\IUpArrow| &|\IHochpfeil| \\
+% $\DDPfeil$   &|\DDArrow| &|\DDPfeil| \\
+% $\NDDPfeil$   &|\NDDArrow| &|\NDDPfeil| \\
+% \FCA   &|\FCA| & \\
+% \FBA   & &|\FBA| \\
+% \FnBA   & &|\FnBA| \\\hline
+%      \end{tabular}
+% \caption{Table of \texttt{fca.sty}--macros.}\label{fig:macros}
+%  \end{center}
+% \end{figure}
+% \begin{figure}[p]
+%  \begin{center}
+%      \begin{tabular}{lll}\hline
+% Symbol&command&package required\\\hline
+% $\vee$&|\vee|&\\
+% $\wedge$&|\wedge|&\\
+% $\bigvee$&|\bigvee|&\\
+% $\bigwedge$&|\bigwedge|&\\
+% $\sqcup$&|\sqcup|&\\
+% $\sqcap$&|\sqcap|&\\
+% $\bigsqcup$&|\bigsqcup|&\\
+% $\bigsqcap$&|\bigsqcap|&stmaryrd\\\hline
+% &||&\\  
+% \end{tabular}
+% \caption{Other symbols that are used in \FCA, and the commands that generate
+%  them.}\label{fig:2}\end{center} 
+% \end{figure}
+% 
+% 
+% \begin{description}
+% \item[]|\GMI|\quad The formal context $\GMI$. 
+% \item[]|\context|\quad The symbol $\context$, a frequently used name for
+%  a formal context.
+% \item[]|\context[S]|\quad Other letters, such as $\context[S]$, may also
+%  be used. 
+% \item[]|\CL|\quad The symbol $\CL$ for the concept lattice operator. If
+%  ${\mathbb K}$ is a formal context, then $\CL({\mathbb K})$ denotes its
+%  concept lattice.   
+% \item[]|\BV|\quad same as |\CL|.  
+% \item[]|\CLGMI|\quad The concept lattice $\CLGMI$ of the formal context
+%  $(G,M,I)$.   
+% \item[]|\BVGMI|\quad Same as |\CLGMI|.  
+% \item[]|\CGMI|\quad The set $\CGMI$ of all formal concepts of the formal
+%  context   $(G,M,I)$.   
+% \item[]|\BGMI|\quad Same as |\CGMI|.  
+% \item[]|\extent|\quad The extent $\extent{\mathfrak{c}}$ of the formal
+%  concept $\mathfrak{c}:=(A,B)$ is  $A$. 
+% \item[]|\intent|\quad The intent $\intent{\mathfrak{c}}$ of the formal
+%  concept $\mathfrak{c}:=(A,B)$ is  $B$. 
+% \item[]|\extents|\quad The set $\extents{\context}$ of extents of the
+%  formal context $\context$.  
+% \item[]|\intents|\quad The set $\intents{\context}$ of intents of the
+%  formal context $\context$.  
+% \item[]|\HNI|\quad The subcontext $\HNI$.  
+% \item[]|\relI|\quad The incidence relation $\relI$.  
+% \item[]|\notI|\quad The negation $\notI$ of the incidence
+%  relation.  
+% \item[]|\bigtimes|\quad The product symbol $\bigtimes$.
+% \item[]|\DownArrow|\quad The $\Runterpfeil$ of the arrow relations.  
+% \item[]|\Runterpfeil|\quad Same as |\DownArrow|. 
+% \item[]|\UpArrow|\quad The $\Hochpfeil$ of the arrow relations.
+% \item[]|\Hochpfeil|\quad   Same as |\UpArrow|.
+% \item[]|\DoubleArrow|\quad  The $\Doppelpfeil$ of the arrow relations.
+% \item[]|\Doppelpfeil|\quad   Same as |\DoubleArrow|.
+% \iffalse
+% \item[]|\IDownArrow|\quad Gives $\IRunterpfeil$, which has the same
+%  meaning as $\DownArrow$,  but is drawn in the other direction. This is
+%  needed in the   definition of $\DPfeil$.
+% \item[]|\IRunterpfeil|\quad  Same as |\IDownArrow|.
+% \fi
+% \item[]|\IUpArrow|\quad  Gives $\IHochpfeil$, which is has the same
+%  meaning as $\UpArrow$,  but is drawn in the other direction. This is needed
+%  in the  definition of $\DPfeil$.
+% \item[]|\IHochpfeil|\quad  Same as |\IUpArrow|.
+% \item[]|\DDArrow|\quad Gives $\DDPfeil$, the symbol for the transitive
+%  closure of the arrow relations.  
+% \item[]|\DDPfeil|\quad  Same as |\DDArrow|.
+% \item[]|\NDDArrow|\quad Gives $\NDDPfeil$ the symbol for the negation of
+%  $\DDPfeil$.   
+% \item[]|\NDDPfeil|\quad  Same as |\NDDArrow|.
+% \item[]|\Semi|\quad Gives $\Semi$, the symbol for the semi-product.  
+% \item[]|\FCA|\quad Prints ``\FCA''.  In most cases, this command does not
+%  eat the space following it (thanks to |\xspace|).  
+% \item[]|\FBA, \FnBA|\quad Print ``Formale(n) Begriffsanalyse''. These
+%  commands also use |\xspace| so that blanks are preserved.
+% \item[]Some symbols that are provided by \LaTeX\ are listed in
+%  Figure~\ref{fig:2}. 
+% \end{description}
+% 
+% \par\noindent
+% Here is a sample text:
+% \begin{verbatim}
+% \FCA offers an elegant way to determine the congruence relations 
+% of a complete lattice: The congruence lattice of a doubly founded 
+% concept lattice $\CLGMI$ is isomorphic to $\CL(G,M,\NDDArrow)$.
+% \end{verbatim}
+% This translates to:
+% \begin{center}
+%  \begin{minipage}{.87\textwidth}
+%  \FCA offers an elegant way to determine the congruence relations of a
+%  complete lattice: The congruence lattice of a doubly founded concept lattice
+%  $\CLGMI$ is   isomorphic to $\CL(G,M,\NDDArrow)$.
+%  \end{minipage}
+% \end{center}
+% 
+% 
+% \section{To do}
+% \begin{itemize}
+% \item Improve the placement of the dotted lines connecting nodes with
+%  attribute- and object names.
+% \item Allow half-shaded nodes in diagrams, and make them
+%  (optionally) automatic for object- and attribute concepts.
+% \item Improve the code to avoid unwanted blanks.
+% \end{itemize}
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% \StopEventually{}
+% \section{The Code}
+% \iffalse
+%    \begin{macrocode}
+%<*fca.sty>
+%    \end{macrocode}
+% \fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% This is file `fca.sty' : LaTeX macros for Formal Concept Analysis           %
+%                                                                             %
+% Copyright  Bernhard Ganter   5/03                                           %
+% Version of                   10/07                                          %
+%                                                                             %
+% This program is provided under the terms of the                             %
+% LaTeX Project Public License distributed from CTAN                          %
+% archives in directory macros/latex/base/lppl.txt.                           %
+%                                                                             %
+% This package contains two environments, called cxt and diagram,             %
+% for typesetting formal contexts and order diagrams,                         %
+% and a few macros for frequently used symbols in FCA.                        %
+%                                                                             %
+% Short descriptions are given below. A recent version of this file           %
+% as well as a file named fcadoc.tex                                          %
+% should be available at http://tu-dresden.de/Members/bernhard.ganter         %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+%    \begin{macrocode}
+\RequirePackage{amssymb,epic,pict2e,graphics,color,ifthen,rotating,xspace,newdrawline}%%
+%    \end{macrocode}
+% \begin{macro}{fcaparseversiondate}
+%    \begin{macrocode}
+\newcommand\fca@parseversion{}
+\def\fca@parseversion#1 #2 #3\fca@parseversion{%
+  \def\fcacurrentversiondate{#1}%
+  \def\fcacurrentversionversion{#2}%
+  \def\fcacurrentversiondescription{#3}%
+}
+\newcommand\fcaparseversion[1]{%
+  \edef\@tempa{\noexpand\fca@parseversion\csname ver@#1\endcsname{} 
+    \noexpand\fca@parseversion}%
+  \@tempa
+}
+%    \end{macrocode}
+% \end{macro}
+%%                                                                             %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% environment cxt for making small cross-tables for Formal Concept% Analysis  %
+%                                                                             %
+% The environment is useful for typesetting  cross-tables                     %
+% of small formal contexts ( max. 20 attributes ).                            %
+%                                                                             %
+% To typeset a formal context with attributes 1., 2., disqualified            %
+% and objects Alonso, Schumacher, Montoya, try                                %
+%                                                                             %
+% \begin{verbatim}
+% \begin{cxt}%                                                                %
+%   \cxtName{Formula 1}%                                                      %
+%   \att{1.}%                                                                 %
+%   \att{2.}%                                                                 %
+%   \atr{disqualified}%                                                       %
+%   \obj{x..}{Alonso}                                                         %
+%   \obj{.x.}{Schumacher}                                                     %
+%   \obj{.xx}{Montoya}                                                        %
+%   \freeobj{a&b&c}{multi-valued-object}                                      %
+% \end{cxt}
+% \end{verbatim}
+%                                                                             %
+% Attribute definitions must precede object definitions !                     %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%    \begin{macrocode}
+\newcommand{\cxt@Kreuz}{$\times$}%
+\newcommand{\cxt@Punkt}{}%
+\newcommand{\cxtArrowStyle}{\footnotesize}
+\newcommand{\cxt@down}{\cxtArrowStyle$\Runterpfeil$}%
+\newcommand{\cxt@up}{\cxtArrowStyle$\Hochpfeil$}%
+\newcommand{\cxt@both}{\cxtArrowStyle$\Doppelpfeil$}%
+\newcounter{cxt@mAnz}%
+\newboolean{@ttributes}%
+\newlength{\cxt@nameraise}%
+\newlength{\@ttnameheight}%
+% 
+\newcommand{\adjcxt@name}{%
+  \ifthenelse{\cxt@nameraise<\@ttnameheight}%
+  {\setlength{\cxt@nameraise}{\@ttnameheight}}{}}%
+% 
+\newcommand{\cxtAlignBottom}{\def\cxt@align{b}}
+\newcommand{\cxtName}[1]{%
+  \def\cxtn@me{%
+    \multicolumn{1}{|c||}{%
+      \settoheight{\@ttnameheight}{#1}%
+      \addtolength{\cxt@nameraise}{-1\@ttnameheight}%
+      \raisebox{.5\cxt@nameraise}{#1}%
+    }%
+  }%
+  \ignorespaces
+}%
+% 
+
+\newcommand{\obj}[2]{%
+  \ifthenelse{\boolean{@ttributes}}%
+  {%
+    \setboolean{@ttributes}{false}%
+    \cxt@tabdef
+    \cxtn@me%&%
+    \cxt@tabtop\strut\\\hline\hline
+  }{}%
+  #2\strut\cxt@Zeile{#1}\\\hline
+}%
+
+\newcommand{\freeobj}[2]{%
+  \ifthenelse{\boolean{@ttributes}}%
+  {%
+    \setboolean{@ttributes}{false}%
+    \cxt@tabdef
+    \cxtn@me%&%
+    \cxt@tabtop\\\hline\hline
+  }{}%
+  #2&#1\\\hline
+}%
+
+\newcommand{\att}[1]{%
+  \ifthenelse{\boolean{@ttributes}}{%
+    \settoheight{\@ttnameheight}{#1}\adjcxt@name%
+    \expandafter\def\expandafter\cxt@tabtop\expandafter{%
+      \cxt@tabtop&#1}%
+    \stepcounter{cxt@mAnz}%
+  }{%
+    \PackageWarning{fca}{Attribute following object in
+      cxt-environment%
+      has been ignored}{}}%
+  \ignorespaces
+}%
+\newcommand{\atr}[1]{\att{\rotatebox{90}{#1~~}}}%
+% 
+\def\cxt@tabtop{}
+\def\cxt@tabdef{\expandafter\cxt@tabdef@\cxt@align}
+\def\cxt@tabdef@#1{%
+  \tabcolsep0.5ex\relax%
+  \begin{tabular}[#1]{|l||*{\value{cxt@mAnz}}{c|}}\hline%
+    }%
+    \newenvironment{cxt}[1][t]{%
+    \Reset@cxtDefaults
+    \def\cxt@align{#1}%
+    \ignorespaces
+    }{
+    \hline
+  \end{tabular}
+}%
+% 
+\def\cxt@stop{}%
+\def\cxt@aKreuz{\cxt@Kreuz}%
+\def\cxtphantom{\phantom{\cxt@Kreuz}}%
+\def\cxtrlap#1{%
+  \settowidth\@tempdima{\cxtphantom}%
+  \hbox to \@tempdima{\hss #1\hss}%
+}%
+\def\cxt@adown{\cxtrlap{\cxt@down}}%
+\def\cxt@aup{\cxtrlap{\cxt@up}}%
+\def\cxt@aboth{\cxtrlap{\cxt@both}}%
+% 
+
+\def\cxt@M@kechar@newcommand{%
+  \newcommand*%
+}
+\def\cxt@Makechar@newcommand#1{%
+  \expandafter
+  \cxt@M@kechar@newcommand
+  \csname cxt@char@\string#1 \endcsname
+}
+\def\cxtM@keChar#1[#2][#3]#4{%
+  \cxt@Makechar@newcommand{#1}[{#2}][{#3}]{#4\readcxt@zeile}%
+}
+\def\cxtMakeCh@r#1[#2]#3{%
+  \cxt@Makechar@newcommand{#1}[{#2}]{#3\readcxt@zeile}%
+}
+\def\cxtMakeChar@@#1[#2]{%
+  \@ifnextchar[{\cxtM@keChar{#1}[{#2}]}{\cxtMakeCh@r{#1}[{#2}]}%
+}
+\def\cxtMakeChar@#1#2{%
+  \cxt@Makechar@newcommand{#1}{#2\readcxt@zeile}%
+}
+\def\cxtMakeChar#1{%
+  \@ifnextchar[{\cxtMakeChar@@{#1}}{\cxtMakeChar@{#1}}%
+}
+\cxtMakeChar .{\cxtphantom}
+\cxtMakeChar x{\cxt@aKreuz}
+\cxtMakeChar X{\cxt@aKreuz}
+\cxtMakeChar b{\cxt@aboth}
+\cxtMakeChar u{\cxt@aup}
+\cxtMakeChar d{\cxt@adown}
+\@for \tmp:= 0,1,2,3,4,5,6,7,8,9\do{
+  \edef\@tmp{\noexpand\cxtMakeChar\tmp{%
+      \noexpand\cxtrlap\tmp}}%
+  \@tmp
+}
+
+\def\cxt@executechar#1{%
+  &\@ifundefined{cxt@char@\string#1 }{%
+    \let\cxt@tmp=\cxt@aPunkt%
+  }{%
+    \expandafter\let\expandafter\cxt@tmp
+    \csname cxt@char@\string#1 \endcsname
+  }%
+  \cxt@tmp
+}
+\def\readcxt@zeile#1{%
+  \ifx#1\cxt@stop
+    \let\cxt@zeile@excecutechar\@gobble
+  \else
+    \let\cxt@zeile@excecutechar\cxt@executechar
+  \fi
+  \cxt@zeile@excecutechar{#1}%
+}%
+\def\cxt@Zeile#1{%
+  \readcxt@zeile#1\cxt@stop
+}%
+% 
+\newcommand{\Reset@cxtDefaults}{%
+  \setlength{\cxt@nameraise}{0pt}%
+  \setlength{\@ttnameheight}{0pt}%
+  \setcounter{cxt@mAnz}{0}%
+  \setboolean{@ttributes}{true}%
+  \newcommand{\cxtn@me}{}%
+}%
+% 
+%    \end{macrocode}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% end of cxt environment definition                                           %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \iffalse
+%    \begin{macrocode}
+%</fca.sty>
+%    \end{macrocode}
+% \fi
+% \iffalse
+%    \begin{macrocode}
+%<*cxtinput.sty>
+%    \end{macrocode}
+% \fi
+% \subsection{Reading Burmeister context files}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% This is file `cxtinput.sty' : LaTeX macros for Formal Concept Analysis      %
+%     input of Burmeister format contexts                                     %
+%                                                                             %
+%      Copyright  Tobias Schlemmer 5/09                                       %
+%      Version of                  1/12                                       %
+%                                                                             %
+%  This program is provided under the terms of the                            %
+%  LaTeX Project Public License distributed from CTAN                         %
+%  archives in directory macros/latex/base/lppl.txt.                          %
+%                                                                             %
+%  This package defines the macro |\cxtinput|, which can input a context        %
+%  file in Burmeister format                                                  %
+%                                                                             %
+%  Usage:                                                                      %
+% \begin{verbatim}
+% \begin{cxt}                                                                 %
+% \cxtAlignBottom                                                             %
+% \end{cxt}                                                                   %
+% \end{verbatim}
+%                                                                             %
+% Known bugs:                                                                 %
+% • The end of the .cex file is not correctly detected.                       %
+%   You will get the error message: Runaway argument?                         %
+%    ! File ended while scanning use of |\cxt@input@getline|.                   %
+%                                                                             %
+% TODO:                                                                       %
+% • Make everything configurable                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% We extend the fca package
+%
+%    \begin{macrocode}
+\RequirePackage{fca}%
+%    \end{macrocode}
+%
+% used counters
+%
+%    \begin{macrocode}
+\newcount\cxt@input@obj
+\newcount\cxt@input@attr
+\newcount\cxt@input@line
+\newtoks\cxt@input@contextlines
+\cxt@input@line0
+\cxt@input@contextlines{}%
+%    \end{macrocode}
+%
+% The end user macro
+%
+%    \begin{macrocode}%
+\newcommand\cxtinput[1]{%
+%  \begingroup
+  \cxt@input@contextlines{}%
+  \cxt@input@save@nl@active%
+  \cxt@input@make@nl@active%
+  \cxt@input@input{#1}%
+  \cxt@input@restore@nl%
+  \xdef\cxt@input@tempa{\the\cxt@input@contextlines}%
+  %\aftergroup
+  \cxt@input@tempa%
+%  \endgroup%
+}
+%    \end{macrocode}
+%
+% Macro holding the command for the next line
+%
+%    \begin{macrocode}
+\def\cxt@input@newline{}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\def\cxt@input@head{%
+ \cxt@input@getline\cxt@input@check@B
+}
+%    \end{macrocode}
+%
+% Check the “B” at the beginning of the file
+%
+%    \begin{macrocode}
+\def\cxt@input@check@B#1{%
+  \def\tempa{B}\def\tempb{#1}%
+  \ifx\tempa\tempb
+  \typeout{Burmeister format detected}%
+  \else
+    \cxt@input@error{No Burmeister format detected}{The \string\cxtinput macro can input Burmeister .cxt files only.}%
+  \fi
+  \def\cxt@input@newline{%
+    \cxt@input@getline{\cxt@input@match@mptyline\cxt@input@readobjcount}%
+  }%
+}
+%    \end{macrocode}
+%
+% Check for an empty line and continue with command \#2 afterwards
+%
+%    \begin{macrocode}
+\def\cxt@input@match@mptyline#1#2{%
+  \edef\tempa{#2}%
+  \ifx\tempa\@empty
+ \else
+    \cxt@input@error{Error in Burmeister format.}{At the current position an empty line is expected.}%
+  \fi
+  \def\cxt@input@newline{%
+    \cxt@input@getline{#1}%
+  }%
+}
+%    \end{macrocode}
+%
+% Read number of objects from the file
+%
+%    \begin{macrocode}
+\def\cxt@input@readobjcount#1{%
+ \cxt@input@obj=#1\relax
+ \def\cxt@input@newline{%
+   \cxt@input@getline\cxt@input@readattrcount%
+ }%
+}
+%    \end{macrocode}
+%
+% Read number of attributes
+%
+%    \begin{macrocode}
+\def\cxt@input@readattrcount#1{%
+  \def\cxt@input@newline{%
+    \cxt@input@getline{\cxt@input@match@mptyline\cxt@input@readobjects}%
+  }%
+  \cxt@input@attr=#1\relax
+}
+%    \end{macrocode}
+%
+% initializes the reading of the object names
+%
+%    \begin{macrocode}
+\def\cxt@input@readobjects{%
+  \ifnum\cxt@input@obj>0\relax
+    \def\cxt@input@newline{%
+      \cxt@input@getline\cxt@input@readobjname
+   }%
+   \@tempcnta=1\relax
+   \let\tempa\cxt@input@readobjname%
+ \else
+    \let\tempa\cxt@input@readattributes%
+  \fi
+ \tempa
+}
+%    \end{macrocode}
+%
+% Read the object names
+%
+%    \begin{macrocode}
+\def\cxt@input@readobjname#1{%
+   \expandafter\def\csname cxt@input@objname@\the\@tempcnta\endcsname{#1}%
+   \ifnum\@tempcnta < \cxt@input@obj
+    \advance\@tempcnta by 1\relax
+ \else
+    \def\cxt@input@newline{%
+      \cxt@input@getline\cxt@input@readattributes%
+    }%
+  \fi
+}
+%    \end{macrocode}
+%
+% Initialize reading of attibute names
+%
+%    \begin{macrocode}
+\def\cxt@input@readattributes{%
+  \ifnum\cxt@input@attr>0\relax
+    \def\cxt@input@newline{%
+      \cxt@input@getline\cxt@input@readattrname
+    }%
+    \@tempcnta=1\relax
+    \def\tempa{\cxt@input@readattrname}%
+  \else
+    \def\tempa{\cxt@input@readcontext}%
+  \fi
+  \tempa
+}
+%    \end{macrocode}
+% Read the attribute names and store |\atr| macros for each attribute
+%    \begin{macrocode}
+\def\cxt@input@readattrname#1{%
+  \cxt@input@appendtotok{#1}\atr%
+  \ifnum\@tempcnta < \cxt@input@attr
+    \advance\@tempcnta by 1\relax
+  \else
+    \def\cxt@input@newline{%
+      \cxt@input@getline\cxt@input@readcontext
+    }%
+  \fi
+}
+%    \end{macrocode}
+%
+% initalize reading of the cross table
+%
+%    \begin{macrocode}
+\def\cxt@input@readcontext{%
+  \ifnum\cxt@input@obj>0\relax
+    \def\cxt@input@newline{%
+      \cxt@input@getline
+      \cxt@input@readcontextline
+    }%
+    \@tempcnta=1\relax
+    \def\tempa{\cxt@input@readcontextline}%
+  \else
+    \def\tempa{}%
+  \fi
+  \tempa
+}
+%    \end{macrocode}
+%
+% Read cross table and store |\obj| macros for each object
+%
+%    \begin{macrocode}
+\def\cxt@input@readcontextline#1{%
+  \expandafter\expandafter\expandafter\cxt@input@appendtotok
+  \expandafter\expandafter\expandafter{%
+    \csname cxt@input@objname@\the\@tempcnta\endcsname}%
+  {\obj{#1}}%
+  \ifnum\@tempcnta < \cxt@input@obj
+    \advance\@tempcnta by 1\relax
+  \else
+    \let\cxt@input@newline\relax
+    \let\cxt@input@endoffile\relax
+  \fi
+}
+%    \end{macrocode}
+%
+% add some stuff to the token register
+% needed to have some tool, which can be used with |\expandierter|
+%
+%    \begin{macrocode}
+\def\cxt@input@appendtotok#1#2{%
+  \expandafter\cxt@input@contextlines\expandafter{%
+    \the\cxt@input@contextlines
+    #2{#1}%
+  }%
+}
+
+\def\cxt@input@error#1#2{%
+  \PackageError{cxtinput}{At line \the\cxt@input@line : #1}{#2}%
+  \def\cxt@input@newline{}%
+}%
+%    \end{macrocode}
+%
+% Some end of file mark
+%
+%    \begin{macrocode}
+\def\cxt@input@endoffile{%
+  \cxt@input@error{unexpected end of file}{The context file is somehow
+    inconsistent.\MessageBreak The last lines of it seem to be lost.}%
+}
+%    \end{macrocode}
+%
+% macro for usage with |\ifx|
+%
+%    \begin{macrocode}
+\def\cxt@input@@endoffile{\cxt@input@endoffile}
+%    \end{macrocode}
+%
+% swich catcode of newline to runtime mode
+%
+%    \begin{macrocode}
+\begingroup%
+\catcode`\^^M\active%
+%    \end{macrocode}
+%
+% Define a macro to save the catcode.
+% Define a macro to set the catcode.
+%
+%    \begin{macrocode}
+\gdef\cxt@input@make@nl@active{%
+  \catcode`\^^M\active%
+% \let\cxt@input@oldcr^^M%
+% \def^^M{\cxt@input@newline}%
+}%
+
+\gdef\cxt@input@save@nl@active{%
+  \chardef\cxt@input@catcode@nl=\catcode`\^^M%
+% \let\cxt@input@oldcr^^M%
+% \def^^M{\cxt@input@newline}%
+}%
+%    \end{macrocode}
+%
+% Define a macro to set the catcode.
+%
+%    \begin{macrocode}
+\gdef\cxt@input@restore@nl{%
+  \catcode`\^^M\cxt@input@catcode@nl\relax%
+% \let\cxt@input@oldcr^^M%
+% \def^^M{\cxt@input@newline}%
+}%
+
+\cxt@input@make@nl@active%
+%    \end{macrocode}
+%
+% reads a line from the context file.
+%
+%    \begin{macrocode}
+\long\gdef\cxt@input@getline #1#2^^M{%
+  \advance\cxt@input@line by 1\relax%
+  \def\tempa{#2}%
+  \ifx\tempa\cxt@input@@endoffile%
+    \tempa%
+  \fi%
+  #1{#2}%
+  \cxt@input@newline%
+}%
+%    \end{macrocode}
+%
+% read the inputfile and use its content as argument for
+% |\cxt@input@head|
+%
+%    \begin{macrocode}
+\gdef\cxt@input@input#1{%
+  \expandafter\cxt@input@head\@@input #1 %
+  \cxt@input@endoffile%
+}
+%    \end{macrocode}
+%
+% restore newline catcode
+%
+%    \begin{macrocode}
+\endgroup%
+%    \end{macrocode}
+% \iffalse
+%    \begin{macrocode}
+%</cxtinput.sty>
+%    \end{macrocode}
+% \fi
+% \iffalse
+%    \begin{macrocode}
+%<*fca.sty>
+%    \end{macrocode}
+% \fi
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% \section{environment diagram for making
+%            diagrams of ordered sets and graphs}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% To obtain a diagram for the concept lattice of the formal
+% context above, try this:
+%
+% \begin{verbatim}
+% {\unitlength 1.2mm
+% \begin{diagram}{40}{55}
+%   \Node{1}{20}{10}
+%   \Node{2}{35}{20}
+%   \Node{3}{5}{30}
+%   \Node{4}{35}{40}
+%   \Node{5}{20}{50}
+%   \Edge{1}{2}
+%   \Edge{1}{3}
+%   \Edge{2}{4}
+%   \Edge{3}{5}
+%   \Edge{4}{5}
+%   \leftAttbox{3}{2}{2}{1.}
+%   \rightAttbox{2}{2}{2}{disqualified}
+%   \rightAttbox{4}{2}{2}{2.}
+%   \leftObjbox{3}{2}{2}{Alonso}
+%   \rightObjbox{2}{2}{2}{Montoya}
+%   \rightObjbox{4}{2}{2}{Schumacher}
+% \end{diagram}}
+% \end{verbatim}
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% The syntax of the commands is                                               %
+%                                                                             %
+% \begin{verbatim}
+% \begin{diagram}{width}{height}                                              %
+%                                                                             %
+%   \Node{number}{xcoordinate}{ycoordinate} % (nodenumbers from 0 to 50)      %
+%                                                                             %
+%   \Edge{nodenumber1}{nodenumber2}                                           %
+%                                                                             %
+%   \leftAttbox{nodenumber}{xoffset}{yoffset}{text1 \\ text2 \\ ... }         %
+%                                                                             %
+%   similarly: \rightAttbox, \centerAttbox,                                   %
+%   \leftObjbox,  \centerObjbox,                                              %
+%   \rightObjbox.                                                             %
+%                                                                             %
+% \end{diagram}
+% \end{verbatim}
+%                                                                             %
+% The circle size can be changed with the |\CircleSize| command.                %
+% The value must be a positive integer, which will be mutiplied               %
+% by |\unitlength|. The default is                                              %
+%                                                                             %
+% |\CircleSize{4}|.                                                             %
+%                                                                             %
+% A helpful command when fine tuning a diagram is                             %
+%                                                                             %
+% \Numbers.                                                                   %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% You may wish to permanently adjust the following values to your             %
+% personal preferences. They can also be changed inside each diagram          %
+% environment using |\renewcommand|.                                            %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \begin{macrocode}
+\newcommand{\fca@Defaults}{% Do not change this line!  %
+  \newcommand{\ObjectLabelStyle}{\small\baselineskip6pt\rm}% %
+  \newcommand{\AttributeLabelStyle}{\small\baselineskip6pt\it}% %
+  \newcommand{\LabelBoxWidth}{40mm}}% %
+\newboolean{fca@dots}\setboolean{fca@dots}{true}% %
+\newcommand{\diagramXoffset}{0}% %
+\newcommand{\diagramYoffset}{0}% %
+\newcommand{\fca@edgethickness}{.8pt}% %
+\newcommand{\fca@nodethickness}{1pt}% %
+\newcommand{\fca@nodecolor}{white}% %
+
+%    \end{macrocode}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% Changing the default values                                                 %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \begin{macrocode}
+\newcommand{\NodeThickness}[1]{\def\fca@nodethickness{#1}}% %
+\newcommand{\EdgeThickness}[1]{\def\fca@edgethickness{#1}}% %
+\newcommand{\NodeColor}[1]{\def\fca@nodecolor{#1}}% %
+\newcommand{\Numbers}{\setboolean{fca@CircledNumbers}{true}% %
+  \addtocounter{fca@CircleDiameter}{2}}% %
+\newcommand{\CircleSize}[1]{\setcounter{fca@CircleDiameter}{#1}}%
+%    \end{macrocode}
+%%
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \begin{macrocode}
+\newcounter{fca@minNode}%
+\newcounter{fca@maxNode}%
+\newcounter{fca@runNode}%
+\newboolean{fca@CircledNumbers}%
+\newcounter{fca@CircleDiameter}%
+\newcounter{fca@AuxCounter}%
+\newcounter{fca@BuxCounter}%
+\def\fca@adjNode#1{%
+  \ifthenelse{#1<\value{fca@minNode}}{\setcounter{fca@minNode}{#1}}{}%
+  \ifthenelse{\value{fca@maxNode}<#1}{\setcounter{fca@maxNode}{#1}}{}}%
+\def\Node#1#2#3{\fca@adjNode{#1}\ifcase#1%
+  \def\fca@xaa{#2}\def\fca@yaa{#3}\or%
+  \def\fca@xab{#2}\def\fca@yab{#3}\or%
+  \def\fca@xac{#2}\def\fca@yac{#3}\or%
+  \def\fca@xad{#2}\def\fca@yad{#3}\or%
+  \def\fca@xae{#2}\def\fca@yae{#3}\or%
+  \def\fca@xaf{#2}\def\fca@yaf{#3}\or%
+  \def\fca@xag{#2}\def\fca@yag{#3}\or%
+  \def\fca@xah{#2}\def\fca@yah{#3}\or%
+  \def\fca@xai{#2}\def\fca@yai{#3}\or%
+  \def\fca@xaj{#2}\def\fca@yaj{#3}\or%
+  \def\fca@xak{#2}\def\fca@yak{#3}\or%
+  \def\fca@xal{#2}\def\fca@yal{#3}\or%
+  \def\fca@xam{#2}\def\fca@yam{#3}\or%
+  \def\fca@xan{#2}\def\fca@yan{#3}\or%
+  \def\fca@xao{#2}\def\fca@yao{#3}\or%
+  \def\fca@xap{#2}\def\fca@yap{#3}\or%
+  \def\fca@xaq{#2}\def\fca@yaq{#3}\or%
+  \def\fca@xar{#2}\def\fca@yar{#3}\or%
+  \def\fca@xas{#2}\def\fca@yas{#3}\or%
+  \def\fca@xat{#2}\def\fca@yat{#3}\or%
+  \def\fca@xau{#2}\def\fca@yau{#3}\or%
+  \def\fca@xav{#2}\def\fca@yav{#3}\or%
+  \def\fca@xaw{#2}\def\fca@yaw{#3}\or%
+  \def\fca@xax{#2}\def\fca@yax{#3}\or%
+  \def\fca@xay{#2}\def\fca@yay{#3}\or%
+  \def\fca@xaz{#2}\def\fca@yaz{#3}\or%
+  \def\fca@xba{#2}\def\fca@yba{#3}\or%
+  \def\fca@xbb{#2}\def\fca@ybb{#3}\or%
+  \def\fca@xbc{#2}\def\fca@ybc{#3}\or%
+  \def\fca@xbd{#2}\def\fca@ybd{#3}\or%
+  \def\fca@xbe{#2}\def\fca@ybe{#3}\or%
+  \def\fca@xbf{#2}\def\fca@ybf{#3}\or%
+  \def\fca@xbg{#2}\def\fca@ybg{#3}\or%
+  \def\fca@xbh{#2}\def\fca@ybh{#3}\or%
+  \def\fca@xbi{#2}\def\fca@ybi{#3}\or%
+  \def\fca@xbj{#2}\def\fca@ybj{#3}\or%
+  \def\fca@xbk{#2}\def\fca@ybk{#3}\or%
+  \def\fca@xbl{#2}\def\fca@ybl{#3}\or%
+  \def\fca@xbm{#2}\def\fca@ybm{#3}\or%
+  \def\fca@xbn{#2}\def\fca@ybn{#3}\or%
+  \def\fca@xbo{#2}\def\fca@ybo{#3}\or%
+  \def\fca@xbp{#2}\def\fca@ybp{#3}\or%
+  \def\fca@xbq{#2}\def\fca@ybq{#3}\or%
+  \def\fca@xbr{#2}\def\fca@ybr{#3}\or%
+  \def\fca@xbs{#2}\def\fca@ybs{#3}\or%
+  \def\fca@xbt{#2}\def\fca@ybt{#3}\or%
+  \def\fca@xbu{#2}\def\fca@ybu{#3}\or%
+  \def\fca@xbv{#2}\def\fca@ybv{#3}\or%
+  \def\fca@xbw{#2}\def\fca@ybw{#3}\or%
+  \def\fca@xbx{#2}\def\fca@ybx{#3}\or%
+  \def\fca@xby{#2}\def\fca@yby{#3}\or%
+  \def\fca@xbz{#2}\def\fca@ybz{#3}\fi}%
+\def\fca@getNode#1{%
+  \ifcase#1%
+  \def\fca@x{\fca@xaa}\or\def\fca@x{\fca@xab}\or\def\fca@x{\fca@xac}\or%
+  \def\fca@x{\fca@xad}\or\def\fca@x{\fca@xae}\or\def\fca@x{\fca@xaf}\or%
+  \def\fca@x{\fca@xag}\or\def\fca@x{\fca@xah}\or\def\fca@x{\fca@xai}\or%
+  \def\fca@x{\fca@xaj}\or\def\fca@x{\fca@xak}\or\def\fca@x{\fca@xal}\or%
+  \def\fca@x{\fca@xam}\or\def\fca@x{\fca@xan}\or\def\fca@x{\fca@xao}\or%
+  \def\fca@x{\fca@xap}\or\def\fca@x{\fca@xaq}\or\def\fca@x{\fca@xar}\or%
+  \def\fca@x{\fca@xas}\or\def\fca@x{\fca@xat}\or\def\fca@x{\fca@xau}\or%
+  \def\fca@x{\fca@xav}\or\def\fca@x{\fca@xaw}\or\def\fca@x{\fca@xax}\or%
+  \def\fca@x{\fca@xay}\or\def\fca@x{\fca@xaz}\or%
+  \def\fca@x{\fca@xba}\or\def\fca@x{\fca@xbb}\or\def\fca@x{\fca@xbc}\or%
+  \def\fca@x{\fca@xbd}\or\def\fca@x{\fca@xbe}\or\def\fca@x{\fca@xbf}\or%
+  \def\fca@x{\fca@xbg}\or\def\fca@x{\fca@xbh}\or\def\fca@x{\fca@xbi}\or%
+  \def\fca@x{\fca@xbj}\or\def\fca@x{\fca@xbk}\or\def\fca@x{\fca@xbl}\or%
+  \def\fca@x{\fca@xbm}\or\def\fca@x{\fca@xbn}\or\def\fca@x{\fca@xbo}\or%
+  \def\fca@x{\fca@xbp}\or\def\fca@x{\fca@xbq}\or\def\fca@x{\fca@xbr}\or%
+  \def\fca@x{\fca@xbs}\or\def\fca@x{\fca@xbt}\or\def\fca@x{\fca@xbu}\or%
+  \def\fca@x{\fca@xbv}\or\def\fca@x{\fca@xbw}\or\def\fca@x{\fca@xbx}\or%
+  \def\fca@x{\fca@xby}\or\def\fca@x{\fca@xbz}\fi%
+  \ifcase#1%
+  \def\fca@y{\fca@yaa}\or\def\fca@y{\fca@yab}\or\def\fca@y{\fca@yac}\or%
+  \def\fca@y{\fca@yad}\or\def\fca@y{\fca@yae}\or\def\fca@y{\fca@yaf}\or%
+  \def\fca@y{\fca@yag}\or\def\fca@y{\fca@yah}\or\def\fca@y{\fca@yai}\or%
+  \def\fca@y{\fca@yaj}\or\def\fca@y{\fca@yak}\or\def\fca@y{\fca@yal}\or%
+  \def\fca@y{\fca@yam}\or\def\fca@y{\fca@yan}\or\def\fca@y{\fca@yao}\or%
+  \def\fca@y{\fca@yap}\or\def\fca@y{\fca@yaq}\or\def\fca@y{\fca@yar}\or%
+  \def\fca@y{\fca@yas}\or\def\fca@y{\fca@yat}\or\def\fca@y{\fca@yau}\or%
+  \def\fca@y{\fca@yav}\or\def\fca@y{\fca@yaw}\or\def\fca@y{\fca@yax}\or%
+  \def\fca@y{\fca@yay}\or\def\fca@y{\fca@yaz}\or%
+  \def\fca@y{\fca@yba}\or\def\fca@y{\fca@ybb}\or\def\fca@y{\fca@ybc}\or%
+  \def\fca@y{\fca@ybd}\or\def\fca@y{\fca@ybe}\or\def\fca@y{\fca@ybf}\or%
+  \def\fca@y{\fca@ybg}\or\def\fca@y{\fca@ybh}\or\def\fca@y{\fca@ybi}\or%
+  \def\fca@y{\fca@ybj}\or\def\fca@y{\fca@ybk}\or\def\fca@y{\fca@ybl}\or%
+  \def\fca@y{\fca@ybm}\or\def\fca@y{\fca@ybn}\or\def\fca@y{\fca@ybo}\or%
+  \def\fca@y{\fca@ybp}\or\def\fca@y{\fca@ybq}\or\def\fca@y{\fca@ybr}\or%
+  \def\fca@y{\fca@ybs}\or\def\fca@y{\fca@ybt}\or\def\fca@y{\fca@ybu}\or%
+  \def\fca@y{\fca@ybv}\or\def\fca@y{\fca@ybw}\or\def\fca@y{\fca@ybx}\or%
+  \def\fca@y{\fca@yby}\or\def\fca@y{\fca@ybz}\fi}%
+\def\fca@getNodeb#1{\ifcase#1%
+  \def\fca@u{\fca@xaa}\or\def\fca@u{\fca@xab}\or\def\fca@u{\fca@xac}\or%
+  \def\fca@u{\fca@xad}\or\def\fca@u{\fca@xae}\or\def\fca@u{\fca@xaf}\or%
+  \def\fca@u{\fca@xag}\or\def\fca@u{\fca@xah}\or\def\fca@u{\fca@xai}\or%
+  \def\fca@u{\fca@xaj}\or\def\fca@u{\fca@xak}\or\def\fca@u{\fca@xal}\or%
+  \def\fca@u{\fca@xam}\or\def\fca@u{\fca@xan}\or\def\fca@u{\fca@xao}\or%
+  \def\fca@u{\fca@xap}\or\def\fca@u{\fca@xaq}\or\def\fca@u{\fca@xar}\or%
+  \def\fca@u{\fca@xas}\or\def\fca@u{\fca@xat}\or\def\fca@u{\fca@xau}\or%
+  \def\fca@u{\fca@xav}\or\def\fca@u{\fca@xaw}\or\def\fca@u{\fca@xax}\or%
+  \def\fca@u{\fca@xay}\or\def\fca@u{\fca@xaz}\or%
+  \def\fca@u{\fca@xba}\or\def\fca@u{\fca@xbb}\or\def\fca@u{\fca@xbc}\or%
+  \def\fca@u{\fca@xbd}\or\def\fca@u{\fca@xbe}\or\def\fca@u{\fca@xbf}\or%
+  \def\fca@u{\fca@xbg}\or\def\fca@u{\fca@xbh}\or\def\fca@u{\fca@xbi}\or%
+  \def\fca@u{\fca@xbj}\or\def\fca@u{\fca@xbk}\or\def\fca@u{\fca@xbl}\or%
+  \def\fca@u{\fca@xbm}\or\def\fca@u{\fca@xbn}\or\def\fca@u{\fca@xbo}\or%
+  \def\fca@u{\fca@xbp}\or\def\fca@u{\fca@xbq}\or\def\fca@u{\fca@xbr}\or%
+  \def\fca@u{\fca@xbs}\or\def\fca@u{\fca@xbt}\or\def\fca@u{\fca@xbu}\or%
+  \def\fca@u{\fca@xbv}\or\def\fca@u{\fca@xbw}\or\def\fca@u{\fca@xbx}\or%
+  \def\fca@u{\fca@xby}\or\def\fca@u{\fca@xbz}\fi%
+  \ifcase#1%
+  \def\fca@v{\fca@yaa}\or\def\fca@v{\fca@yab}\or\def\fca@v{\fca@yac}\or%
+  \def\fca@v{\fca@yad}\or\def\fca@v{\fca@yae}\or\def\fca@v{\fca@yaf}\or%
+  \def\fca@v{\fca@yag}\or\def\fca@v{\fca@yah}\or\def\fca@v{\fca@yai}\or%
+  \def\fca@v{\fca@yaj}\or\def\fca@v{\fca@yak}\or\def\fca@v{\fca@yal}\or%
+  \def\fca@v{\fca@yam}\or\def\fca@v{\fca@yan}\or\def\fca@v{\fca@yao}\or%
+  \def\fca@v{\fca@yap}\or\def\fca@v{\fca@yaq}\or\def\fca@v{\fca@yar}\or%
+  \def\fca@v{\fca@yas}\or\def\fca@v{\fca@yat}\or\def\fca@v{\fca@yau}\or%
+  \def\fca@v{\fca@yav}\or\def\fca@v{\fca@yaw}\or\def\fca@v{\fca@yax}\or%
+  \def\fca@v{\fca@yay}\or\def\fca@v{\fca@yaz}\or%
+  \def\fca@v{\fca@yba}\or\def\fca@v{\fca@ybb}\or\def\fca@v{\fca@ybc}\or%
+  \def\fca@v{\fca@ybd}\or\def\fca@v{\fca@ybe}\or\def\fca@v{\fca@ybf}\or%
+  \def\fca@v{\fca@ybg}\or\def\fca@v{\fca@ybh}\or\def\fca@v{\fca@ybi}\or%
+  \def\fca@v{\fca@ybj}\or\def\fca@v{\fca@ybk}\or\def\fca@v{\fca@ybl}\or%
+  \def\fca@v{\fca@ybm}\or\def\fca@v{\fca@ybn}\or\def\fca@v{\fca@ybo}\or%
+  \def\fca@v{\fca@ybp}\or\def\fca@v{\fca@ybq}\or\def\fca@v{\fca@ybr}\or%
+  \def\fca@v{\fca@ybs}\or\def\fca@v{\fca@ybt}\or\def\fca@v{\fca@ybu}\or%
+  \def\fca@v{\fca@ybv}\or\def\fca@v{\fca@ybw}\or\def\fca@v{\fca@ybx}\or%
+  \def\fca@v{\fca@yby}\or\def\fca@v{\fca@ybz}\fi}%
+% 
+\newcommand{\Edge}[2]{\fca@getNode{#1}\fca@getNodeb{#2}%
+  {\linethickness{\fca@edgethickness}%
+    \fcadrawline(\fca@x,\fca@y)(\fca@u,\fca@v)}}%
+% 
+\def\fca@changeaValue#1#2#3{\setcounter{fca@AuxCounter}{#1}%
+  \addtocounter{fca@AuxCounter}{#2}\def#3{\value{fca@AuxCounter}}}%
+\def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
+  \addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
+\newcommand{\NoDots}{\setboolean{fca@dots}{false}}
+% 
+\def\leftAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+    \begin{picture}(#2,#3)(#2,0)%
+      \put(0,#3){\makebox(0,0)[rb]{\begin{minipage}{\LabelBoxWidth}%
+            \raggedleft\AttributeLabelStyle#4\end{minipage}}}%
+      \fca@changebValue{#3}{-1}{\fca@u}%
+      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,\fca@u)(#2,0)}}{}%
+    \end{picture}}}%
+% 
+\def\centerAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+    \begin{picture}(#2,#3)(0,0)%
+      \put(#2,#3){\makebox(0,0)[cb]{\begin{minipage}{\LabelBoxWidth}%
+            \centering\AttributeLabelStyle#4\end{minipage}}}%
+      \fca@changeaValue{#2}{0}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
+      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(\fca@u,\fca@v)(0,0)}}{}%
+    \end{picture}}}%
+% 
+\def\rightAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+    \begin{picture}(#2,#3)(0,0)%
+      \put(#2,#3){\makebox(0,0)[lb]{\begin{minipage}{\LabelBoxWidth}%
+            \raggedright\AttributeLabelStyle#4\end{minipage}}}%
+      \fca@changeaValue{#2}{-1}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
+      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,0)(\fca@u,\fca@v)}}{}%
+    \end{picture}}}%
+% 
+\def\leftObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+    \begin{picture}(#2,#3)(#2,#3)%
+      \put(0,0){\makebox(0,0)[rt]{\begin{minipage}{\LabelBoxWidth}%
+            \raggedleft\ObjectLabelStyle#4\end{minipage}}}%
+      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,1)(#2,#3)}}{}%
+    \end{picture}}}%
+% 
+\def\centerObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+    \begin{picture}(#2,#3)(0,#3)%
+      \put(#2,0){\makebox(0,0)[ct]{\begin{minipage}{\LabelBoxWidth}%
+            \centering\ObjectLabelStyle#4\end{minipage}}}%
+      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(#2,1)}}{}%
+    \end{picture}}}%
+% 
+\def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+    \begin{picture}(#2,#3)(0,#3)%
+      \put(#2,0){\makebox(0,0)[lt]{\begin{minipage}{\LabelBoxWidth}%
+            \raggedright\ObjectLabelStyle#4\end{minipage}}}%
+      \fca@changeaValue{#2}{-1}{\fca@u}%
+      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(\fca@u,1)}}{}%
+    \end{picture}}}%
+% 
+\def\fca@ResetDefaults{\setcounter{fca@minNode}{60}%
+  \setcounter{fca@maxNode}{0}%
+  \setcounter{fca@CircleDiameter}{4}%
+  \setboolean{fca@CircledNumbers}{false}%
+  \fca@Defaults}%
+% 
+\def\ColorNode#1{{%
+    \linethickness{\fca@nodethickness}%
+    \color{#1}{\circle*{\value{fca@CircleDiameter}}}%
+    \color{black}{\circle{\value{fca@CircleDiameter}}}}}%
+% 
+\def\fca@circle{{%
+    \linethickness{\fca@nodethickness}%
+    \color{\fca@nodecolor}{\circle*{\value{fca@CircleDiameter}}}%
+    \color{black}{\circle{\value{fca@CircleDiameter}}}}}%
+% 
+\def\fca@DrawCircles{\setcounter{fca@runNode}{\value{fca@minNode}}%
+  \stepcounter{fca@maxNode}%
+  \whiledo{\value{fca@runNode}<\value{fca@maxNode}}%
+  {\fca@getNode{\value{fca@runNode}}%
+    \put(\fca@x,\fca@y){\fca@circle}%
+    \ifthenelse{\boolean{fca@CircledNumbers}}%
+    {\put(\fca@x,\fca@y){\makebox(0,0){\tiny\arabic{fca@runNode}}}}{}%
+    \stepcounter{fca@runNode}}}%
+% 
+\newenvironment{diagram}[2]%
+{\fca@ResetDefaults%
+  \noindent\begin{picture}(#1,#2)(\diagramXoffset,\diagramYoffset)}%
+  {\fca@DrawCircles\end{picture}}%
+%    \end{macrocode}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% End of diagram environment definition.                                      %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% Some simple macros for FCA texts.                                           %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    \begin{macrocode}
+\providecommand{\GMI}{(G,M,\relI)}
+\newcommand{\context}[1][K]{\ensuremath{\mathbb{#1}}}
+\providecommand{\'}{\ensuremath{\sp\prime}}% derivation operator
+\providecommand{\extent}[1]{\textrm{ext}(#1)}
+\providecommand{\intent}[1]{\textrm{int}(#1)}
+\providecommand{\extents}[1]{\textrm{Ext}(#1)}
+\providecommand{\intents}[1]{\textrm{Int}(#1)}
+\providecommand{\BV}{\underline{{\mathfrak B}}}
+\providecommand{\CL}{\BV}
+\providecommand{\BGMI}{{\mathfrak B} (G,M,\relI)}
+\providecommand{\CGMI}{\BGMI}
+\providecommand{\BVGMI}{\BV (G,M,\relI)}
+\providecommand{\CLGMI}{\BVGMI}
+\providecommand{\HNI}{(H,N,\relI \cap\; H{\times}N)}
+\providecommand{\relI}{\mathrel{I}}
+\providecommand{\notI}{\mathrel{\mbox{\rlap{\char'40}%
+      {\it I}\hspace*{-0.09em}\raisebox{.27ex}{\char'40}}}}%
+% 
+\providecommand{\bigtimes}{\mathop{%
+    \mathchoice{\raisebox{-2pt}{\huge$\times$}}{\mbox{\LARGE$\times$}}%
+    {\raisebox{0pt}{\Large$\times$}}{\times}}\displaylimits}%
+% 
+\providecommand{\Runterpfeil}{\mathrel{\swarrow}}
+\providecommand{\DownArrow}{\Runterpfeil}
+\providecommand{\Hochpfeil}{\mathrel{\nearrow}}
+\providecommand{\UpArrow}{\Hochpfeil}
+\providecommand{\IRunterpfeil}{\mathrel{\searrow}}
+\providecommand{\IDownArrow}{\IRunterpfeil}
+\providecommand{\IHochpfeil}{\mathrel{\nwarrow}}
+\providecommand{\IUpArrow}{\IHochpfeil}
+\providecommand{\Doppelpfeil}{\mathrel{\!\!\rlap{$\;\nearrow$}\swarrow}}
+\providecommand{\DoubleArrow}{\Doppelpfeil}
+% 
+\newcommand{\DDPfeil}{\mathrel{\mathchoice%
+    {\mbox{$\displaystyle\swarrow\hspace{-.7em}\swarrow$}}
+    {\mbox{$\textstyle\swarrow\hspace{-.7em}\swarrow$}}
+    {\mbox{$\scriptstyle\swarrow\hspace{-.5em}\swarrow$}}
+    {\mbox{$\scriptscriptstyle\swarrow\hspace{-.35em}\swarrow$}}}}
+% 
+\newcommand{\NDDPfeil}{\mathrel{\mathchoice%
+    {\mbox{$\displaystyle\swarrow\hspace{-.7em}\swarrow%
+        \hspace{-1.2em}\backslash\hspace{.4em}$}}
+    {\mbox{$\textstyle\swarrow\hspace{-.7em}\swarrow
+        \hspace{-1.1em}\backslash\hspace{.4em}$}}
+    {\mbox{$\scriptstyle\swarrow\hspace{-.5em}\swarrow
+        \hspace{-.6em}\backslash\hspace{.2em}$}}
+    {\mbox{$\scriptscriptstyle\swarrow\hspace{-.35em}\swarrow
+        \hspace{-.5em}\backslash\hspace{.1em}$}}}}
+% 
+\providecommand{\DPfeil}{\DDPfeil}
+\providecommand{\NDPfeil}{\NDDPfeil}
+\newcommand{\DDArrow}{\DDPfeil}
+\newcommand{\NDDArrow}{\NDDPfeil}
+\providecommand{\Semi}{\mathrel{\mbox{\tiny\rlap{\raisebox{2.0ex}%
+        {$\bigtriangledown$}}\raisebox{-0.0ex}{$\bigtriangleup$}}}}
+\def\ovee{\mbox{\small$\mathrel{\hspace{.35em}\raisebox{-1pt}%
+      {$\smash{\vee}$}\hspace*{-.835em}\bigcirc\hspace{.2em}}$}}
+\def\owedge{\mbox{\small$\mathrel{\hspace{.35em}\smash{\wedge}%
+      \hspace*{-.835em}\bigcirc\hspace{.2em}}$}}
+% 
+\providecommand{\ptimes}[1]{\mathrel{\stackrel{#1}{\times}}}
+% 
+\providecommand{\FCA}{Formal Concept Analysis\xspace}
+\providecommand{\FBA}{Formale Begriffsanalyse\xspace}
+\providecommand{\FnBA}{Formalen Begriffsanalyse\xspace}
+%    \end{macrocode}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                                             %
+% End of fca.sty style file definitions                                       %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \iffalse
+%    \begin{macrocode}
+%</fca.sty>
+%    \end{macrocode}
+% \fi
+% \iffalse
+%    \begin{macrocode}
+%<*formula1.cxt>
+%    \end{macrocode}
+% \fi
+%    \begin{verbatim}
+B
+
+3
+3
+
+Hamilton
+Alonso
+Massa
+1.
+2.
+disqualified
+X..
+.X.
+.XX
+%    \end{verbatim}
+% \iffalse
+%    \begin{macrocode}
+%</formula1.cxt>
+%    \end{macrocode}
+% \fi
+% \Finale

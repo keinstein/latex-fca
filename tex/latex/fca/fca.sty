@@ -1,55 +1,68 @@
+%%
+%% This is file `fca.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% latex-fca.dtx  (with options: `fca.sty,package')
+%%  latex-fca.dtx
+%%  Copyright ℂ 2022 Ernst-Schröder-Zentrum
+%%                   für Begriffliche Wissensverarbeitung
+%%  Authors: Bernhard Ganter
+%%           Tobias Schlemmer
+%% 
+%%  This program is provided under the terms of the
+%%  LaTeX Project Public License distributed from CTAN
+%%  archives in directory macros/latex/base/lppl.txt.
+%% 
+%%  This work is "maintained" (as per LPPL maintenance status) by
+%%  Tobias Schlemmer <keinstein@users.sf.net>.
+%% 
+%%  This work consists of the files
+%%    latex-fca.dtx and
+%%    latex-fca.ins
+%% 
+%%  and the derived files
+%%    cxtinput.sty,
+%%    fca.sty,
+%%    formula1.cxt.
+%% 
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesPackage{fca}
+    [2022/02/26 v2.2
+Formal Concept Analysis macros]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% This is file `fca.sty' : LaTeX macros for Formal Concept Analysis           %
-%                                                                             %
-% Copyright  Bernhard Ganter   5/03                                           %
-% Version of                   10/07                                          %
-%                                                                             %
-% This program is provided under the terms of the                             %
-% LaTeX Project Public License distributed from CTAN                          %
-% archives in directory macros/latex/base/lppl.txt.                           %
-%                                                                             %
-% This package contains two environments, called cxt and diagram,             %
-% for typesetting formal contexts and order diagrams,                         %
-% and a few macros for frequently used symbols in FCA.                        %
-%                                                                             %
-% Short descriptions are given below. A recent version of this file           %
-% as well as a file named fcadoc.tex                                          %
-% should be available at http://tu-dresden.de/Members/bernhard.ganter         %
-%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-\NeedsTeXFormat{LaTeX2e}%                                                     %
-\ProvidesPackage{fca}[2006/09/01 v2.1 Formal Concept Analysis macros]%        %
 \RequirePackage{amssymb,epic,pict2e,graphics,color,ifthen,rotating,xspace,newdrawline}%%
-%                                                                             %
-%                                                                             %
-%                                                                             %
+\newcommand\fca@parseversion{}
+\def\fca@parseversion#1 #2 #3\fca@parseversion{%
+  \def\fcacurrentversiondate{#1}%
+  \def\fcacurrentversionversion{#2}%
+  \def\fcacurrentversiondescription{#3}%
+}
+\newcommand\fcaparseversion[1]{%
+  \edef\@tempa{\noexpand\fca@parseversion\csname ver@#1\endcsname{}
+    \noexpand\fca@parseversion}%
+  \@tempa
+}
+%%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% environment cxt for making small cross-tables for Formal Concept% Analysis  %
-%                                                                             %
-% The environment is useful for typesetting  cross-tables                     %
-% of small formal contexts ( max. 20 attributes ).                            %
-%                                                                             %
-% To typeset a formal context with attributes 1., 2., disqualified            %
-% and objects Alonso, Schumacher, Montoya, try                                %
-%                                                                             %
-% \begin{cxt}%                                                                %
-%   \cxtName{Formula 1}%                                                      %
-%   \att{1.}%                                                                 %
-%   \att{2.}%                                                                 %
-%   \atr{disqualified}%                                                       %
-%   \obj{x..}{Alonso}                                                         %
-%   \obj{.x.}{Schumacher}                                                     %
-%   \obj{.xx}{Montoya}                                                        %
-%   \freeobj{a&b&c}{multi-valued-object}                                      %
-% \end{cxt}                                                                   %
-%                                                                             %
-% Attribute definitions must precede object definitions !                     %
-%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
 \newcommand{\cxt@Kreuz}{$\times$}%
 \newcommand{\cxt@Punkt}{}%
 \newcommand{\cxtArrowStyle}{\footnotesize}
@@ -60,11 +73,9 @@
 \newboolean{@ttributes}%
 \newlength{\cxt@nameraise}%
 \newlength{\@ttnameheight}%
-%
 \newcommand{\adjcxt@name}{%
   \ifthenelse{\cxt@nameraise<\@ttnameheight}%
   {\setlength{\cxt@nameraise}{\@ttnameheight}}{}}%
-%
 \newcommand{\cxtAlignBottom}{\def\cxt@align{b}}
 \newcommand{\cxtName}[1]{%
   \def\cxtn@me{%
@@ -76,7 +87,6 @@
   }%
   \ignorespaces
 }%
-%
 
 \newcommand{\obj}[2]{%
   \ifthenelse{\boolean{@ttributes}}%
@@ -107,19 +117,26 @@
       \cxt@tabtop&#1}%
     \stepcounter{cxt@mAnz}%
   }{%
-    \PackageWarning{fca}{Attribute following object in cxt-environment%
+    \PackageWarning{fca}{Attribute following object in
+      cxt-environment%
       has been ignored}{}}%
   \ignorespaces
 }%
 \newcommand{\atr}[1]{\att{\rotatebox{90}{#1~~}}}%
-%
 \def\cxt@tabtop{}
 \def\cxt@tabdef{\expandafter\cxt@tabdef@\cxt@align}
 \def\cxt@tabdef@#1{%
   \tabcolsep0.5ex\relax%
   \begin{tabular}[#1]{|l||*{\value{cxt@mAnz}}{c|}}\hline%
+    }%
+    \newenvironment{cxt}[1][t]{%
+    \Reset@cxtDefaults
+    \def\cxt@align{#1}%
+    \ignorespaces
+    }{
+    \hline
+  \end{tabular}
 }%
-% 
 \def\cxt@stop{}%
 \def\cxt@aKreuz{\cxt@Kreuz}%
 \def\cxtphantom{\phantom{\cxt@Kreuz}}%
@@ -130,7 +147,6 @@
 \def\cxt@adown{\cxtrlap{\cxt@down}}%
 \def\cxt@aup{\cxtrlap{\cxt@up}}%
 \def\cxt@aboth{\cxtrlap{\cxt@both}}%
-%
 
 \def\cxt@M@kechar@newcommand{%
   \newcommand*%
@@ -187,7 +203,6 @@
 \def\cxt@Zeile#1{%
   \readcxt@zeile#1\cxt@stop
 }%
-% 
 \newcommand{\Reset@cxtDefaults}{%
   \setlength{\cxt@nameraise}{0pt}%
   \setlength{\@ttnameheight}{0pt}%
@@ -195,105 +210,33 @@
   \setboolean{@ttributes}{true}%
   \newcommand{\cxtn@me}{}%
 }%
-% 
-\newenvironment{cxt}[1][t]{%
-  \Reset@cxtDefaults
-  \def\cxt@align{#1}%
-  \ignorespaces}{\hline\end{tabular}}%
-%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% end of cxt environment definition                                           %
-%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% environment diagram for making diagrams of ordered sets and                 %
-% graphs                                                                      %
-%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% To obtain a diagram for the concept lattice of the formal                   %
-% context above, try this:                                                    %
-%                                                                             %
-% {\unitlength 1.2mm                                                          %
-% \begin{diagram}{40}{55}                                                     %
-%   \Node{1}{20}{10}                                                          %
-%   \Node{2}{35}{20}                                                          %
-%   \Node{3}{5}{30}                                                           %
-%   \Node{4}{35}{40}                                                          %
-%   \Node{5}{20}{50}                                                          %
-%   \Edge{1}{2}                                                               %
-%   \Edge{1}{3}                                                               %
-%   \Edge{2}{4}                                                               %
-%   \Edge{3}{5}                                                               %
-%   \Edge{4}{5}                                                               %
-%   \leftAttbox{3}{2}{2}{1.}                                                  %
-%   \rightAttbox{2}{2}{2}{disqualified}                                       %
-%   \rightAttbox{4}{2}{2}{2.}                                                 %
-%   \leftObjbox{3}{2}{2}{Alonso}                                              %
-%   \rightObjbox{2}{2}{2}{Montoya}                                            %
-%   \rightObjbox{4}{2}{2}{Schumacher}                                         %
-% \end{diagram}}                                                              %
-%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% The syntax of the commands is                                               %
-%                                                                             %
-% \begin{diagram}{width}{height}                                              %
-%                                                                             %
-%   \Node{number}{xcoordinate}{ycoordinate} % (nodenumbers from 0 to 50)      %
-%                                                                             %
-%   \Edge{nodenumber1}{nodenumber2}                                           %
-%                                                                             %
-%   \leftAttbox{nodenumber}{xoffset}{yoffset}{text1 \\ text2 \\ ... }         %
-%                                                                             %
-%   similarly: \rightAttbox, \centerAttbox,                                   %
-%   \leftObjbox,  \centerObjbox,                                              %
-%   \rightObjbox.                                                             %
-%                                                                             %
-% \end{diagram}                                                               %
-%                                                                             %
-% The circle size can be changed with the \CircleSize command.                %
-% The value must be a positive integer, which will be mutiplied               %
-% by \unitlength. The default is                                              %
-%                                                                             %
-% \CircleSize{4}.                                                             %
-%                                                                             %
-% A helpful command when fine tuning a diagram is                             %
-%                                                                             %
-% \Numbers.                                                                   %
-%                                                                             %
+\newcommand{\fca@Defaults}{% Do not change this line!  %
+  \newcommand{\ObjectLabelStyle}{\small\baselineskip6pt\rm}% %
+  \newcommand{\AttributeLabelStyle}{\small\baselineskip6pt\it}% %
+  \newcommand{\LabelBoxWidth}{40mm}}% %
+\newboolean{fca@dots}\setboolean{fca@dots}{true}% %
+\newcommand{\diagramXoffset}{0}% %
+\newcommand{\diagramYoffset}{0}% %
+\newcommand{\fca@edgethickness}{.8pt}% %
+\newcommand{\fca@nodethickness}{1pt}% %
+\newcommand{\fca@nodecolor}{white}% %
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% You may wish to permanently adjust the following values to your             %
-% personal preferences. They can also be changed inside each diagram          %
-% environment using \renewcommand.                                            %
-%                                                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\fca@Defaults}{%   Do not change this line!                       %
-  \newcommand{\ObjectLabelStyle}{\small\baselineskip6pt\rm}%                  %
-  \newcommand{\AttributeLabelStyle}{\small\baselineskip6pt\it}%               %
-  \newcommand{\LabelBoxWidth}{40mm}}%                                         %
-\newboolean{fca@dots}\setboolean{fca@dots}{true}%                             %
-\newcommand{\diagramXoffset}{0}%                                              %
-\newcommand{\diagramYoffset}{0}%                                              %
-\newcommand{\fca@edgethickness}{.8pt}%                                        %
-\newcommand{\fca@nodethickness}{1pt}%                                         %
-\newcommand{\fca@nodecolor}{white}%                                           %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% Changing the default values                                                 %
-%                                                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\NodeThickness}[1]{\def\fca@nodethickness{#1}}%                   %
-\newcommand{\EdgeThickness}[1]{\def\fca@edgethickness{#1}}%                   %
-\newcommand{\NodeColor}[1]{\def\fca@nodecolor{#1}}%                           %
-\newcommand{\Numbers}{\setboolean{fca@CircledNumbers}{true}%                  %
-  \addtocounter{fca@CircleDiameter}{2}}%                                      %
-\newcommand{\CircleSize}[1]{\setcounter{fca@CircleDiameter}{#1}}%             %
-%                                                                             %
+\newcommand{\NodeThickness}[1]{\def\fca@nodethickness{#1}}% %
+\newcommand{\EdgeThickness}[1]{\def\fca@edgethickness{#1}}% %
+\newcommand{\NodeColor}[1]{\def\fca@nodecolor{#1}}% %
+\newcommand{\Numbers}{\setboolean{fca@CircledNumbers}{true}% %
+  \addtocounter{fca@CircleDiameter}{2}}% %
+\newcommand{\CircleSize}[1]{\setcounter{fca@CircleDiameter}{#1}}%
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcounter{fca@minNode}%
 \newcounter{fca@maxNode}%
@@ -435,17 +378,14 @@
   \def\fca@v{\fca@ybs}\or\def\fca@v{\fca@ybt}\or\def\fca@v{\fca@ybu}\or%
   \def\fca@v{\fca@ybv}\or\def\fca@v{\fca@ybw}\or\def\fca@v{\fca@ybx}\or%
   \def\fca@v{\fca@yby}\or\def\fca@v{\fca@ybz}\fi}%
-%
 \newcommand{\Edge}[2]{\fca@getNode{#1}\fca@getNodeb{#2}%
   {\linethickness{\fca@edgethickness}%
     \fcadrawline(\fca@x,\fca@y)(\fca@u,\fca@v)}}%
-%
 \def\fca@changeaValue#1#2#3{\setcounter{fca@AuxCounter}{#1}%
   \addtocounter{fca@AuxCounter}{#2}\def#3{\value{fca@AuxCounter}}}%
 \def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
   \addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
 \newcommand{\NoDots}{\setboolean{fca@dots}{false}}
-%
 \def\leftAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(#2,0)%
       \put(0,#3){\makebox(0,0)[rb]{\begin{minipage}{\LabelBoxWidth}%
@@ -453,7 +393,6 @@
       \fca@changebValue{#3}{-1}{\fca@u}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,\fca@u)(#2,0)}}{}%
     \end{picture}}}%
-%
 \def\centerAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(0,0)%
       \put(#2,#3){\makebox(0,0)[cb]{\begin{minipage}{\LabelBoxWidth}%
@@ -461,7 +400,6 @@
       \fca@changeaValue{#2}{0}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(\fca@u,\fca@v)(0,0)}}{}%
     \end{picture}}}%
-%
 \def\rightAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(0,0)%
       \put(#2,#3){\makebox(0,0)[lb]{\begin{minipage}{\LabelBoxWidth}%
@@ -469,21 +407,18 @@
       \fca@changeaValue{#2}{-1}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,0)(\fca@u,\fca@v)}}{}%
     \end{picture}}}%
-%
 \def\leftObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(#2,#3)%
       \put(0,0){\makebox(0,0)[rt]{\begin{minipage}{\LabelBoxWidth}%
             \raggedleft\ObjectLabelStyle#4\end{minipage}}}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,1)(#2,#3)}}{}%
     \end{picture}}}%
-%
 \def\centerObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(0,#3)%
       \put(#2,0){\makebox(0,0)[ct]{\begin{minipage}{\LabelBoxWidth}%
             \centering\ObjectLabelStyle#4\end{minipage}}}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(#2,1)}}{}%
     \end{picture}}}%
-%
 \def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(0,#3)%
       \put(#2,0){\makebox(0,0)[lt]{\begin{minipage}{\LabelBoxWidth}%
@@ -491,23 +426,19 @@
       \fca@changeaValue{#2}{-1}{\fca@u}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(\fca@u,1)}}{}%
     \end{picture}}}%
-%
 \def\fca@ResetDefaults{\setcounter{fca@minNode}{60}%
   \setcounter{fca@maxNode}{0}%
   \setcounter{fca@CircleDiameter}{4}%
   \setboolean{fca@CircledNumbers}{false}%
   \fca@Defaults}%
-%
 \def\ColorNode#1{{%
     \linethickness{\fca@nodethickness}%
     \color{#1}{\circle*{\value{fca@CircleDiameter}}}%
     \color{black}{\circle{\value{fca@CircleDiameter}}}}}%
-%
 \def\fca@circle{{%
     \linethickness{\fca@nodethickness}%
     \color{\fca@nodecolor}{\circle*{\value{fca@CircleDiameter}}}%
     \color{black}{\circle{\value{fca@CircleDiameter}}}}}%
-%
 \def\fca@DrawCircles{\setcounter{fca@runNode}{\value{fca@minNode}}%
   \stepcounter{fca@maxNode}%
   \whiledo{\value{fca@runNode}<\value{fca@maxNode}}%
@@ -516,22 +447,13 @@
     \ifthenelse{\boolean{fca@CircledNumbers}}%
     {\put(\fca@x,\fca@y){\makebox(0,0){\tiny\arabic{fca@runNode}}}}{}%
     \stepcounter{fca@runNode}}}%
-%
 \newenvironment{diagram}[2]%
 {\fca@ResetDefaults%
   \noindent\begin{picture}(#1,#2)(\diagramXoffset,\diagramYoffset)}%
   {\fca@DrawCircles\end{picture}}%
-%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% End of diagram environment definition.                                      %
-%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% Some simple macros for FCA texts.                                           %
-%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
 \providecommand{\GMI}{(G,M,\relI)}
 \newcommand{\context}[1][K]{\ensuremath{\mathbb{#1}}}
 \providecommand{\'}{\ensuremath{\sp\prime}}% derivation operator
@@ -549,11 +471,9 @@
 \providecommand{\relI}{\mathrel{I}}
 \providecommand{\notI}{\mathrel{\mbox{\rlap{\char'40}%
       {\it I}\hspace*{-0.09em}\raisebox{.27ex}{\char'40}}}}%
-%
 \providecommand{\bigtimes}{\mathop{%
     \mathchoice{\raisebox{-2pt}{\huge$\times$}}{\mbox{\LARGE$\times$}}%
     {\raisebox{0pt}{\Large$\times$}}{\times}}\displaylimits}%
-%
 \providecommand{\Runterpfeil}{\mathrel{\swarrow}}
 \providecommand{\DownArrow}{\Runterpfeil}
 \providecommand{\Hochpfeil}{\mathrel{\nearrow}}
@@ -564,13 +484,11 @@
 \providecommand{\IUpArrow}{\IHochpfeil}
 \providecommand{\Doppelpfeil}{\mathrel{\!\!\rlap{$\;\nearrow$}\swarrow}}
 \providecommand{\DoubleArrow}{\Doppelpfeil}
-%
 \newcommand{\DDPfeil}{\mathrel{\mathchoice%
     {\mbox{$\displaystyle\swarrow\hspace{-.7em}\swarrow$}}
     {\mbox{$\textstyle\swarrow\hspace{-.7em}\swarrow$}}
     {\mbox{$\scriptstyle\swarrow\hspace{-.5em}\swarrow$}}
     {\mbox{$\scriptscriptstyle\swarrow\hspace{-.35em}\swarrow$}}}}
-%
 \newcommand{\NDDPfeil}{\mathrel{\mathchoice%
     {\mbox{$\displaystyle\swarrow\hspace{-.7em}\swarrow%
         \hspace{-1.2em}\backslash\hspace{.4em}$}}
@@ -580,7 +498,6 @@
         \hspace{-.6em}\backslash\hspace{.2em}$}}
     {\mbox{$\scriptscriptstyle\swarrow\hspace{-.35em}\swarrow
         \hspace{-.5em}\backslash\hspace{.1em}$}}}}
-%
 \providecommand{\DPfeil}{\DDPfeil}
 \providecommand{\NDPfeil}{\NDDPfeil}
 \newcommand{\DDArrow}{\DDPfeil}
@@ -591,15 +508,12 @@
       {$\smash{\vee}$}\hspace*{-.835em}\bigcirc\hspace{.2em}}$}}
 \def\owedge{\mbox{\small$\mathrel{\hspace{.35em}\smash{\wedge}%
       \hspace*{-.835em}\bigcirc\hspace{.2em}}$}}
-%
 \providecommand{\ptimes}[1]{\mathrel{\stackrel{#1}{\times}}}
-%
 \providecommand{\FCA}{Formal Concept Analysis\xspace}
 \providecommand{\FBA}{Formale Begriffsanalyse\xspace}
 \providecommand{\FnBA}{Formalen Begriffsanalyse\xspace}
-%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% End of fca.sty style file definitions                                       %
-%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\endinput
+%%
+%% End of file `fca.sty'.

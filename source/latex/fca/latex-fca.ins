@@ -1,0 +1,95 @@
+%%
+%% This is file `latex-fca.ins',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% latex-fca.dtx  (with options: `install')
+%%  latex-fca.dtx
+%%  Copyright ℂ 2022 Ernst-Schröder-Zentrum
+%%                   für Begriffliche Wissensverarbeitung
+%%  Authors: Bernhard Ganter
+%%           Tobias Schlemmer
+%% 
+%%  This program is provided under the terms of the
+%%  LaTeX Project Public License distributed from CTAN
+%%  archives in directory macros/latex/base/lppl.txt.
+%% 
+%%  This work is "maintained" (as per LPPL maintenance status) by
+%%  Tobias Schlemmer <keinstein@users.sf.net>.
+%% 
+%%  This work consists of the files
+%%    latex-fca.dtx and
+%%    latex-fca.ins
+%% 
+%%  and the derived files
+%%    cxtinput.sty,
+%%    fca.sty,
+%%    formula1.cxt.
+%% 
+\input docstrip
+
+\iftrue
+
+ This program is provided under the terms of the                             %
+ LaTeX Project Public License distributed from CTAN                          %
+ archives in directory macros/latex/base/lppl.txt.                           %
+ \else
+
+This work may be distributed and/or modified under the
+conditions of the LaTeX Project Public License (LPPL), either
+version 1.3c of this license or (at your option) any later
+version.  The latest version of this license is in the file:
+
+http://www.latex-project.org/lppl.txt
+
+\fi
+
+\preamble
+ latex-fca.dtx
+ Copyright ℂ 2022 Ernst-Schröder-Zentrum
+                  für Begriffliche Wissensverarbeitung
+ Authors: Bernhard Ganter
+          Tobias Schlemmer
+
+ This program is provided under the terms of the
+ LaTeX Project Public License distributed from CTAN
+ archives in directory macros/latex/base/lppl.txt.
+
+ This work is "maintained" (as per LPPL maintenance status) by
+ Tobias Schlemmer <keinstein@users.sf.net>.
+
+ This work consists of the files
+   latex-fca.dtx and
+   latex-fca.ins
+
+ and the derived files
+   cxtinput.sty,
+   fca.sty,
+   formula1.cxt.
+
+\endpreamble
+
+\askforoverwritefalse
+
+\usedir{tex/latex/fca}
+\generate{%
+        \file{cxtinput.sty}{%
+                \usepreamble\defaultpreamble
+                \usepostamble\defaultpostamble
+                \from{latex-fca.dtx}{cxtinput.sty,package}}
+        \file{fca.sty}{%
+                \usepreamble\defaultpreamble
+                \usepostamble\defaultpostamble
+                \from{latex-fca.dtx}{fca.sty,package}}
+            }
+\usedir{doc/latex/fca}
+\generate{%
+  \file{formula1.cxt}{
+    \nopreamble\nopostamble
+    \from{latex-fca.dtx}{formula1.cxt}}
+}
+\endbatchfile
+\endinput
+%%
+%% End of file `latex-fca.ins'.

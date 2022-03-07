@@ -156,10 +156,9 @@ Formal Concept Analysis macros]
 %</fca.sty|driver>
 %<cxtinput.sty> Reading formal contexts is Burmeister format]
 %<*driver>
-%</driver>
-%<*driver>
 % Hack around the convention to use the vertical bar for macro names.
 % This clashes with the tabular environment.
+\NeedsTeXFormat{LaTeX2e}[2020/08/21]
 \edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|}%
 \documentclass{ltxdoc}
 \def\catcodebarltxdoc{\noexpand\catcode`|=\active}%

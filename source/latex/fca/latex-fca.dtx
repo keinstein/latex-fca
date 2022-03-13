@@ -1453,74 +1453,64 @@ Formal Concept Analysis macros]
   \endgroup }%
 %    \end{macrocode}
 % \end{environment}
-\def\cxt@stop{}%
-\def\cxt@aKreuz{\cxt@Kreuz}%
-\def\cxtphantom{\phantom{\cxt@Kreuz}}%
+%    \begin{macrocode}
+\def\fca@cxt@stop{}%
+%    \end{macrocode}
+%    \begin{macrocode}
+\def\fca@cxt@aKreuz{\fca@cxt@Kreuz}%
+%    \end{macrocode}
+%    \begin{macrocode}
+\def\cxtphantom{\phantom{\fca@cxt@Kreuz}}%
+%    \end{macrocode}
+%    \begin{macrocode}
 \def\cxtrlap#1{%
   \settowidth\@tempdima{\cxtphantom}%
   \hbox to \@tempdima{\hss #1\hss}%
-}%
-\def\cxt@adown{\cxtrlap{\cxt@down}}%
-\def\cxt@aup{\cxtrlap{\cxt@up}}%
-\def\cxt@aboth{\cxtrlap{\cxt@both}}%
-% 
-
-\def\cxt@M@kechar@newcommand{%
+}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\def\fca@cxt@adown{\cxtrlap{\fca@cxt@down}}%
+\def\fca@cxt@aup{\cxtrlap{\fca@cxt@up}}%
+\def\fca@cxt@aboth{\cxtrlap{\fca@cxt@both}}%
+%    \end{macrocode}
+%    \begin{macrocode}
+\def\fca@cxt@M@kechar@newcommand{%
   \newcommand*%
-}
-\def\cxt@Makechar@newcommand#1{%
-  \expandafter
-  \cxt@M@kechar@newcommand
-  \csname cxt@char@\string#1 \endcsname
-}
-\def\cxtM@keChar#1[#2][#3]#4{%
-  \cxt@Makechar@newcommand{#1}[{#2}][{#3}]{#4\readcxt@zeile}%
-}
-\def\cxtMakeCh@r#1[#2]#3{%
-  \cxt@Makechar@newcommand{#1}[{#2}]{#3\readcxt@zeile}%
-}
-\def\cxtMakeChar@@#1[#2]{%
+} \def\fca@cxt@Makechar@newcommand#1{%
+  \expandafter \fca@cxt@M@kechar@newcommand \csname cxt@char@\string#1
+  \endcsname } \def\cxtM@keChar#1[#2][#3]#4{%
+  \fca@cxt@Makechar@newcommand{#1}[{#2}][{#3}]{#4\readcxt@zeile}%
+} \def\cxtMakeCh@r#1[#2]#3{%
+  \fca@cxt@Makechar@newcommand{#1}[{#2}]{#3\readcxt@zeile}%
+} \def\cxtMakeChar@@#1[#2]{%
   \@ifnextchar[{\cxtM@keChar{#1}[{#2}]}{\cxtMakeCh@r{#1}[{#2}]}%
-}
-\def\cxtMakeChar@#1#2{%
-  \cxt@Makechar@newcommand{#1}{#2\readcxt@zeile}%
-}
-\def\cxtMakeChar#1{%
+} \def\cxtMakeChar@#1#2{%
+  \fca@cxt@Makechar@newcommand{#1}{#2\readcxt@zeile}%
+} \def\cxtMakeChar#1{%
   \@ifnextchar[{\cxtMakeChar@@{#1}}{\cxtMakeChar@{#1}}%
 }
-\cxtMakeChar .{\cxtphantom}
-\cxtMakeChar x{\cxt@aKreuz}
-\cxtMakeChar X{\cxt@aKreuz}
-\cxtMakeChar b{\cxt@aboth}
-\cxtMakeChar u{\cxt@aup}
-\cxtMakeChar d{\cxt@adown}
-\@for \tmp:= 0,1,2,3,4,5,6,7,8,9\do{
-  \edef\@tmp{\noexpand\cxtMakeChar\tmp{%
-      \noexpand\cxtrlap\tmp}}%
-  \@tmp
-}
-
-\def\cxt@executechar#1{%
+%    \end{macrocode}
+%    \begin{macrocode}
+\def\fca@cxt@executechar#1{%
   &\@ifundefined{cxt@char@\string#1 }{%
-    \let\cxt@tmp=\cxt@aPunkt%
+    \let\fca@cxt@tmp=\fca@cxt@aPunkt%
   }{%
-    \expandafter\let\expandafter\cxt@tmp
-    \csname cxt@char@\string#1 \endcsname
-  }%
-  \cxt@tmp
-}
+    \expandafter\let\expandafter\fca@cxt@tmp \csname
+    cxt@char@\string#1 \endcsname }%
+  \fca@cxt@tmp }
+
+%    \end{macrocode}
+%    \begin{macrocode}
 \def\readcxt@zeile#1{%
-  \ifx#1\cxt@stop
-    \let\cxt@zeile@excecutechar\@gobble
-  \else
-    \let\cxt@zeile@excecutechar\cxt@executechar
-  \fi
-  \cxt@zeile@excecutechar{#1}%
+  \ifx#1\fca@cxt@stop \let\fca@cxt@zeile@excecutechar\@gobble \else
+  \let\fca@cxt@zeile@excecutechar\fca@cxt@executechar \fi
+  \fca@cxt@zeile@excecutechar{#1}%
 }%
-\def\cxt@Zeile#1{%
-  \readcxt@zeile#1\cxt@stop
-}%
-% 
+\def\fca@cxt@Zeile#1{%
+  \readcxt@zeile#1\fca@cxt@stop }%
+%    \end{macrocode}
+%    \begin{macrocode}
 \newcommand{\Reset@cxtDefaults}{%
   \setlength{\fca@cxt@nameraise}{0pt}%
   \setlength{\fca@cxt@ttnameheight}{0pt}%
@@ -1537,7 +1527,23 @@ Formal Concept Analysis macros]
   \def\fca@cxtn@me{}%
   \let\fca@cxt@tabdef\fca@cxt@tabdef@@
 }%
+%    \end{macrocode}
 % 
+%    \begin{macrocode}
+\cxtMakeChar .{\cxtphantom}
+\cxtMakeChar x{\fca@cxt@aKreuz}
+\cxtMakeChar X{\fca@cxt@aKreuz}
+\cxtMakeChar b{\fca@cxt@aboth}
+\cxtMakeChar u{\fca@cxt@aup}
+\cxtMakeChar d{\fca@cxt@adown} \@for
+\tmp:= 0,1,2,3,4,5,6,7,8,9\do{
+  \edef\@tmp{
+    \noexpand\cxtMakeChar\tmp{%
+      \noexpand\cxtrlap\tmp
+    }%
+  }%
+  \@tmp
+}
 %    \end{macrocode}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %

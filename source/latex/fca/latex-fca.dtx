@@ -1210,8 +1210,31 @@ Formal Concept Analysis macros]
 % \end{macro}
 % \end{macro}
 %
-\newcommand{\cxtName}[1]{%
-  \def\cxtn@me{%
+% \subsubsection{The main structure of a context}
+%
+% Typically a context is created in the following way:
+% \begin{enumerate}
+% \item The environment \env{cxt} is opened. This sets up the basic
+%   configuration. An empty name is constructed.
+% \item Attributes are added to the context. They are added as tokens
+%   to \cs{fca@cxt@tabtop}.
+% \item When the control arrives at the first call to \cs{obj}, the
+%   \env{tabular} environment is opened and \cs{att} and \cs{atr} are
+%   disabled.
+% \end{enumerate}
+%
+% \begin{macro}{\cxtName}
+% \begin{macro}{\fcaCxtName}
+%   Set the name of the current formal context. If used outside of a
+%   \env{cxt} environment it sets the name for all following contexts.
+%   Inside a \env{cxt} environment \cs{fcaCxtName} can be accessed
+%   also with the shorter name \cs{cxtName}.
+%   \changes{2.2}{2022/03/08}{rename \cs{cxtName} to \cs{fcaCxtName},
+%   \cs{cxtName} is still accessible inside the \env{cxt} environment,
+%   ignore spaces after the macro call}
+%    \begin{macrocode}
+\newcommand{\fcaCxtName}[1]{%
+  \def\fca@cxtn@me{%
     \multicolumn{1}{|c||}{%
       \settoheight{\fca@cxt@ttnameheight}{#1}%
       \addtolength{\fca@cxt@nameraise}{-1\fca@cxt@ttnameheight}%
@@ -1220,43 +1243,105 @@ Formal Concept Analysis macros]
   }%
   \ignorespaces
 }%
-% 
+\iffca@compat@macros
+  \newcommand{\cxtName}{\fcaCxtName}
+\fi
+%    \end{macrocode}
 
-\newcommand{\obj}[2]{%
-  \ifthenelse{\boolean{@ttributes}}%
-  {%
-    \setboolean{@ttributes}{false}%
-    \cxt@tabdef
-    \cxtn@me%&%
-    \cxt@tabtop\strut\\\hline\hline
-  }{}%
-  #2\strut\cxt@Zeile{#1}\\\hline
-}%
-
-\newcommand{\freeobj}[2]{%
-  \ifthenelse{\boolean{@ttributes}}%
-  {%
-    \setboolean{@ttributes}{false}%
-    \cxt@tabdef
-    \cxtn@me%&%
-    \cxt@tabtop\\\hline\hline
-  }{}%
-  #2&#1\\\hline
-}%
-
-\newcommand{\att}[1]{%
-  \ifthenelse{\boolean{@ttributes}}{%
+% \end{macro}
+% \end{macro}
+% \begin{macro}{\fca@cxt@att}\marg{name}
+% Implementation for \cs{att}. The corresponding alias is set up
+% during \cs{begin}\marg{\env{cxt}}.
+% \begin{macro}{\att}\marg{name}
+%
+% For each attribute the user must provide us a name either with
+% \cs{att} or with \cs{atr}. Both save the prvided name as heading.
+% For horizontally oriented attribute names (typically very short
+% ones) the user should use \cs{att}.
+%
+% \changes{2.2}{2022/03/08}{rename \cs{att} to \cs{fca@cxt@att} and
+% make it available as \cs{att} in the \env{cxt} environment, only.}
+%    \begin{macrocode}
+\newcommand{\fca@cxt@att}[1]{%
+  \ifthenelse{\boolean{fca@cxt@ttributes}}{%
     \settoheight{\fca@cxt@ttnameheight}{#1}\adjcxt@name%
-    \expandafter\def\expandafter\cxt@tabtop\expandafter{%
-      \cxt@tabtop&#1}%
+    \expandafter\def\expandafter\fca@cxt@tabtop\expandafter{%
+      \fca@cxt@tabtop&#1}%
     \stepcounter{fca@cxt@mAnz}%
   }{%
     \PackageWarning{fca}{Attribute following object in
       cxt-environment%
       has been ignored}{}}%
-  \ignorespaces
+  \ignorespaces }%
+%    \end{macrocode}
+
+% \end{macro}
+% \end{macro}
+% \begin{macro}{\fca@cxt@atr}\marg{name}
+% Implementation for \cs{atr}. The corresponding alias is set up
+% during \cs{begin}\marg{\env{cxt}}.
+% \begin{macro}{\atr}\marg{name}
+%   The macro \cs{atr} is available only in the \env{cxt} environment.
+%   it calls \cs{att} with its name rotated by 90 degrees, so that the
+%   name is typeset vertically.
+% \changes{2.2}{2022/03/08}{rename \cs{atr} to \cs{fca@cxt@atr} and
+% make it available as \cs{atr} in the \env{cxt} environment, only.}
+%    \begin{macrocode}
+\newcommand{\fca@cxt@atr}[1]{\att{\rotatebox{90}{#1~~}}}%
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\fca@cxt@obj}\marg{crosses}\marg{objectname}
+%   Implementation for \cs{obj}. The corresponding alias is set up
+%   during \cs{begin}\marg{\env{cxt}}.
+% \begin{macro}{\obj}\marg{crosses}\marg{objectname}
+%   This macro typesets an object line of a formal context inside the
+%   \env{cxt} environment. The second argument \marg{objectname} is
+%   the name of the objects. The first argument \marg{crosses} is a
+%   line of tokens. Each token represents the contents of one cell in
+%   the context table. Typically tokens contain spaces, arrows,
+%   crosses. But they can be defined to represent other material as
+%   well. Even multi character tokens are possible. However these are
+%   not documented.%
+%   \changes{2.2}{2022/03/08}{rename \cs{obj} to \cs{fca@cxt@obj} and
+%   make it available as \cs{obj} in the \env{cxt} environment,
+%   only.}%
+%   \changes{2.2}{2022/03/11}{avoid usage of \cs{setboolean} in
+%   \cs{fca@cxt@obj}}%
+%    \begin{macrocode}
+\newcommand{\fca@cxt@obj}[2]{%
+  \fca@cxt@tabdef
+  #2\strut
+  \fca@cxt@Zeile{#1}%
+  \\
 }%
-\newcommand{\atr}[1]{\att{\rotatebox{90}{#1~~}}}%
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\fca@cxt@freeobj}\marg{columns}\marg{name}
+%   Implementation for \cs{freeobj}. The corresponding alias is set up
+%   during \cs{begin}\marg{\env{cxt}}.
+% \begin{macro}{\freeobj}\marg{columns}\marg{name}
+%   This macro allows to typeset any material in the incidence area of the
+%   context. The second argument is typeset in the name column of the
+%   context, while the first one occures inside the incidence area of the
+%   context. The different fields in the first argument must be
+%   separated as usual by |&|.
+% \changes{2.2}{2022/03/08}{rename \cs{freeobj} to \cs{fca@cxt@freeobj} and
+% make it available as \cs{freeobj} in the \env{cxt} environment, only.}
+%
+%    \begin{macrocode}
+\newcommand{\fca@cxt@freeobj}[2]{%acrocod}
+  \fca@cxt@tabdef%
+  #2&#1\\\hline }%
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+%
 % 
 \def\cxt@tabtop{}
 \def\cxt@tabdef{\expandafter\cxt@tabdef@\cxt@align}

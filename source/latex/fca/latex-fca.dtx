@@ -401,7 +401,7 @@ Formal Concept Analysis macros]
 % \noindent\begin{minipage}{.45\textwidth}
 % \begin{verbatim}
 % \begin{cxt}%
-% \renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}
+% \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}
 % \cxtName{Formula 1}%
 % \att{1.}%
 % \att{2.}%
@@ -416,7 +416,7 @@ Formal Concept Analysis macros]
 % \begin{minipage}{.40\textwidth}
 % \strut\par\strut\par
 % \begin{cxt}%
-% \renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}
+% \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}
 % \cxtName{Formula 1}%
 % \att{1.}%
 % \att{2.}%
@@ -428,7 +428,7 @@ Formal Concept Analysis macros]
 % \end{minipage}
 % \bigbreak
 % 
-% The default for |\cxtArrowStyle| is |\footnotesize|. In the above
+% The default for |\fcaCxtArrowStyle| is |\footnotesize|. In the above
 % example we have changed it using |\renewcommand| in order to make the
 % arrows red. The default colour is black. 
 % 
@@ -443,7 +443,7 @@ Formal Concept Analysis macros]
 % \begin{cxt}%
 % \cxtMakeChar{v}{\cxtrlap{$\vee$}}%
 % \cxtMakeChar{\wedge}{\cxtrlap{$\wedge$}}%
-% \renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}%
+% \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}%
 % \cxtName{Formula 1}%
 % \att{1.}%
 % \att{2.}%
@@ -460,7 +460,7 @@ Formal Concept Analysis macros]
 % \begin{cxt}%
 % \cxtMakeChar{v}{\rlap{$\vee$}\phantom{$\times$}}%
 % \cxtMakeChar{\wedge}{\rlap{$\wedge$}\phantom{$\times$}}%
-% \renewcommand{\cxtArrowStyle}{\footnotesize\color{red}}%
+% \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}%
 % \cxtName{Formula 1}%
 % \att{1.}%
 % \att{2.}%
@@ -512,8 +512,7 @@ Formal Concept Analysis macros]
 % \end{minipage}
 % \bigbreak
 % 
-% 
-% 
+%
 % \section{Including Burmeister context files}
 % 
 % The package |cxtinput| allows to use context files in Burmeister
@@ -1094,45 +1093,46 @@ Formal Concept Analysis macros]
 \ProcessOptions\relax
 %    \end{macrocode}
 %
+% \subsection{Loading other packages}
 %    \begin{macrocode}
 \RequirePackage{amssymb,epic,pict2e,graphics,color,ifthen,rotating,xspace,newdrawline}%%
 %    \end{macrocode}
-%                                                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% environment cxt for making small cross-tables for Formal Concept% Analysis  %
-%                                                                             %
-% The environment is useful for typesetting  cross-tables                     %
-% of small formal contexts ( max. 20 attributes ).                            %
-%                                                                             %
-% To typeset a formal context with attributes 1., 2., disqualified            %
-% and objects Alonso, Schumacher, Montoya, try                                %
-%                                                                             %
-% \begin{verbatim}
-% \begin{cxt}%                                                                %
-%   \cxtName{Formula 1}%                                                      %
-%   \att{1.}%                                                                 %
-%   \att{2.}%                                                                 %
-%   \atr{disqualified}%                                                       %
-%   \obj{x..}{Alonso}                                                         %
-%   \obj{.x.}{Schumacher}                                                     %
-%   \obj{.xx}{Montoya}                                                        %
-%   \freeobj{a&b&c}{multi-valued-object}                                      %
-% \end{cxt}
-% \end{verbatim}
-%                                                                             %
-% Attribute definitions must precede object definitions !                     %
-%                                                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
+%
+% \subsection{The context environment \env{cxt}}
+% \subsubsection{Some configurations}
+%
+% \begin{macro}{\fca@cxt@Kreuz}
+% \begin{macro}{\fca@cxt@Punkt}
+% \begin{macro}{\fcaCxtArrowStyle}
+% \begin{macro}{\cxtArrowStyle}
+% \changes{2.2}{2022/03/8}{rename \cs{cxtArrowStyle} to \cs{fcaCxtArrowStyle}}
+% \begin{macro}{\fca@cxt@down}
+% \begin{macro}{\fca@cxt@up}
+% \begin{macro}{\fca@cxt@both}
+%   First we define some symbols that are used in formal contexts.
+%    \begin{macrocode}
+\newcommand{\fca@cxt@Kreuz}{$\times$}%
+\newcommand{\fca@cxt@Punkt}{}%
+\iffca@compat@macros
+  \newcommand{\cxtArrowStyle}{\footnotesize}
+  \def\fcaCxtArrowStyle{\cxtArrowStyle}
+\else
+  \newcommand{\fcaCxtArrowStyle}{\footnotesize}
+\fi
+\newcommand{\fca@cxt@down}{\fcaCxtArrowStyle$\Runterpfeil$}%
+\newcommand{\fca@cxt@up}{\fcaCxtArrowStyle$\Hochpfeil$}%
+\newcommand{\fca@cxt@both}{\fcaCxtArrowStyle$\Doppelpfeil$}%
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
 %    \begin{macrocode}
-\newcommand{\cxt@Kreuz}{$\times$}%
-\newcommand{\cxt@Punkt}{}%
-\newcommand{\cxtArrowStyle}{\footnotesize}
-\newcommand{\cxt@down}{\cxtArrowStyle$\Runterpfeil$}%
-\newcommand{\cxt@up}{\cxtArrowStyle$\Hochpfeil$}%
-\newcommand{\cxt@both}{\cxtArrowStyle$\Doppelpfeil$}%
 \newcounter{cxt@mAnz}%
 \newboolean{@ttributes}%
 \newlength{\cxt@nameraise}%

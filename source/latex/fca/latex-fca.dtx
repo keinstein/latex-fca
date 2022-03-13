@@ -304,99 +304,76 @@ Formal Concept Analysis macros]
 %
 % This option reverts the effect of |compat|.
 %
-% \section{Environment \texttt{cxt}}
-% \DescribeEnv{cxt}
-% What this (very simple) environment does can be guessed from an example:
-% The text on the left leads to the output on the right.\bigbreak
+% \section{Typesetting formal contexts}
+%
+%
+% Formal contexts can be typeset using the |cxt| environment. What
+% this (very simple) environment does can be guessed from an example.
+% \begin{dtxexample}{A formal context.}
+%   \begin{cxt}
+%     \cxtName{Formula 1}
+%   %
+%     \att{1.}
+%     \att{2.}
+%     \atr{disqualified}
+%   %
+%     \obj{x..}{Hamilton}
+%     \obj{.x.}{Alonso}
+%     \obj{.xx}{Massa}
+%   \end{cxt}
+% \end{dtxexample}
 % 
-% \noindent\begin{minipage}{.45\textwidth}
-% \begin{verbatim}
-% \begin{cxt}
-% \cxtName{Formula 1}
-% \att{1.}
-% \att{2.}
-% \atr{disqualified}
-% \obj{x..}{Hamilton}
-% \obj{.x.}{Alonso}
-% \obj{.xx}{Massa}
-% \end{cxt}
-% \end{verbatim}
-% \end{minipage}
-% \hfill
-% \begin{minipage}{.40\textwidth}
-% \begin{cxt}
-% \cxtName{Formula 1}
-% \att{1.}
-% \att{2.}
-% \atr{disqualified}
-% \obj{x..}{Hamilton}
-% \obj{.x.}{Alonso}
-% \obj{.xx}{Massa}
-% \end{cxt}
-% \end{minipage}
-% \bigbreak
-% 
-% \texttt{cxt} generates a tabular of the appropriate format. It takes
+% \DescribeEnv{cxt}\oarg{alignment}
+%
+% |cxt| generates a tabular of the appropriate format. It takes
 % an optional alignment parameter, that is passed to the tabular
 % environment (see there for further documentation). The tabular is
 % defined as soon as the first |\obj| command is given. Spaces in the 
 % preceding lines are not ignored in general. The standard macros have
 % been designed to ignore following spaces. But this cannot be extended
 % to other macros. Therefore, each line that contains individual
-% (non-cxt-code) should be ended with a \texttt{\%}\ .
+% (non-cxt-code) should be ended with a |%|\ .
 % 
 % A short demonstration of the alignment parameter:
-% \medbreak
 % 
-% \noindent\begin{minipage}{.45\textwidth}
-% \begin{verbatim}
-% \begin{cxt}[t]
-% \cxtName{Formula 1}
-% \att{1.}
-% \att{2.}
-% \atr{disqualified}
-% \obj{x..}{Hamilton}
-% \obj{.x.}{Alonso}
-% \obj{.xx}{Massa}
-% \end{cxt}
-% \end{verbatim}
-% \end{minipage}
-% \hfill
-% \begin{minipage}{.45\textwidth}
-% \begin{verbatim}
-% \begin{cxt}[b]
-% \cxtName{Formula 1}%
-% \att{1.}%
-% \att{2.}%
-% \atr{disqualified}%
-% \obj{x..}{Hamilton}
-% \obj{.x.}{Alonso}
-% \obj{.xx}{Massa}
-% \end{cxt}
-% \end{verbatim}
-% \end{minipage}
-% 
-% \noindent\hfill\begin{cxt}[t]
-% \cxtName{Formula 1}
-% \att{1.}
-% \att{2.}
-% \atr{disqualified}
-% \obj{x..}{Hamilton}
-% \obj{.x.}{Alonso}
-% \obj{.xx}{Massa}
-% \end{cxt}%
-% \begin{cxt}[b]
-% \cxtName{Formula 1}
-% \att{1.}
-% \att{2.}
-% \atr{disqualified}
-% \obj{x..}{Hamilton}
-% \obj{.x.}{Alonso}
-% \obj{.xx}{Massa}
-% \end{cxt}\hfill\strut
-% \bigbreak
-% 
-% The commands within a \texttt{cxt}--environment are
+% \begin{dtxexample}{Alignment parameter of the formal context}
+%   \makebox{%
+%   \begin{cxt}[t]
+%     \cxtName{Formula t}
+%     %
+%     \att{1.}
+%     \att{2.}
+%     \atr{disqualified}
+%     %
+%     \obj{x..}{Hamilton}
+%     \obj{.x.}{Alonso}
+%     \obj{.xx}{Massa}
+%   \end{cxt}%
+%   \begin{cxt}[c]
+%     \cxtName{Formula c}
+%     %
+%     \att{1.}
+%     \att{2.}
+%     \atr{disqualified}
+%     %
+%     \obj{x..}{Hamilton}
+%     \obj{.x.}{Alonso}
+%     \obj{.xx}{Massa}
+%   \end{cxt}%
+%   \begin{cxt}[b]
+%     \cxtName{Formula b}
+%     %
+%     \att{1.}
+%     \att{2.}
+%     \atr{disqualified}
+%     %
+%     \obj{x..}{Hamilton}
+%     \obj{.x.}{Alonso}
+%     \obj{.xx}{Massa}
+%   \end{cxt}
+%   }
+% \end{dtxexample}
+% The commands within a \env{cxt} environment are
 % 
 % \begin{description}
 % \item[]|\cxtName{}|\quad Define the text for the upper left cell of the

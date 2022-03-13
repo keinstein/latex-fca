@@ -205,8 +205,13 @@ Formal Concept Analysis macros]
 \makeatother
 
 % \selectlanguage{english}
+%
+\usepackage{iftex}
+\ifluatex
+\else
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\fi
 \usepackage[english]{babel}
 \usepackage{lmodern}
 \usepackage{xcolor}

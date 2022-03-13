@@ -1077,6 +1077,23 @@ Formal Concept Analysis macros]
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %
+%
+% \subsection{Package options for fca.sty}
+%
+%    \begin{macrocode}
+\newif\iffca@compat@macros
+\fca@compat@macrosfalse
+\DeclareOption{compat}{%
+  \fca@compat@macrostrue
+}
+\DeclareOption{nocompat}{%
+  \fca@compat@macrosfalse
+}
+%    \end{macrocode}
+%    \begin{macrocode}
+\ProcessOptions\relax
+%    \end{macrocode}
+%
 %    \begin{macrocode}
 \RequirePackage{amssymb,epic,pict2e,graphics,color,ifthen,rotating,xspace,newdrawline}%%
 %    \end{macrocode}

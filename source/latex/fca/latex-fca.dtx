@@ -187,7 +187,23 @@ Formal Concept Analysis macros]
 }
 \fi
 
+% We want to keep the version information of the whole package at one
+% and the same place in the file. So we extract the version
+% information from the version string.
 \makeatletter
+\newcommand\fca@parseversion{}
+\def\fca@parseversion#1 #2 #3\fca@parseversion{%
+  \def\fcacurrentversiondate{#1}%
+  \def\fcacurrentversionversion{#2}%
+  \def\fcacurrentversiondescription{#3}%
+}
+\newcommand\fcaparseversion[1]{%
+  \edef\@tempa{\noexpand\fca@parseversion\csname ver@#1\endcsname{} 
+    \noexpand\fca@parseversion}%
+  \@tempa
+}
+\makeatother
+
 % \selectlanguage{english}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -1047,22 +1063,6 @@ Formal Concept Analysis macros]
 %    \begin{macrocode}
 \RequirePackage{amssymb,epic,pict2e,graphics,color,ifthen,rotating,xspace,newdrawline}%%
 %    \end{macrocode}
-% \begin{macro}{fcaparseversiondate}
-%    \begin{macrocode}
-\newcommand\fca@parseversion{}
-\def\fca@parseversion#1 #2 #3\fca@parseversion{%
-  \def\fcacurrentversiondate{#1}%
-  \def\fcacurrentversionversion{#2}%
-  \def\fcacurrentversiondescription{#3}%
-}
-\newcommand\fcaparseversion[1]{%
-  \edef\@tempa{\noexpand\fca@parseversion\csname ver@#1\endcsname{} 
-    \noexpand\fca@parseversion}%
-  \@tempa
-}
-%    \end{macrocode}
-% \end{macro}
-%%                                                                             %
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %

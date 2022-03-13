@@ -268,7 +268,42 @@ Formal Concept Analysis macros]
 % 
 % 
 % \tableofcontents
+%
+% \section{Loading the package}
+%
+% The package |fca| is loaded by adding
+%
+% \begin{verbatim}
+% \usepackage{fca}
+% \end{verbatim}
+%
+% If you want to include context files in the Burmeister format,
+% you should also load the packages |cxtinput|:
 % 
+% \begin{verbatim}
+% \usepackage{fca}
+% \usepackage{cxtinput}
+% \end{verbatim}
+%
+% \subsection{Package options of fca.sty}
+%
+% Currently the package supports two options:
+%
+% \DescribeOption{compat}
+%
+% In order to reduce incompatibilities with other packages, 
+% since version 2.2 |fca.sty| nearly all macros of |fca.sty| and
+% |cxtinput.sty| belong to a so called namespace. That means most of
+% them start with the |\fca...|. Only in the environments |cxt| and
+% |diagram| this rule is relaxed.
+%
+% The option |compat| also defines the old names that have been used
+% before version 2.2.
+%
+% \DescribeOption{nocompat}
+%
+% This option reverts the effect of |compat|.
+%
 % \section{Environment \texttt{cxt}}
 % \DescribeEnv{cxt}
 % What this (very simple) environment does can be guessed from an example:

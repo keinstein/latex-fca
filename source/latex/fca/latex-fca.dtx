@@ -1170,6 +1170,46 @@ Formal Concept Analysis macros]
 %    \end{macrocode}
 %
 % \end{macro}
+%
+% \begin{macro}{\alignBottom}
+% \begin{macro}{\fcaCxtAlignBottom}
+%   Align the current context to the bottom. Inside the \env{cxt}
+%   environment the macro \cs{fcaCxtAlignBottom} is available in its
+%   short form \cs{alignBottom}.
+%
+%   \changes{2.2}{2022/03/08}{add \cs{cxtAlignBottom}}
+%    \begin{macrocode}
+\newcommand{\fcaCxtAlignBottom}{\def\fca@cxt@align{b}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\alignCenter}
+% \begin{macro}{\fcaCxtAlignCenter}
+%   Align the current context to the top. Inside the \env{cxt}
+%   environment the macro \cs{fcaCxtAlignCenter} is available in its
+%   short form \cs{alignCenter}.
+%
+%   \changes{2.2}{2022/03/08}{add \cs{cxtAlignCenter}}
+%    \begin{macrocode}
+\newcommand{\fcaCxtAlignCenter}{\def\fca@cxt@align{t}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \begin{macro}{\alignTop}
+% \begin{macro}{\fcaCxtAlignTop}
+%   Align the current context to the top. Inside the \env{cxt}
+%   environment the macro \cs{fcaCxtAlignTop} is available in its
+%   short form \cs{alignTop}.
+%
+%   \changes{2.2}{2022/03/08}{add \cs{cxtAlignTop}}
+%    \begin{macrocode}
+\newcommand{\fcaCxtAlignTop}{\def\fca@cxt@align{t}}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
 \newcommand{\cxtName}[1]{%
   \def\cxtn@me{%
     \multicolumn{1}{|c||}{%
@@ -1226,7 +1266,7 @@ Formal Concept Analysis macros]
     }%
     \newenvironment{cxt}[1][t]{%
     \Reset@cxtDefaults
-    \def\cxt@align{#1}%
+    \def\fca@cxt@align{#1}%
     \ignorespaces
     }{
     \hline
@@ -1307,6 +1347,9 @@ Formal Concept Analysis macros]
   \setcounter{fca@cxt@mAnz}{0}%
   \setboolean{fca@cxt@ttributes}{true}%
   \newcommand{\cxtn@me}{}%
+  \let\alignBottom\fcaCxtAlignBottom
+  \let\alignCenter\fcaCxtAlignCenter
+  \let\alignTop   \fcaCxtAlignTop
 }%
 % 
 %    \end{macrocode}

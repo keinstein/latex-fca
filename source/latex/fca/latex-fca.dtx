@@ -158,19 +158,35 @@ Formal Concept Analysis macros]
 %<*driver>
 % Hack around the convention to use the vertical bar for macro names.
 % This clashes with the tabular environment.
-\NeedsTeXFormat{LaTeX2e}[2020/08/21]
-\edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|}%
-\documentclass{ltxdoc}
-\def\catcodebarltxdoc{\noexpand\catcode`|=\active}%
-\usepackage{a4,color}
+\edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|\relax}%
+\documentclass[a4paper]{ltxdoc}
+\def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
+%\usepackage{a4}
+\usepackage{dtxdescribe}
 \usepackage{fca}
 \usepackage{cxtinput}
+
+% we hack the cxt environment so that it deactivates the vertical
+% bar. Otherwise it would break vertical column rules in context.
+% Since LaTeX2e from 2020-08-21 we can use hooks for that
+%
+%
+\iftrue
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\expandafter\def\expandafter\cxt
+\expandafter{\expandafter\catcodebarlatex\cxt}%
+\expandafter\def\expandafter\endcxt
+\expandafter{\endcxt\catcodebarltxdoc}%
+\else
+\NeedsTeXFormat{LaTeX2e}[2020/08/21]
 \AddToHook{env/cxt/before}{%
   \catcodebarlatex
 }
 \AddToHook{env/cxt/after}{%
   \catcodebarltxdoc
 }
+\fi
+
 \makeatletter
 % \selectlanguage{english}
 \usepackage[utf8]{inputenc}

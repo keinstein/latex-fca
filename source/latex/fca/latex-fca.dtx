@@ -1132,23 +1132,51 @@ Formal Concept Analysis macros]
 % \end{macro}
 % \end{macro}
 %
+% \DescribeCounter{fca@cxt@mAnz}%
+%   Count the number of attributes in the current context.
 %    \begin{macrocode}
-\newcounter{cxt@mAnz}%
-\newboolean{@ttributes}%
-\newlength{\cxt@nameraise}%
-\newlength{\@ttnameheight}%
+\newcounter{fca@cxt@mAnz}%
+%    \end{macrocode}
+%
+% \DescribeBoolean{fca@cxt@ttributes}
+% Record whether we ar still in
+% the attributes section or whether we have already started the object
+% section of a formal context.
+%
+% \changes{2.2}{2022/03/08}{Rename \bool{@ttributes} to \bool{fca@cxt@ttributes}}
+%    \begin{macrocode}
+\newboolean{fca@cxt@ttributes}%
+%    \end{macrocode}
+%
+% \DescribeLength{\fca@cxt@nameraise}
+% Helper length for vertical alignment of the context and attribute names.
+% \DescribeLength{\fca@cxt@ttnameheight}
+% Helper length for vertical alignment of the context and attribute names.
+%
+% \changes{2.2}{2022/03/08}{Rename \cs{@ttnameheight} to \cs{fca@cxt@ttnameheight}}
 % 
+%    \begin{macrocode}
+\newlength{\fca@cxt@nameraise}%
+\newlength{\fca@cxt@ttnameheight}%
+%    \end{macrocode}
+% 
+%
+% \begin{macro}{\adjcxt@name}
+% Adjusts the the vertical alignment of the attributes.
+%    \begin{macrocode}
 \newcommand{\adjcxt@name}{%
-  \ifthenelse{\cxt@nameraise<\@ttnameheight}%
-  {\setlength{\cxt@nameraise}{\@ttnameheight}}{}}%
-% 
+  \ifthenelse{\fca@cxt@nameraise<\fca@cxt@ttnameheight}%
+  {\setlength{\fca@cxt@nameraise}{\fca@cxt@ttnameheight}}{}}%
+%    \end{macrocode}
+%
+% \end{macro}
 \newcommand{\cxtAlignBottom}{\def\cxt@align{b}}
 \newcommand{\cxtName}[1]{%
   \def\cxtn@me{%
     \multicolumn{1}{|c||}{%
-      \settoheight{\@ttnameheight}{#1}%
-      \addtolength{\cxt@nameraise}{-1\@ttnameheight}%
-      \raisebox{.5\cxt@nameraise}{#1}%
+      \settoheight{\fca@cxt@ttnameheight}{#1}%
+      \addtolength{\fca@cxt@nameraise}{-1\fca@cxt@ttnameheight}%
+      \raisebox{.5\fca@cxt@nameraise}{#1}%
     }%
   }%
   \ignorespaces
@@ -1179,10 +1207,10 @@ Formal Concept Analysis macros]
 
 \newcommand{\att}[1]{%
   \ifthenelse{\boolean{@ttributes}}{%
-    \settoheight{\@ttnameheight}{#1}\adjcxt@name%
+    \settoheight{\fca@cxt@ttnameheight}{#1}\adjcxt@name%
     \expandafter\def\expandafter\cxt@tabtop\expandafter{%
       \cxt@tabtop&#1}%
-    \stepcounter{cxt@mAnz}%
+    \stepcounter{fca@cxt@mAnz}%
   }{%
     \PackageWarning{fca}{Attribute following object in
       cxt-environment%

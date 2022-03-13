@@ -1342,22 +1342,117 @@ Formal Concept Analysis macros]
 % \end{macro}
 %
 %
+%
+% \begin{macro}{\fca@cxt@tabtop}
+%   Material that is typeset above a context line.
+%
+%   At the beginning this macro contains the table header. Later it is
+%   used to typeset the lines between the objects.
+%
+%   The Table heading for the attributes will be filled by |\att| and
+%   |\atr| during the attribute section of the formal context. The
+%   first |\obj| will use it.
+%   \changes{2.2}{2022/03/11}{use \cs{fca@cxt@tabtop} also for storing
+%   the \cs{hline} between the objects.
+%    \begin{macrocode}
+\def\fca@cxt@tabtop{}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\fca@cxt@tabdef}
+% \begin{macro}{\fca@cxt@tabdef@@}
+%   Expand \cs{fca@cxt@align} as argument to \cs{fca@cxt@tabdef@}.
+%
+%   At the begin of a \env{cxt} environment \cs{fca@cxt@tabdef} set to
+%   be an alias of \cs{fca@cxt@tabdef@@}. As soon as
+%   \cs{fca@cxt@tabdef} is executed, this macro is set to \cs{relax}.
+%
+%   It is executed at the end of the cxt environment so that we can
+%   typeset contexts without any objects.
+%
+%   \changes{2.2}{2022/03/11}{move generation of 1st line into \cs{fca@cxt@tabdef@@}}
+%    \begin{macrocode}
+\def\fca@cxt@tabdef@@{%
+  \expandafter\fca@cxt@tabdef@\fca@cxt@align
+  \fca@cxtn@me%&%
+  \fca@cxt@tabtop\strut\\\hline\hline
+}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
 % 
-\def\cxt@tabtop{}
-\def\cxt@tabdef{\expandafter\cxt@tabdef@\cxt@align}
-\def\cxt@tabdef@#1{%
+% \begin{macro}{\fca@cxt@tabdef@}\marg{alignment}
+%   Do the work of \cs{fca@cxt@tabdef}: Open the tabular
+%   environment. The parameter \marg{alignment} will be used to set
+%   the vertiacal alignment of the context. See the documentation of
+%   the |tabular| environment for further documentation.
+%
+%   Note: We must do all definitions outside of the tabular
+%   environment.
+%    \begin{macrocode}
+\def\fca@cxt@tabdef@#1{%
+  \def\fca@cxt@tabdef{\hline}%
   \tabcolsep0.5ex\relax%
-  \begin{tabular}[#1]{|l||*{\value{cxt@mAnz}}{c|}}\hline%
+  \begin{tabular}[#1]{|l||*{\value{fca@cxt@mAnz}}{c|}}%
+    \hline%
     }%
+%    \end{macrocode}
+% \end{macro}
+% \begin{environment}{cxt}\oarg{alignment}
+%
+%   The \env{cxt} environment. During setup a set of macros are
+%   defined, and a new group is opened. The alignment argument is
+%   saved. During the the first call to \cs{obj} a tabular environment
+%   will be opened by calling \cs{fca@cxt@tabdef}.
+%    At the end of the environment the tabular environment
+%    is closed.
+%
+%   Here we test empty contexts. They should work, but don't need to
+%   be documented:
+% \begin{dtxexample}{A formal context without objects.}
+%   \begin{cxt}
+%     \cxtName{Formula 1}
+%   %
+%     \att{1.}
+%     \att{2.}
+%     \atr{disqualified}
+%   %
+%   \end{cxt}
+% \end{dtxexample}
+% \begin{dtxexample}{A formal context without attributes.}
+%   \begin{cxt}
+%     \cxtName{Formula 1}
+%   %
+%     \obj{}{Hamilton}
+%     \obj{}{Alonso}
+%     \obj{}{Massa}
+%   \end{cxt}
+% \end{dtxexample}
+%
+% \begin{dtxexample}{An empty named context.}
+%   \begin{cxt}
+%     \cxtName{Formula 0}
+%   \end{cxt}
+% \end{dtxexample}
+%
+% \begin{dtxexample}{An empty \env{cxt} environment.}
+%   \begin{cxt}
+%   \end{cxt}
+% \end{dtxexample}
+%
+%
+%    \begin{macrocode}
     \newenvironment{cxt}[1][t]{%
+    \begingroup
     \Reset@cxtDefaults
     \def\fca@cxt@align{#1}%
     \ignorespaces
-    }{
-    \hline
-  \end{tabular}
-}%
-% 
+    }{%
+    \fca@cxt@tabdef% open the tabular in case there are no objects
+  \end{tabular}%
+  \endgroup }%
+%    \end{macrocode}
+% \end{environment}
 \def\cxt@stop{}%
 \def\cxt@aKreuz{\cxt@Kreuz}%
 \def\cxtphantom{\phantom{\cxt@Kreuz}}%
@@ -1431,10 +1526,16 @@ Formal Concept Analysis macros]
   \setlength{\fca@cxt@ttnameheight}{0pt}%
   \setcounter{fca@cxt@mAnz}{0}%
   \setboolean{fca@cxt@ttributes}{true}%
-  \newcommand{\cxtn@me}{}%
+  \let\cxtName\fcaCxtName
   \let\alignBottom\fcaCxtAlignBottom
   \let\alignCenter\fcaCxtAlignCenter
   \let\alignTop   \fcaCxtAlignTop
+  \let\att\fca@cxt@att
+  \let\atr\fca@cxt@atr
+  \let\obj\fca@cxt@obj
+  \let\freeobj\fca@cxt@freeobj
+  \def\fca@cxtn@me{}%
+  \let\fca@cxt@tabdef\fca@cxt@tabdef@@
 }%
 % 
 %    \end{macrocode}

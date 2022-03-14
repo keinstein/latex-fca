@@ -1461,10 +1461,8 @@ Formal Concept Analysis macros]
 %    \end{macrocode}
 % \end{macro}
 %
-%    \begin{macrocode}
-\def\fca@cxt@aKreuz{\fca@cxt@Kreuz}%
-%    \end{macrocode}
-%    \begin{macrocode}
+%
+% \begin{macrocode}
 \def\cxtphantom{\phantom{\fca@cxt@Kreuz}}%
 %    \end{macrocode}
 %    \begin{macrocode}
@@ -1474,11 +1472,6 @@ Formal Concept Analysis macros]
 }
 %    \end{macrocode}
 %
-%    \begin{macrocode}
-\def\fca@cxt@adown{\cxtrlap{\fca@cxt@down}}%
-\def\fca@cxt@aup{\cxtrlap{\fca@cxt@up}}%
-\def\fca@cxt@aboth{\cxtrlap{\fca@cxt@both}}%
-%    \end{macrocode}
 %    \begin{macrocode}
 \def\fca@cxt@M@kechar@newcommand{%
   \newcommand*%
@@ -1533,15 +1526,18 @@ Formal Concept Analysis macros]
   \let\fca@cxt@tabdef\fca@cxt@tabdef@@
 }%
 %    \end{macrocode}
-% 
+%
+% \changes{2.2}{2022/03/14}{Remove \cs{cxt@aKreuz}, \cs{cxt@aup},
+% \cs{cxt@adown} and \cs{cxt@aboth}. These macros are replaced by
+% calls to \cs{cxtMakeChar}.}
 %    \begin{macrocode}
 \cxtMakeChar .{\cxtphantom}
-\cxtMakeChar x{\fca@cxt@aKreuz}
-\cxtMakeChar X{\fca@cxt@aKreuz}
-\cxtMakeChar b{\fca@cxt@aboth}
-\cxtMakeChar u{\fca@cxt@aup}
-\cxtMakeChar d{\fca@cxt@adown} \@for
-\tmp:= 0,1,2,3,4,5,6,7,8,9\do{
+\cxtMakeChar x{\fca@cxt@Kreuz}
+\cxtMakeChar X{\fca@cxt@Kreuz}
+\cxtMakeChar b{\cxtrlap{\fca@cxt@both}}
+\cxtMakeChar u{\cxtrlap{\fca@cxt@up}}
+\cxtMakeChar d{\cxtrlap{\fca@cxt@down}}
+\@for\tmp:= 0,1,2,3,4,5,6,7,8,9\do{
   \edef\@tmp{
     \noexpand\cxtMakeChar\tmp{%
       \noexpand\cxtrlap\tmp

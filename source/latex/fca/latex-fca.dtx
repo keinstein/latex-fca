@@ -517,36 +517,30 @@ Formal Concept Analysis macros]
 %
 %
 % \section{Including Burmeister context files}
-% 
+%
 % The package |cxtinput| allows to use context files in Burmeister
 % format to be included directly in a \LaTeX{} document. It's usage is
 % as simple as possible. In order to allow for certain customizations it
 % needs to be issued inside a |cxt| environment.
 % \medbreak
-% 
-% \noindent\begin{minipage}{.45\textwidth}
 % \begin{verbatim}
 % \documentclass{article}
 % \usepackage{fca,cxtinput}
 % \begin{document}
-% \begin{cxt}%
-% \cxtName{Formula 1}%
-% \cxtinput{formula1.cxt}%
-% \end{cxt}
+% ... Text with contexts
 % \end{document}
 % \end{verbatim}
-% \end{minipage}
-% \hfill
-% \begin{minipage}{.40\textwidth}
+%
+% Then, the context can be included as in the following example:
+%
+% \begin{dtxexample}{Including Burmeister context files}
 % \begin{cxt}%
-%   \cxtName{Formula 1}%
-%   \cxtinput{formula1.cxt}%
+% \cxtName{Formula 1}%
+% \cxtinput{formula1.cxt}%
 % \end{cxt}
-% \end{minipage}
-% \bigbreak
-% 
+% \end{dtxexample}
 % Unrotated attribute names can be achieved using the following code:
-% 
+%
 % \noindent\begin{minipage}{.45\textwidth}
 % \begin{verbatim}
 % \documentclass{article}
@@ -556,7 +550,7 @@ Formal Concept Analysis macros]
 % \cxtName{Formula 1}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
-% 
+%
 % \begin{cxt}%
 % \cxtName{Formula 2}%
 % \cxtinput{formula1.cxt}%
@@ -565,28 +559,24 @@ Formal Concept Analysis macros]
 % \end{verbatim}
 % \end{minipage}
 % \hfill
-% \begin{minipage}{.40\textwidth}
-% \strut\par\strut\par
-% \begin{cxt}%
+% \begin{dtxexample}{Including contexts with rotated attributes}
+% \begin{cxt}[b]%
 % \cxtName{Formula 1}%
 % \renewcommand{\atr}{\att}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
-% 
-% \bigskip
-% \begin{cxt}
+% \begin{cxt}[b]
 % \cxtName{Formula 2}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
-% \end{minipage}
-% \bigbreak
-% 
+% \end{dtxexample}
+%
 % \section{Environment \texttt{diagram}}
 % The \texttt{diagram} environment helps typesetting diagrams of concept
 % lattices, but can be used for ordered sets and graphs as well. Again we start
 % with a small example (for which we have set |\unitlength 1.2mm|):
 % \bigbreak
-% 
+%
 % \noindent\begin{minipage}{.55\textwidth}
 % \begin{verbatim}
 % \begin{diagram}{40}{55}

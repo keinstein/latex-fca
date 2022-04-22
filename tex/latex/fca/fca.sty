@@ -48,168 +48,169 @@
 Formal Concept Analysis macros]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newif\iffca@compat@macros
+\fca@compat@macrosfalse
+\DeclareOption{compat}{%
+  \fca@compat@macrostrue
+}
+\DeclareOption{nocompat}{%
+  \fca@compat@macrosfalse
+}
+\ProcessOptions\relax
 \RequirePackage{amssymb,epic,pict2e,graphics,color,ifthen,rotating,xspace,newdrawline}%%
-\newcommand\fca@parseversion{}
-\def\fca@parseversion#1 #2 #3\fca@parseversion{%
-  \def\fcacurrentversiondate{#1}%
-  \def\fcacurrentversionversion{#2}%
-  \def\fcacurrentversiondescription{#3}%
-}
-\newcommand\fcaparseversion[1]{%
-  \edef\@tempa{\noexpand\fca@parseversion\csname ver@#1\endcsname{}
-    \noexpand\fca@parseversion}%
-  \@tempa
-}
-%%                                                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\cxt@Kreuz}{$\times$}%
-\newcommand{\cxt@Punkt}{}%
-\newcommand{\cxtArrowStyle}{\footnotesize}
-\newcommand{\cxt@down}{\cxtArrowStyle$\Runterpfeil$}%
-\newcommand{\cxt@up}{\cxtArrowStyle$\Hochpfeil$}%
-\newcommand{\cxt@both}{\cxtArrowStyle$\Doppelpfeil$}%
-\newcounter{cxt@mAnz}%
-\newboolean{@ttributes}%
-\newlength{\cxt@nameraise}%
-\newlength{\@ttnameheight}%
+\newcommand{\fca@cxt@Kreuz}{$\times$}%
+\newcommand{\fca@cxt@Punkt}{}%
+\iffca@compat@macros
+  \newcommand{\cxtArrowStyle}{\footnotesize}
+  \def\fcaCxtArrowStyle{\cxtArrowStyle}
+\else
+  \newcommand{\fcaCxtArrowStyle}{\footnotesize}
+\fi
+\newcommand{\fca@cxt@down}{\fcaCxtArrowStyle$\Runterpfeil$}%
+\newcommand{\fca@cxt@up}{\fcaCxtArrowStyle$\Hochpfeil$}%
+\newcommand{\fca@cxt@both}{\fcaCxtArrowStyle$\Doppelpfeil$}%
+\newcounter{fca@cxt@mAnz}%
+\newboolean{fca@cxt@ttributes}%
+\newlength{\fca@cxt@nameraise}%
+\newlength{\fca@cxt@ttnameheight}%
 \newcommand{\adjcxt@name}{%
-  \ifthenelse{\cxt@nameraise<\@ttnameheight}%
-  {\setlength{\cxt@nameraise}{\@ttnameheight}}{}}%
-\newcommand{\cxtAlignBottom}{\def\cxt@align{b}}
-\newcommand{\cxtName}[1]{%
-  \def\cxtn@me{%
+  \ifthenelse{\fca@cxt@nameraise<\fca@cxt@ttnameheight}%
+  {\setlength{\fca@cxt@nameraise}{\fca@cxt@ttnameheight}}{}}%
+\newcommand{\fcaCxtAlignBottom}{\def\fca@cxt@align{b}}
+\newcommand{\fcaCxtAlignCenter}{\def\fca@cxt@align{t}}
+\newcommand{\fcaCxtAlignTop}{\def\fca@cxt@align{t}}
+\newcommand{\fcaCxtName}[1]{%
+  \def\fca@cxtn@me{%
     \multicolumn{1}{|c||}{%
-      \settoheight{\@ttnameheight}{#1}%
-      \addtolength{\cxt@nameraise}{-1\@ttnameheight}%
-      \raisebox{.5\cxt@nameraise}{#1}%
+      \settoheight{\fca@cxt@ttnameheight}{#1}%
+      \addtolength{\fca@cxt@nameraise}{-1\fca@cxt@ttnameheight}%
+      \raisebox{.5\fca@cxt@nameraise}{#1}%
     }%
   }%
   \ignorespaces
 }%
+\iffca@compat@macros
+  \newcommand{\cxtName}{\fcaCxtName}
+\fi
 
-\newcommand{\obj}[2]{%
-  \ifthenelse{\boolean{@ttributes}}%
-  {%
-    \setboolean{@ttributes}{false}%
-    \cxt@tabdef
-    \cxtn@me%&%
-    \cxt@tabtop\strut\\\hline\hline
-  }{}%
-  #2\strut\cxt@Zeile{#1}\\\hline
-}%
-
-\newcommand{\freeobj}[2]{%
-  \ifthenelse{\boolean{@ttributes}}%
-  {%
-    \setboolean{@ttributes}{false}%
-    \cxt@tabdef
-    \cxtn@me%&%
-    \cxt@tabtop\\\hline\hline
-  }{}%
-  #2&#1\\\hline
-}%
-
-\newcommand{\att}[1]{%
-  \ifthenelse{\boolean{@ttributes}}{%
-    \settoheight{\@ttnameheight}{#1}\adjcxt@name%
-    \expandafter\def\expandafter\cxt@tabtop\expandafter{%
-      \cxt@tabtop&#1}%
-    \stepcounter{cxt@mAnz}%
+\newcommand{\fca@cxt@att}[1]{%
+  \ifthenelse{\boolean{fca@cxt@ttributes}}{%
+    \settoheight{\fca@cxt@ttnameheight}{#1}\adjcxt@name%
+    \expandafter\def\expandafter\fca@cxt@tabtop\expandafter{%
+      \fca@cxt@tabtop&#1}%
+    \stepcounter{fca@cxt@mAnz}%
   }{%
     \PackageWarning{fca}{Attribute following object in
       cxt-environment%
       has been ignored}{}}%
-  \ignorespaces
+  \ignorespaces }%
+
+\newcommand{\fca@cxt@atr}[1]{\att{\rotatebox{90}{#1~~}}}%
+\newcommand{\fca@cxt@obj}[2]{%
+  \fca@cxt@tabdef
+  #2\strut
+  \fca@cxt@Zeile{#1}%
+  \\
 }%
-\newcommand{\atr}[1]{\att{\rotatebox{90}{#1~~}}}%
-\def\cxt@tabtop{}
-\def\cxt@tabdef{\expandafter\cxt@tabdef@\cxt@align}
-\def\cxt@tabdef@#1{%
+\newcommand{\fca@cxt@freeobj}[2]{%acrocod}
+  \fca@cxt@tabdef%
+  #2&#1\\\hline }%
+\def\fca@cxt@tabtop{}
+\def\fca@cxt@tabdef@@{%
+  \expandafter\fca@cxt@tabdef@\fca@cxt@align
+  \fca@cxtn@me%&%
+  \fca@cxt@tabtop\strut\\\hline\hline
+}
+\def\fca@cxt@tabdef@#1{%
+  \def\fca@cxt@tabdef{\hline}%
   \tabcolsep0.5ex\relax%
-  \begin{tabular}[#1]{|l||*{\value{cxt@mAnz}}{c|}}\hline%
+  \begin{tabular}[#1]{|l||*{\value{fca@cxt@mAnz}}{c|}}%
+    \hline%
     }%
     \newenvironment{cxt}[1][t]{%
-    \Reset@cxtDefaults
-    \def\cxt@align{#1}%
+    \begingroup
+    \fca@cxt@resetDefaults
+    \def\fca@cxt@align{#1}%
     \ignorespaces
-    }{
-    \hline
-  \end{tabular}
+    }{%
+    \fca@cxt@tabdef% open the tabular in case there are no objects
+  \end{tabular}%
+  \endgroup }%
+\newcommand{\fca@cxt@resetDefaults}{%
+  \setlength{\fca@cxt@nameraise}{0pt}%
+  \setlength{\fca@cxt@ttnameheight}{0pt}%
+  \setcounter{fca@cxt@mAnz}{0}%
+  \setboolean{fca@cxt@ttributes}{true}%
+  \let\cxtName\fcaCxtName
+  \let\alignBottom\fcaCxtAlignBottom
+  \let\alignCenter\fcaCxtAlignCenter
+  \let\alignTop \fcaCxtAlignTop
+  \let\att\fca@cxt@att
+  \let\atr\fca@cxt@atr
+  \let\obj\fca@cxt@obj
+  \let\freeobj\fca@cxt@freeobj
+  \def\fca@cxtn@me{}%
+  \let\fca@cxt@tabdef\fca@cxt@tabdef@@
 }%
-\def\cxt@stop{}%
-\def\cxt@aKreuz{\cxt@Kreuz}%
-\def\cxtphantom{\phantom{\cxt@Kreuz}}%
+\def\cxtphantom{\phantom{\fca@cxt@Kreuz}}%
 \def\cxtrlap#1{%
   \settowidth\@tempdima{\cxtphantom}%
-  \hbox to \@tempdima{\hss #1\hss}%
-}%
-\def\cxt@adown{\cxtrlap{\cxt@down}}%
-\def\cxt@aup{\cxtrlap{\cxt@up}}%
-\def\cxt@aboth{\cxtrlap{\cxt@both}}%
-
-\def\cxt@M@kechar@newcommand{%
+  \makebox[\@tempdima][c]{\hss #1\hss}%
+}
+\def\fca@cxt@M@kechar@newcommand{%
   \newcommand*%
 }
-\def\cxt@Makechar@newcommand#1{%
-  \expandafter
-  \cxt@M@kechar@newcommand
-  \csname cxt@char@\string#1 \endcsname
-}
+\def\fca@cxt@Makechar@newcommand#1{%
+  \expandafter \fca@cxt@M@kechar@newcommand \csname cxt@char@\string#1
+  \endcsname }
 \def\cxtM@keChar#1[#2][#3]#4{%
-  \cxt@Makechar@newcommand{#1}[{#2}][{#3}]{#4\readcxt@zeile}%
+  \fca@cxt@Makechar@newcommand{#1}[{#2}][{#3}]{#4\fca@cxt@readline}%
 }
 \def\cxtMakeCh@r#1[#2]#3{%
-  \cxt@Makechar@newcommand{#1}[{#2}]{#3\readcxt@zeile}%
+  \fca@cxt@Makechar@newcommand{#1}[{#2}]{#3\fca@cxt@readline}%
 }
 \def\cxtMakeChar@@#1[#2]{%
   \@ifnextchar[{\cxtM@keChar{#1}[{#2}]}{\cxtMakeCh@r{#1}[{#2}]}%
 }
 \def\cxtMakeChar@#1#2{%
-  \cxt@Makechar@newcommand{#1}{#2\readcxt@zeile}%
+  \fca@cxt@Makechar@newcommand{#1}{#2\fca@cxt@readline}%
 }
 \def\cxtMakeChar#1{%
   \@ifnextchar[{\cxtMakeChar@@{#1}}{\cxtMakeChar@{#1}}%
 }
+\def\fca@cxt@stop{}%
+\def\fca@cxt@executechar#1{%
+  &\@ifundefined{cxt@char@\string#1 }{%
+    \PackageWarning{fca}{Undefinded character \string#1 \space in the context}%
+    \let\fca@cxt@tmp=\fca@cxt@aPunkt%
+  }{%
+    \expandafter\let\expandafter\fca@cxt@tmp \csname
+    cxt@char@\string#1 \endcsname }%
+  \fca@cxt@tmp }
+\def\fca@cxt@readline#1{%
+  \ifx#1\fca@cxt@stop
+    \let\fca@cxt@zeile@excecutechar\@gobble
+  \else
+    \let\fca@cxt@zeile@excecutechar\fca@cxt@executechar
+  \fi
+  \fca@cxt@zeile@excecutechar{#1}%
+}%
+\def\fca@cxt@Zeile#1{%
+  \fca@cxt@readline#1\fca@cxt@stop }%
 \cxtMakeChar .{\cxtphantom}
-\cxtMakeChar x{\cxt@aKreuz}
-\cxtMakeChar X{\cxt@aKreuz}
-\cxtMakeChar b{\cxt@aboth}
-\cxtMakeChar u{\cxt@aup}
-\cxtMakeChar d{\cxt@adown}
-\@for \tmp:= 0,1,2,3,4,5,6,7,8,9\do{
-  \edef\@tmp{\noexpand\cxtMakeChar\tmp{%
-      \noexpand\cxtrlap\tmp}}%
+\cxtMakeChar x{\fca@cxt@Kreuz}
+\cxtMakeChar X{\fca@cxt@Kreuz}
+\cxtMakeChar u{\cxtrlap{\fca@cxt@up}}
+\cxtMakeChar d{\cxtrlap{\fca@cxt@down}}
+\cxtMakeChar b{\cxtrlap{\fca@cxt@both}}
+\@for\tmp:= 0,1,2,3,4,5,6,7,8,9\do{
+  \edef\@tmp{
+    \noexpand\cxtMakeChar\tmp{%
+      \noexpand\cxtrlap\tmp
+    }%
+  }%
   \@tmp
 }
-
-\def\cxt@executechar#1{%
-  &\@ifundefined{cxt@char@\string#1 }{%
-    \let\cxt@tmp=\cxt@aPunkt%
-  }{%
-    \expandafter\let\expandafter\cxt@tmp
-    \csname cxt@char@\string#1 \endcsname
-  }%
-  \cxt@tmp
-}
-\def\readcxt@zeile#1{%
-  \ifx#1\cxt@stop
-    \let\cxt@zeile@excecutechar\@gobble
-  \else
-    \let\cxt@zeile@excecutechar\cxt@executechar
-  \fi
-  \cxt@zeile@excecutechar{#1}%
-}%
-\def\cxt@Zeile#1{%
-  \readcxt@zeile#1\cxt@stop
-}%
-\newcommand{\Reset@cxtDefaults}{%
-  \setlength{\cxt@nameraise}{0pt}%
-  \setlength{\@ttnameheight}{0pt}%
-  \setcounter{cxt@mAnz}{0}%
-  \setboolean{@ttributes}{true}%
-  \newcommand{\cxtn@me}{}%
-}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -514,6 +515,7 @@ Formal Concept Analysis macros]
 \providecommand{\FnBA}{Formalen Begriffsanalyse\xspace}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \endinput
 %%
 %% End of file `fca.sty'.

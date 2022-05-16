@@ -57,7 +57,16 @@ Formal Concept Analysis macros]
   \fca@compat@macrosfalse
 }
 \ProcessOptions\relax
-\RequirePackage{amssymb,epic,pict2e,graphics,color,ifthen,rotating,xspace,newdrawline}%%
+\RequirePackage{pgf}
+\RequirePackage{amssymb,epic,graphics,color,ifthen,rotating,xspace,newdrawline}%%
+\newcommand*\fca@parselength[3]{%
+  \pgfmathparse{#2}%
+  \ifpgfmathunitsdeclared
+    #1=\pgfmathresult pt\relax
+  \else
+    #1=\pgfmathresult#3%
+  \fi
+}
 \newcommand{\fca@cxt@Kreuz}{$\times$}%
 \newcommand{\fca@cxt@Punkt}{}%
 \iffca@compat@macros
@@ -170,13 +179,13 @@ Formal Concept Analysis macros]
   \fca@cxt@Makechar@newcommand{#1}[{#2}]{#3\fca@cxt@readline}%
 }
 \def\cxtMakeChar@@#1[#2]{%
-  \@ifnextchar[{\cxtM@keChar{#1}[{#2}]}{\cxtMakeCh@r{#1}[{#2}]}%
+  \@ifnextchar[{\cxtM@keChar{#1}[{#2}]}{\cxtMakeCh@r{#1}[{#2}]}%]
 }
 \def\cxtMakeChar@#1#2{%
   \fca@cxt@Makechar@newcommand{#1}{#2\fca@cxt@readline}%
 }
 \def\cxtMakeChar#1{%
-  \@ifnextchar[{\cxtMakeChar@@{#1}}{\cxtMakeChar@{#1}}%
+  \@ifnextchar[{\cxtMakeChar@@{#1}}{\cxtMakeChar@{#1}}%]
 }
 \def\fca@cxt@stop{}%
 \def\fca@cxt@executechar#1{%
@@ -221,23 +230,141 @@ Formal Concept Analysis macros]
 \newcommand{\fca@Defaults}{% Do not change this line!  %
   \newcommand{\ObjectLabelStyle}{\small\baselineskip6pt\rm}% %
   \newcommand{\AttributeLabelStyle}{\small\baselineskip6pt\it}% %
-  \newcommand{\LabelBoxWidth}{40mm}}% %
+  \newcommand{\LabelBoxWidth}{40mm}%
+  \let\Node\fca@node
+  \let\Edge\fca@edge
+  \iffca@compat@macros
+  \else
+    \let\EdgeThickness\fcaEdgeThickness
+    \let\NodeThickness\fcaNodeThickness
+    \let\Numbers\fcaNumbers
+    \let\NodeColor\fcaNodeColor
+  \fi
+  \let\leftAttbox\fca@leftAttbox
+  \let\centerAttbox\fca@centerAttbox
+  \let\rightAttbox\fca@rightAttbox
+  \let\leftObjbox\fca@leftObjbox
+  \let\centerObjbox\fca@centerObjbox
+  \let\rightObjbox\fca@rightObjbox
+}% %
 \newboolean{fca@dots}\setboolean{fca@dots}{true}% %
-\newcommand{\diagramXoffset}{0}% %
-\newcommand{\diagramYoffset}{0}% %
-\newcommand{\fca@edgethickness}{.8pt}% %
-\newcommand{\fca@nodethickness}{1pt}% %
-\newcommand{\fca@nodecolor}{white}% %
-
+\iffca@compat@macros
+  \newcommand{\diagramXoffset}{0}% %
+  \newcommand{\diagramYoffset}{0}% %
+  \newcommand{\fcaDiagramXoffset}{\diagramXoffset}% %
+  \newcommand{\fcaDiagramYoffset}{\diagramYoffset}% %
+\else
+  \newcommand{\fcaDiagramXoffset}{0}% %
+  \newcommand{\fcaDiagramYoffset}{0}% %
+\fi
+\newcommand*{\fca@edgethickness}{.8pt}% %
+\newcommand*{\fca@nodethickness}{1pt}% %
+\newcommand*{\fca@nodecolor}{white}% %
+\newcommand*{\fca@nodename}{fca node }%
+\newcommand*{\fca@nodeshape}{circle}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\NodeThickness}[1]{\def\fca@nodethickness{#1}}% %
-\newcommand{\EdgeThickness}[1]{\def\fca@edgethickness{#1}}% %
-\newcommand{\NodeColor}[1]{\def\fca@nodecolor{#1}}% %
-\newcommand{\Numbers}{\setboolean{fca@CircledNumbers}{true}% %
-  \addtocounter{fca@CircleDiameter}{2}}% %
-\newcommand{\CircleSize}[1]{\setcounter{fca@CircleDiameter}{#1}}%
-%%
+\pgfqkeys{/fca/node}{%
+  thickness/.initial=1pt,
+  thickness/.value required,
+  color/.initial={white},
+  color/.value required,
+  numbers/.is if=fca@CircledNumbers,
+  radius/.initial=1\unitlength,
+  radius/.value required,
+  label at/.initial=center,
+  label at/.value required,
+  label anchor/.initial=center,
+  label anchor/.value required,
+  label shift/x/.initial=0pt,
+  label shift/y/.initial=0pt,
+  label shift/.value required,
+  label shift/.style args={(#1,#2)}{%
+    label shift/x=#1,
+    label shift/y=#2
+  },%
+  type/.initial=attribute,
+  type/.is choice,
+  type/attribute/.code={
+    \pgfkeyssetvalue{/fca/node/type}{attribute}
+    \pgfqkeys{/fca/node/}{attribute position}{\pgfkeysgetvalue{}}
+
+  },
+  position/.initial=center,
+  position/.code={%
+    \pgfqkeys{/fca/node}{%
+      \pgfkeysqgetvalue{/fca/node}{type} #1}%
+    \pgfkeyssetvalue{/fca/node/\pgfkeysgetvalue{/fca/node/type} position}{}
+  }
+  left/.style={position=left},
+  right/.style={position=right},
+  center/.style={position=center},
+  attribute position/.is choice,
+  attribute position/left/.style={
+    label at=north west,
+    label anchor=south east
+  },
+  attribute position/center/.style={
+    label at=north,
+    label anchor=south
+  },
+  attribute position/right/.style={
+    label at=north east,
+    label anchor=south west
+  },
+  attribute/.code={
+    \pgfqkeys{/fca/node}{%
+      label type=attribute
+    }
+    \ifx\pgfnovalue#1\relax
+      \pgfqkeys{/fca/node}{attribute position=\pgfkeysqgetvalue{/fca/node/position}}
+    \else
+      \pgfqkeys{/fca/node}{attribute position={#1}}
+    \fi
+  },
+  object position/.is choice,
+  object position/left/.style={
+    label at=south west,
+    label anchor=north east
+  },
+  object position/center/.style={
+    label at=south,
+    label anchor=north
+  },
+  object position/right/.style={
+    label at=south east,
+    label anchor=north west
+  },
+  object/.code={
+    \pgfqkeys{/fca/node}{%
+      label type=object
+    }
+    \ifx\pgfnovalue#1\relax
+      \pgfqkeys{/fca/node}{object position=center}
+    \else
+      \pgfqkeys{/fca/node}{object position={#1}}
+    \fi
+  },
+}
+\newcommand*{\fcaNodeThickness}[1]{\pgfkeyssetvalue{/fca/node/thickness}{#1}}% %
+\newcommand*{\fcaEdgeThickness}[1]{\def\fca@edgethickness{#1}}% %
+\newcommand*{\fcaNodeColor}[1]{\pgfkeyssetvalue{/fca/node/color}{#1}}% %
+\newcommand*{\fcaNumbers}{%
+  \setboolean{fca@CircledNumbers}{true}%
+  \pgfqkeys{/fca/node}{radius/.append={+2/unitlength}}%
+}%
+\newcommand*{\CircleSize}[1]{\setcounter{fca@CircleDiameter}{#1}}%
+\iffca@compat@macros
+  \def\EdgeThickness{\fcaEdgeThickness}%
+  \def\NodeThickness{\fcaNodeThickness}%
+  \def\NodeColor{\fcaNodeColor}%
+  \def\Numbers{\fcaNumbers}%
+  \def\CircleSize{\fcaCircleSize}%
+\fi
+\pgfqkeys{/fca/edge}{%
+  thickness/.code=\fcaEdgeThickness
+}%
+\newcommand*\fcaset[1]{\pgfqkeys{/fca}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcounter{fca@minNode}%
 \newcounter{fca@maxNode}%
@@ -249,6 +376,21 @@ Formal Concept Analysis macros]
 \def\fca@adjNode#1{%
   \ifthenelse{#1<\value{fca@minNode}}{\setcounter{fca@minNode}{#1}}{}%
   \ifthenelse{\value{fca@maxNode}<#1}{\setcounter{fca@maxNode}{#1}}{}}%
+\newcommand\fca@node{%
+  \@ifnextchar\bgroup\fca@oldnode{%
+      \@ifnextchar(\fca@pictnode\fca@tikznode%)
+      }%
+}
+\newcommand\fca@oldnode[3]{%
+  {%
+    \fca@parselength\@tempdima{#2}\unitlength
+    \fca@parselength\@tempdimb{#3}\unitlength
+    \pgftransformshift{\pgfpoint{\@tempdima}{\@tempdimb}}%
+    \pgfnode{\fca@nodeshape}{center}{}{\fca@nodename#1}{\pgfusepath{stroke}}
+  }%
+  \ignorespaces
+}
+\iffalse
 \def\Node#1#2#3{\fca@adjNode{#1}\ifcase#1%
   \def\fca@xaa{#2}\def\fca@yaa{#3}\or%
   \def\fca@xab{#2}\def\fca@yab{#3}\or%
@@ -382,11 +524,6 @@ Formal Concept Analysis macros]
 \newcommand{\Edge}[2]{\fca@getNode{#1}\fca@getNodeb{#2}%
   {\linethickness{\fca@edgethickness}%
     \fcadrawline(\fca@x,\fca@y)(\fca@u,\fca@v)}}%
-\def\fca@changeaValue#1#2#3{\setcounter{fca@AuxCounter}{#1}%
-  \addtocounter{fca@AuxCounter}{#2}\def#3{\value{fca@AuxCounter}}}%
-\def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
-  \addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
-\newcommand{\NoDots}{\setboolean{fca@dots}{false}}
 \def\leftAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(#2,0)%
       \put(0,#3){\makebox(0,0)[rb]{\begin{minipage}{\LabelBoxWidth}%
@@ -420,13 +557,76 @@ Formal Concept Analysis macros]
             \centering\ObjectLabelStyle#4\end{minipage}}}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(#2,1)}}{}%
     \end{picture}}}%
-\def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+\def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@yRechnungsnummer RE-00379166/04/2013 ){%
     \begin{picture}(#2,#3)(0,#3)%
       \put(#2,0){\makebox(0,0)[lt]{\begin{minipage}{\LabelBoxWidth}%
             \raggedright\ObjectLabelStyle#4\end{minipage}}}%
       \fca@changeaValue{#2}{-1}{\fca@u}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(\fca@u,1)}}{}%
     \end{picture}}}%
+\fi
+\newcommand{\fca@edge}{%
+  \@ifnextchar\bgroup{\fca@oldedge}{\fca@newedge}
+}
+\newcommand{\fca@oldedge}[2]{%
+  {%
+    \pgfsetlinewidth{\fca@edgethickness}%
+    \pgfpathmoveto{\pgfpointshapeborder{\fca@nodename#1}{\pgfpointanchor{\fca@nodename#2}{center}}}%
+    \pgfpathlineto{\pgfpointshapeborder{\fca@nodename#2}{\pgfpointanchor{\fca@nodename#1}{center}}}%
+    \pgfusepath{stroke}%
+  }%
+  \ignorespaces
+}
+\def\fca@changeaValue#1#2#3{\setcounter{fca@AuxCounter}{#1}%
+  \addtocounter{fca@AuxCounter}{#2}\def#3{\value{fca@AuxCounter}}}%
+\def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
+  \addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
+\newcommand{\NoDots}{\setboolean{fca@dots}{false}}
+\newcommand\fca@labelBox[5]{%
+  \@ifnextchar\bgroup{%
+    \fca@oldlabelBox{#1}{#2}{#3}{#4}{#5}%
+  }{
+    \let\fca@extrashift\relax
+    \fca@@labelBox{#1}{#2}{#3}{#4}{#5}%
+  }%
+}
+\newcommand\fca@oldlabelBox[7]{%
+  \PackageWarning{fca}{The offset parameter of #2 #3 has been
+    ignored.}
+  {%
+    \fca@parselength\@tempdima{#5}\unitlength
+    \fca@parselength\@tempdimb{-(#6)}\unitlength
+    \edef\fca@extrashift{%
+      \noexpand\pgftransformshift{\noexpand\pgfpoint{\the\@tempdima}{\the\@tempdimb}}%
+    }%
+    \fca@@labelBox{#1}{#2}{#3}{#4}{#7}%
+  }%
+}
+\newcommand\fca@@labelBox[5]{%
+  {%
+    \pgftransformshift{\pgfpointanchor{\fca@nodename#4}{#1}}%
+    \fca@extrashift
+    \pgfnode{rectangle}{#2}{#5}{\fca@nodename#3#4}{}%
+  }%
+}
+\newcommand\fca@leftAttbox{%
+  \fca@labelBox{north west}{south east}{ attribute left }%
+}
+\newcommand\fca@centerAttbox{%
+  \fca@labelBox{north}{south}{ attribute center }%
+}
+\newcommand\fca@rightAttbox{%
+  \fca@labelBox{north east}{south west}{ attribute right }%
+}
+\newcommand\fca@leftObjbox{%
+  \fca@labelBox{south west}{north east}{ object left }%
+}
+\newcommand\fca@centerObjbox{%
+  \fca@labelBox{south}{north}{ object center }%
+}
+\newcommand\fca@rightObjbox{%
+  \fca@labelBox{south east}{north west}{ object right }%
+}
 \def\fca@ResetDefaults{\setcounter{fca@minNode}{60}%
   \setcounter{fca@maxNode}{0}%
   \setcounter{fca@CircleDiameter}{4}%
@@ -448,10 +648,63 @@ Formal Concept Analysis macros]
     \ifthenelse{\boolean{fca@CircledNumbers}}%
     {\put(\fca@x,\fca@y){\makebox(0,0){\tiny\arabic{fca@runNode}}}}{}%
     \stepcounter{fca@runNode}}}%
-\newenvironment{diagram}[2]%
-{\fca@ResetDefaults%
-  \noindent\begin{picture}(#1,#2)(\diagramXoffset,\diagramYoffset)}%
-  {\fca@DrawCircles\end{picture}}%
+
+\newcommand*\fca@setb@undingbox{%
+}%
+\newcommand*\fca@ignoreboundingbox{}%
+
+\newcommand*\fca@olddiagram[2]{%
+  \fca@parselength\@tempdima{#1}\unitlength
+  \edef\fca@right@border{\the\@tempdima}%
+  \fca@parselength\@tempdimb{#2}\unitlength
+  \edef\fca@top@border{\the\@tempdimb}%
+  \let\fca@boundingbox\fca@setboundingbox
+  \fca@parselength\@tempdima{-(\fcaDiagramXoffset)}\unitlength%
+  \edef\fca@left@border{\the\@tempdima}%
+  \fca@parselength\@tempdima{-(\fcaDiagramYoffset)}\unitlength%
+  \edef\fca@bottom@border{\the\@tempdima}%
+  \fca@startdiagram
+  \fca@setboundingbox{\fca@left@border}{\fca@bottom@border}
+  {\fca@right@border}{\fca@top@border}%
+}
+\newcommand*\fca@diagram{%
+  \@ifnextchar(\fca@diagr@m\fca@di@gram
+}
+\newcommand*\fca@diagr@m{%(#1,#2)
+  \PackageError{fca}{not implemented}{not implemented}%
+}
+\newcommand*\fca@di@gram{%
+  \fca@startdiagram
+}
+\newcommand*\fca@startdiagram{%
+  \fca@begindiagram
+  \fca@Defaults
+}
+\newcommand*\fca@setboundingbox[4]{%
+  \pgfpathrectangle{\pgfpoint{#1}{#2}}{\pgfpoint{#3}{#4}}%
+  \pgfusepath{use as bounding box}%
+}
+\newenvironment{diagram}
+{%
+  \ifpgfpicture
+    \def\fca@begindiagram{%
+      \begin{pgfscope}%
+        \def\fca@enddiagram{\end{pgfscope}}%
+    }
+  \else
+    \def\fca@begindiagram{%
+      \begin{pgfpicture}%
+        \def\fca@enddiagram{\end{pgfpicture}}%
+    }
+  \fi
+  \noindent
+  \@ifnextchar\bgroup\fca@olddiagram\fca@diagram% This line must be
+                                % executed before \begin{pgfpictire}
+}%
+{%
+  %\fca@DrawCircles
+  \fca@enddiagram%
+}%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

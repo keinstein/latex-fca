@@ -154,7 +154,7 @@ http://www.latex-project.org/lppl.txt
 %<*fca.sty|driver>
 Formal Concept Analysis macros]
 %</fca.sty|driver>
-%<cxtinput.sty> Reading formal contexts is Burmeister format]
+%<cxtinput.sty> Reading formal contexts in Burmeister format]
 %<*driver>
 % Hack around the convention to use the vertical bar for macro names.
 % This clashes with the tabular environment.
@@ -299,6 +299,12 @@ Formal Concept Analysis macros]
 %
 % The option |compat| also defines the old names that have been used
 % before version 2.2.
+%
+% \watchout The current implementation can be only used to typeset
+% unmodified Documents that were written before version 2.2. It maps
+% the new macros to use the old ones. As soon as the new macros are
+% redefined, the old ones are ignored. So, make shure you replace all
+% occurrances of the old macros by the corresponding new ones at once.
 %
 % \DescribeOption{nocompat}
 %
@@ -584,8 +590,8 @@ Formal Concept Analysis macros]
 % with a small example (for which we have set |\unitlength 1.2mm|):
 % \bigbreak
 % 
-% \noindent\begin{minipage}{.55\textwidth}
-% \begin{verbatim}
+% \begin{dtxexample}{A diagram}
+%   {\unitlength 1.2mm\relax
 % \begin{diagram}{40}{55}
 % \Node{1}{20}{10}
 % \Node{2}{35}{20}
@@ -605,69 +611,87 @@ Formal Concept Analysis macros]
 % \rightObjbox{2}{2}{2}{Massa}
 % \rightObjbox{4}{2}{2}{Alonso}
 % \end{diagram}
-% \end{verbatim}
-% \end{minipage}\hfill
-% \begin{minipage}{.45\textwidth}
-% {\unitlength 1.2mm\begin{diagram}{40}{55}
-% \Node{1}{20}{10}\Node{2}{35}{20}\Node{3}{5}{30}\Node{4}{35}{40}\Node{5}{20}{50}
-% \Edge{1}{2}\Edge{1}{3}\Edge{2}{4}\Edge{3}{5}\Edge{4}{5}
-% %\Numbers
-% \leftAttbox{3}{2}{2}{1.} \rightAttbox{2}{2}{2}{disqualified}
-% \rightAttbox{4}{2}{2}{2.} \leftObjbox{3}{2}{2}{Hamilton}
-% \rightObjbox{2}{2}{2}{Massa} \rightObjbox{4}{2}{2}{Alonso}
-% \end{diagram}}
-% \end{minipage}
-% \bigbreak
+% }
+% \end{dtxexample}
 % 
 % Here are the commands of the \texttt{diagram}--environment:
 % \begin{description}
-% \item[]|\begin{diagram}{width}{height}|\quad
-% translates to \par
-% |\begin{picture}(width,height)(\diagramXoffset,\diagramYoffset)|.
-% 
+%   \ItemDescribeEnv{diagram}\marg{width}\marg{height}
+% Starts a PGF picture and sets its bounding box.
 % 
 % The offsets are zero by default. They can be modified using
 % |\renewcommand|. Note that the diagram dimensions do not take the lables
 % into account, these may overlap. Putting an |\fbox| around the above
 % diagram yields (with |\unitlength .7mm|)
-% \begin{center}
-%  \fbox{\unitlength .7mm\begin{diagram}{40}{55}
-% \Node{1}{20}{10}\Node{2}{35}{20}\Node{3}{5}{30}\Node{4}{35}{40}\Node{5}{20}{50}
-% \Edge{1}{2}\Edge{1}{3}\Edge{2}{4}\Edge{3}{5}\Edge{4}{5}
+% \begin{dtxexample}{Changing the bounding box}
+%   \fbox{%
+%     \unitlength .7mm
+%     \begin{diagram}{70}{100}
+%       \Node{1}{20}{10}
+%       \Node{2}{35}{20}
+%       \Node{3}{5}{30}
+%       \Node{4}{35}{40}%
+%       \Node{5}{20}{50}
+%       \Edge{1}{2}
+%       \Edge{1}{3}
+%       \Edge{2}{4}
+%       \Edge{3}{5}
+%       \Edge{4}{5}
 % %\Numbers
 % \leftAttbox{3}{2}{2}{1.} \rightAttbox{2}{2}{2}{disqualified}
 % \rightAttbox{4}{2}{2}{2.} \leftObjbox{3}{2}{2}{Hamilton}
 % \rightObjbox{2}{2}{2}{Massa} \rightObjbox{4}{2}{2}{Alonso}
-% \end{diagram}}\end{center}
-% \item[]|\Node{nodenumber}{xpos}{ypos}|\quad
+% \end{diagram}}
+% \end{dtxexample}
+% \ItemDescribeEnv{diagram}
+% If the diagram environment is called without parameters, the
+% bounding box is calculated automatically by PGF.
+% 
+% \begin{dtxexample}{Automatic bounding box}
+%   \fbox{%
+%   \unitlength .7mm
+%   \begin{diagram}
+%     \Node{1}{20}{10}
+%     \Node{2}{35}{20}
+%     \Node{3}{5}{30}
+%     \Node{4}{35}{40}%
+%     \Node{5}{20}{50}
+%     \Edge{1}{2}
+%     \Edge{1}{3}
+%     \Edge{2}{4}
+%     \Edge{3}{5}
+%     \Edge{4}{5}
+%     \leftAttbox{3}{2}{2}{1.}
+%     \rightAttbox{2}{2}{2}{disqualified}
+%     \rightAttbox{4}{2.}%
+%     \leftObjbox{3}{Hamilton}
+%     \rightObjbox{2}{2}{2}{Massa}
+%     \rightObjbox{4}{2}{2}{Alonso}
+%   \end{diagram}}
+% \end{dtxexample}
+% \ItemDescribeMacro{\Node}{nodenumber}\marg{xpos}\marg{ypos}
 % Puts a circle at position \texttt{(xpos,ypos)} of the picture. 
 % These circles are drawn when |\end{diagram}| is invoked. The default
 % diameter of the circles is 4 (times |\unitlength|). It can be changed
-% (for all circles) with |\CircleSize{}|. The argument must be an integer.
+% (for all circles) with |\fcaCircleSize{}|. The argument must be an integer.
 % The node numbers must be different, consecutive between 0 and 51, but need not
 % necessarily be given in ascending order. 
 % 
-% \item[]|\Numbers|\quad Puts numbers inside circles.  While working on a
+% \ItemDescribeMacro{\Numbers} Puts numbers inside circles.  While working on a
 %  diagram it can be helpful to have a picture with numbered 
 % nodes. The result of the following command sequence is shown on the right:
 % 
-% \begin{minipage}{.6\textwidth}
-% \begin{verbatim}
-% \fbox{\unitlength .7mm
-% \begin{diagram}{40}{55}
-% \Node{5}{20}{10}
-% \Node{6}{35}{20}
-% \Node{4}{5}{30}
-% \Node{8}{35}{40}
-% \Node{7}{20}{50}
-% \Numbers
-% \end{diagram}}
-% \end{verbatim}
-% \end{minipage} \hfill
-% \begin{minipage}{.25\textwidth}
-% \fbox{\unitlength .7mm\begin{diagram}{40}{55}
-% \Node{5}{20}{10}\Node{6}{35}{20}\Node{4}{5}{30}\Node{8}{35}{40}\Node{7}{20}{50}
-% \Numbers\end{diagram}}\end{minipage}
+% \begin{dtxexample}{Plotting numbers inside of nodes}
+%   \fbox{\unitlength .7mm
+%   \begin{diagram}{40}{55}
+%     \Node{5}{20}{10}
+%     \Node{6}{35}{20}
+%     \Node{4}{5}{30}
+%     \Node{8}{35}{40}
+%     \Node{7}{20}{50}
+%     \Numbers
+%   \end{diagram}}
+% \end{dtxexample}
 % 
 % We recommend to remove the |\Numbers|--command when the diagram is
 % ready. In most cases it is not a good idea to put text inside the nodes of a diagram. 
@@ -758,19 +782,28 @@ Formal Concept Analysis macros]
 % \subsection{Fine tuning}
 % You can change certain layout parameters either permanently (by modifying the
 % file \texttt{fca.sty}) or temporarily using the following commands:
-% \begin{trivlist}
-% \item |\CircleSize{}|,  \hspace*{3.5ex}\qquad Default: 4\qquad
+% \begin{description}
+% \ItemDescribeMacro{\fcaCircleSize}\marg{size} Default: 4\qquad
 % (times |\unitlength|)
-% \item |\NodeColor{}|,  \qquad\qquad Default: white
-% \item |\NodeThickness{}|,  \qquad Default: 1.2pt
-% \item |\EdgeThickness{}|,  \qquad Default: .8pt
-% \item |\NoDots|,
-% \item |\renewcommand{\ObjectLabelStyle}{}|,
-% \item |\renewcommand{\AttributeLabelStyle}{}|, 
-% \item |\renewcommand{\LabelBoxWidth}{}|.    
-% \end{trivlist}
+% \ItemDescribeMacro {\NodeColor}\marg{color}   Default: white
+% \ItemDescribeMacro {\fcaNodeThickness}\marg{thickness}  \qquad
+% Default: 1.2pt
+% \ItemDescribeMacro {\fcaEdgeThickness}\marg{thickness}  \qquad
+% Default: .8pt
+% \ItemDescribeMacro {\NodeThickness}\marg{thickness} an alias to
+% \cs{fcaNodeThickness} inside a \env{diagram} environment
+% \ItemDescribeMacro {\EdgeThickness}\marg{thickness} an alias to
+% \cs{fcaEdgeThickness} inside a \env{diagram} environment
+% \ItemDescribeMacro {\NoDots}
+% \ItemDescribeMacro {\ObjectLabelStyle} can be redefined to set the
+% style of object labels,
+% \ItemDescribeMacro {\AttributeLabelStyle} can be redefined to set
+% the syele of attribute labels, 
+% \ItemDescribeMacro {\LabelBoxWidth} can be redefined to a width,
+% which will be used to set the width of the object and attribute boxes.
+% \end{description}
 % Except for the first three, these commands can be focussed to single instances,
-% using brackets. For example,
+% using braces. For example,
 % \begin{center}
 % |{\NoDots\centerObjbox{nodenumber}{xoffset}{yoffset}{labeltext}}|
 % \end{center}
@@ -869,8 +902,8 @@ Formal Concept Analysis macros]
 % \begin{verbatim}
 % {\definecolor{grey}{gray}{.8}
 % \unitlength 2mm
-% \NodeThickness{2.5pt}
-% \EdgeThickness{2.5pt}
+% \fcaNodeThickness{2.5pt}
+% \fcaEdgeThickness{2.5pt}
 % \begin{picture}(20,20)%
 % \put(0,0){%
 % \begin{diagram}{20}{20}
@@ -885,8 +918,8 @@ Formal Concept Analysis macros]
 % \end{minipage}\hfill
 % \begin{minipage}{.3\textwidth}
 % {\unitlength 2mm\definecolor{grey}{gray}{.8}
-% \NodeThickness{2.5pt}
-% \EdgeThickness{2.5pt}
+% \fcaNodeThickness{2.5pt}
+% \fcaEdgeThickness{2.5pt}
 % \begin{picture}(20,20)%
 % \put(0,0){%
 % \begin{diagram}{20}{20}
@@ -1093,11 +1126,27 @@ Formal Concept Analysis macros]
 \ProcessOptions\relax
 %    \end{macrocode}
 %
-% \subsection{Loading other packages}
+% \subsection{Loading other packages and general helpers}
 %    \begin{macrocode}
-\RequirePackage{amssymb,epic,pict2e,graphics,color,ifthen,rotating,xspace,newdrawline}%%
+\RequirePackage{pgf}
+\RequirePackage{amssymb,epic,graphics,color,ifthen,rotating,xspace,newdrawline}%%
 %    \end{macrocode}
 %
+% \begin{macro}{\fca@parselength}\marg{register}\marg{expression}\marg{default unit}
+%   Evaluates \meta{expression}. If it has no unit the \meta{default
+%   unit} is use instead. The result is stored in \meta{register}.
+%    \begin{macrocode}
+\newcommand*\fca@parselength[3]{%
+  \pgfmathparse{#2}%
+  \ifpgfmathunitsdeclared
+    #1=\pgfmathresult pt\relax
+  \else
+    #1=\pgfmathresult#3%
+  \fi
+}
+%    \end{macrocode}
+%   
+% \end{macro}
 %
 % \subsection{The context environment \env{cxt}}
 % \subsubsection{Some configurations}
@@ -1543,13 +1592,13 @@ Formal Concept Analysis macros]
   \fca@cxt@Makechar@newcommand{#1}[{#2}]{#3\fca@cxt@readline}%
 }
 \def\cxtMakeChar@@#1[#2]{%
-  \@ifnextchar[{\cxtM@keChar{#1}[{#2}]}{\cxtMakeCh@r{#1}[{#2}]}%
+  \@ifnextchar[{\cxtM@keChar{#1}[{#2}]}{\cxtMakeCh@r{#1}[{#2}]}%]
 }
 \def\cxtMakeChar@#1#2{%
   \fca@cxt@Makechar@newcommand{#1}{#2\fca@cxt@readline}%
 }
 \def\cxtMakeChar#1{%
-  \@ifnextchar[{\cxtMakeChar@@{#1}}{\cxtMakeChar@{#1}}%
+  \@ifnextchar[{\cxtMakeChar@@{#1}}{\cxtMakeChar@{#1}}%]
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1995,15 +2044,16 @@ Formal Concept Analysis macros]
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% \section{environment diagram for making
-%            diagrams of ordered sets and graphs}
+% \section{Environment \env{diagram} for making
+%            diagrams of ordered sets, graphs and concept lattices}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % To obtain a diagram for the concept lattice of the formal
 % context above, try this:
 %
-% \begin{verbatim}
+%
+% \begin{dtxexample}{A lattice diagram}
 % {\unitlength 1.2mm
 % \begin{diagram}{40}{55}
 %   \Node{1}{20}{10}
@@ -2023,7 +2073,7 @@ Formal Concept Analysis macros]
 %   \rightObjbox{2}{2}{2}{Montoya}
 %   \rightObjbox{4}{2}{2}{Schumacher}
 % \end{diagram}}
-% \end{verbatim}
+% \end{dtxexample}
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %
@@ -2045,15 +2095,15 @@ Formal Concept Analysis macros]
 % \end{diagram}
 % \end{verbatim}
 %                                                                             %
-% The circle size can be changed with the |\CircleSize| command.                %
+% The circle size can be changed with the |\fcaCircleSize| command.                %
 % The value must be a positive integer, which will be mutiplied               %
 % by |\unitlength|. The default is                                              %
 %                                                                             %
-% |\CircleSize{4}|.                                                             %
+% |\fcaCircleSize{4}|.                                                             %
 %                                                                             %
 % A helpful command when fine tuning a diagram is                             %
 %                                                                             %
-% \Numbers.                                                                   %
+% |\Numbers|.                                                                   %
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %
@@ -2066,14 +2116,38 @@ Formal Concept Analysis macros]
 \newcommand{\fca@Defaults}{% Do not change this line!  %
   \newcommand{\ObjectLabelStyle}{\small\baselineskip6pt\rm}% %
   \newcommand{\AttributeLabelStyle}{\small\baselineskip6pt\it}% %
-  \newcommand{\LabelBoxWidth}{40mm}}% %
+  \newcommand{\LabelBoxWidth}{40mm}%
+  \let\Node\fca@node
+  \let\Edge\fca@edge
+  \iffca@compat@macros
+  \else
+    \let\EdgeThickness\fcaEdgeThickness
+    \let\NodeThickness\fcaNodeThickness
+    \let\Numbers\fcaNumbers
+    \let\NodeColor\fcaNodeColor
+  \fi
+  \let\leftAttbox\fca@leftAttbox
+  \let\centerAttbox\fca@centerAttbox
+  \let\rightAttbox\fca@rightAttbox
+  \let\leftObjbox\fca@leftObjbox
+  \let\centerObjbox\fca@centerObjbox
+  \let\rightObjbox\fca@rightObjbox
+}% %
 \newboolean{fca@dots}\setboolean{fca@dots}{true}% %
-\newcommand{\diagramXoffset}{0}% %
-\newcommand{\diagramYoffset}{0}% %
-\newcommand{\fca@edgethickness}{.8pt}% %
-\newcommand{\fca@nodethickness}{1pt}% %
-\newcommand{\fca@nodecolor}{white}% %
-
+\iffca@compat@macros
+  \newcommand{\diagramXoffset}{0}% %
+  \newcommand{\diagramYoffset}{0}% %
+  \newcommand{\fcaDiagramXoffset}{\diagramXoffset}% %
+  \newcommand{\fcaDiagramYoffset}{\diagramYoffset}% %
+\else
+  \newcommand{\fcaDiagramXoffset}{0}% %
+  \newcommand{\fcaDiagramYoffset}{0}% %
+\fi
+\newcommand*{\fca@edgethickness}{.8pt}% %
+\newcommand*{\fca@nodethickness}{1pt}% %
+\newcommand*{\fca@nodecolor}{white}% %
+\newcommand*{\fca@nodename}{fca node }%
+\newcommand*{\fca@nodeshape}{circle}%
 %    \end{macrocode}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %
@@ -2081,15 +2155,115 @@ Formal Concept Analysis macros]
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
-\newcommand{\NodeThickness}[1]{\def\fca@nodethickness{#1}}% %
-\newcommand{\EdgeThickness}[1]{\def\fca@edgethickness{#1}}% %
-\newcommand{\NodeColor}[1]{\def\fca@nodecolor{#1}}% %
-\newcommand{\Numbers}{\setboolean{fca@CircledNumbers}{true}% %
-  \addtocounter{fca@CircleDiameter}{2}}% %
-\newcommand{\CircleSize}[1]{\setcounter{fca@CircleDiameter}{#1}}%
+\pgfqkeys{/fca/node}{%
+  thickness/.initial=1pt,
+  thickness/.value required,
+  color/.initial={white},
+  color/.value required,
+  numbers/.is if=fca@CircledNumbers,
+  radius/.initial=1\unitlength,
+  radius/.value required,
+  label at/.initial=center,
+  label at/.value required,
+  label anchor/.initial=center,
+  label anchor/.value required,
+  label shift/x/.initial=0pt,
+  label shift/y/.initial=0pt,
+  label shift/.value required,
+  label shift/.style args={(#1,#2)}{%
+    label shift/x=#1,
+    label shift/y=#2
+  },%
+  type/.initial=attribute,
+  type/.is choice,
+  type/attribute/.code={
+    \pgfkeyssetvalue{/fca/node/type}{attribute}
+    \pgfqkeys{/fca/node/}{attribute position}{\pgfkeysgetvalue{}}
+
+  },
+  position/.initial=center,
+  position/.code={%
+    \pgfqkeys{/fca/node}{%
+      \pgfkeysqgetvalue{/fca/node}{type} #1}%
+    \pgfkeyssetvalue{/fca/node/\pgfkeysgetvalue{/fca/node/type} position}{}
+  }
+  left/.style={position=left},
+  right/.style={position=right},
+  center/.style={position=center},
+  attribute position/.is choice,
+  attribute position/left/.style={
+    label at=north west,
+    label anchor=south east
+  },
+  attribute position/center/.style={
+    label at=north,
+    label anchor=south
+  },
+  attribute position/right/.style={
+    label at=north east,
+    label anchor=south west
+  },
+  attribute/.code={
+    \pgfqkeys{/fca/node}{%
+      label type=attribute
+    }
+    \ifx\pgfnovalue#1\relax
+      \pgfqkeys{/fca/node}{attribute position=\pgfkeysqgetvalue{/fca/node/position}}
+    \else
+      \pgfqkeys{/fca/node}{attribute position={#1}}
+    \fi
+  },
+  object position/.is choice,
+  object position/left/.style={
+    label at=south west,
+    label anchor=north east
+  },
+  object position/center/.style={
+    label at=south,
+    label anchor=north
+  },
+  object position/right/.style={
+    label at=south east,
+    label anchor=north west
+  },
+  object/.code={
+    \pgfqkeys{/fca/node}{%
+      label type=object
+    }
+    \ifx\pgfnovalue#1\relax
+      \pgfqkeys{/fca/node}{object position=center}
+    \else
+      \pgfqkeys{/fca/node}{object position={#1}}
+    \fi
+  },
+}
+\newcommand*{\fcaNodeThickness}[1]{\pgfkeyssetvalue{/fca/node/thickness}{#1}}% %
+\newcommand*{\fcaEdgeThickness}[1]{\def\fca@edgethickness{#1}}% %
+\newcommand*{\fcaNodeColor}[1]{\pgfkeyssetvalue{/fca/node/color}{#1}}% %
+\newcommand*{\fcaNumbers}{%
+  \setboolean{fca@CircledNumbers}{true}%
+  \pgfqkeys{/fca/node}{radius/.append={+2\unitlength}}%
+}%
+\newcommand*{\fcaCircleSize}[1]{\setcounter{fca@CircleDiameter}{#1}}%
+\iffca@compat@macros
+  \def\EdgeThickness{\fcaEdgeThickness}%
+  \def\NodeThickness{\fcaNodeThickness}%
+  \def\NodeColor{\fcaNodeColor}%
+  \def\Numbers{\fcaNumbers}%
+  \def\CircleSize{\fcaCircleSize}%
+\fi
+\pgfqkeys{/fca/edge}{%
+  thickness/.code=\fcaEdgeThickness
+}%
 %    \end{macrocode}
-%%
-%                                                                             %
+% \begin{macro}{\fcaset}\marg{key value list}
+%   This macro is similar to \cs{pgfkeys}, except that it
+%   sets \filenm{/fca} as default path.
+%    \begin{macrocode}
+\newcommand*\fcaset[1]{\pgfqkeys{/fca}}
+%    \end{macrocode}
+% \end{macro}
+%                                                                             % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
 \newcounter{fca@minNode}%
@@ -2102,6 +2276,22 @@ Formal Concept Analysis macros]
 \def\fca@adjNode#1{%
   \ifthenelse{#1<\value{fca@minNode}}{\setcounter{fca@minNode}{#1}}{}%
   \ifthenelse{\value{fca@maxNode}<#1}{\setcounter{fca@maxNode}{#1}}{}}%
+\newcommand\fca@node{%
+  \@ifnextchar\bgroup\fca@oldnode{%
+      \@ifnextchar(\fca@pictnode\fca@tikznode%)
+      }%
+% \egroup
+}
+\newcommand\fca@oldnode[3]{%
+  {%
+    \fca@parselength\@tempdima{#2}\unitlength
+    \fca@parselength\@tempdimb{#3}\unitlength
+    \pgftransformshift{\pgfpoint{\@tempdima}{\@tempdimb}}%
+    \pgfnode{\fca@nodeshape}{center}{}{\fca@nodename#1}{\pgfusepath{stroke}}
+  }%
+  \ignorespaces
+}
+\iffalse
 \def\Node#1#2#3{\fca@adjNode{#1}\ifcase#1%
   \def\fca@xaa{#2}\def\fca@yaa{#3}\or%
   \def\fca@xab{#2}\def\fca@yab{#3}\or%
@@ -2232,17 +2422,10 @@ Formal Concept Analysis macros]
   \def\fca@v{\fca@ybs}\or\def\fca@v{\fca@ybt}\or\def\fca@v{\fca@ybu}\or%
   \def\fca@v{\fca@ybv}\or\def\fca@v{\fca@ybw}\or\def\fca@v{\fca@ybx}\or%
   \def\fca@v{\fca@yby}\or\def\fca@v{\fca@ybz}\fi}%
-% 
+%
 \newcommand{\Edge}[2]{\fca@getNode{#1}\fca@getNodeb{#2}%
   {\linethickness{\fca@edgethickness}%
     \fcadrawline(\fca@x,\fca@y)(\fca@u,\fca@v)}}%
-% 
-\def\fca@changeaValue#1#2#3{\setcounter{fca@AuxCounter}{#1}%
-  \addtocounter{fca@AuxCounter}{#2}\def#3{\value{fca@AuxCounter}}}%
-\def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
-  \addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
-\newcommand{\NoDots}{\setboolean{fca@dots}{false}}
-% 
 \def\leftAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(#2,0)%
       \put(0,#3){\makebox(0,0)[rb]{\begin{minipage}{\LabelBoxWidth}%
@@ -2281,13 +2464,88 @@ Formal Concept Analysis macros]
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(#2,1)}}{}%
     \end{picture}}}%
 % 
-\def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
+\def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@yRechnungsnummer RE-00379166/04/2013 ){%
     \begin{picture}(#2,#3)(0,#3)%
       \put(#2,0){\makebox(0,0)[lt]{\begin{minipage}{\LabelBoxWidth}%
             \raggedright\ObjectLabelStyle#4\end{minipage}}}%
       \fca@changeaValue{#2}{-1}{\fca@u}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(\fca@u,1)}}{}%
     \end{picture}}}%
+%
+\fi
+\newcommand{\fca@edge}{%
+  \@ifnextchar\bgroup{\fca@oldedge}{\fca@newedge}
+% \egroup
+}
+\newcommand{\fca@oldedge}[2]{%
+  {%
+    \pgfsetlinewidth{\fca@edgethickness}%
+    \pgfpathmoveto{\pgfpointshapeborder{\fca@nodename#1}{\pgfpointanchor{\fca@nodename#2}{center}}}%
+    \pgfpathlineto{\pgfpointshapeborder{\fca@nodename#2}{\pgfpointanchor{\fca@nodename#1}{center}}}%
+    \pgfusepath{stroke}%
+  }%
+  \ignorespaces
+}
+% 
+\def\fca@changeaValue#1#2#3{\setcounter{fca@AuxCounter}{#1}%
+  \addtocounter{fca@AuxCounter}{#2}\def#3{\value{fca@AuxCounter}}}%
+\def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
+  \addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
+\newcommand{\NoDots}{\setboolean{fca@dots}{false}}
+%    \end{macrocode}
+%
+% \begin{macro}{\fca@labelBox}\marg{node anchor}\marg{label anchor}\marg{prefix}\marg{label}\marg{content}
+% \begin{macro}{\fca@labelBox}\marg{node anchor}\marg{label anchor}\marg{prefix}\marg{label}\marg{xoffset}\marg{yoffset}\marg{content}
+%    \begin{macrocode}
+\newcommand\fca@labelBox[5]{%
+  \@ifnextchar\bgroup{%
+    \fca@oldlabelBox{#1}{#2}{#3}{#4}{#5}%
+  }{
+    \let\fca@extrashift\relax
+    \fca@@labelBox{#1}{#2}{#3}{#4}{#5}%
+  }%
+}
+\newcommand\fca@oldlabelBox[7]{%
+  \PackageWarning{fca}{The offset parameter of #2 #3 has been
+    ignored.}
+  {%
+    \fca@parselength\@tempdima{#5}\unitlength
+    \fca@parselength\@tempdimb{-(#6)}\unitlength
+    \edef\fca@extrashift{%
+      \noexpand\pgftransformshift{\noexpand\pgfpoint{\the\@tempdima}{\the\@tempdimb}}%
+    }%
+    \fca@@labelBox{#1}{#2}{#3}{#4}{#7}%
+  }%
+}
+\newcommand\fca@@labelBox[5]{%
+  {%
+    \pgftransformshift{\pgfpointanchor{\fca@nodename#4}{#1}}%
+    \fca@extrashift
+    \pgfnode{rectangle}{#2}{#5}{\fca@nodename#3#4}{}%
+  }%
+}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%    \begin{macrocode}
+\newcommand\fca@leftAttbox{%
+  \fca@labelBox{north west}{south east}{ attribute left }%
+}
+\newcommand\fca@centerAttbox{%
+  \fca@labelBox{north}{south}{ attribute center }%
+}
+\newcommand\fca@rightAttbox{%
+  \fca@labelBox{north east}{south west}{ attribute right }%
+}
+\newcommand\fca@leftObjbox{%
+  \fca@labelBox{south west}{north east}{ object left }%
+}
+\newcommand\fca@centerObjbox{%
+  \fca@labelBox{south}{north}{ object center }%
+}
+\newcommand\fca@rightObjbox{%
+  \fca@labelBox{south east}{north west}{ object right }%
+}
 % 
 \def\fca@ResetDefaults{\setcounter{fca@minNode}{60}%
   \setcounter{fca@maxNode}{0}%
@@ -2313,12 +2571,73 @@ Formal Concept Analysis macros]
     \ifthenelse{\boolean{fca@CircledNumbers}}%
     {\put(\fca@x,\fca@y){\makebox(0,0){\tiny\arabic{fca@runNode}}}}{}%
     \stepcounter{fca@runNode}}}%
-% 
-\newenvironment{diagram}[2]%
-{\fca@ResetDefaults%
-  \noindent\begin{picture}(#1,#2)(\diagramXoffset,\diagramYoffset)}%
-  {\fca@DrawCircles\end{picture}}%
+%
+
+\newcommand*\fca@setb@undingbox{%
+}%
+\newcommand*\fca@ignoreboundingbox{}%
+
+% set bounding box using brace notation
+\newcommand*\fca@olddiagram[2]{%
+  \fca@parselength\@tempdima{#1}\unitlength
+  \edef\fca@right@border{\the\@tempdima}%
+  \fca@parselength\@tempdimb{#2}\unitlength
+  \edef\fca@top@border{\the\@tempdimb}%
+  \let\fca@boundingbox\fca@setboundingbox
+  \fca@parselength\@tempdima{-(\fcaDiagramXoffset)}\unitlength%
+  \edef\fca@left@border{\the\@tempdima}%
+  \fca@parselength\@tempdima{-(\fcaDiagramYoffset)}\unitlength%
+  \edef\fca@bottom@border{\the\@tempdima}%
+  \fca@startdiagram
+  \fca@setboundingbox{\fca@left@border}{\fca@bottom@border}
+  {\fca@right@border}{\fca@top@border}%
+}
+\newcommand*\fca@diagram{%
+  \@ifnextchar(\fca@diagr@m\fca@di@gram
+% )
+}
+% set bounding box using parentheses
+\newcommand*\fca@diagr@m{%(#1,#2)
+  \PackageError{fca}{not implemented}{not implemented}%
+}
+% set bounding box using defaults
+\newcommand*\fca@di@gram{%
+  \fca@startdiagram
+}
+\newcommand*\fca@startdiagram{%
+  \fca@begindiagram
+  \fca@Defaults
+}
+\newcommand*\fca@setboundingbox[4]{%
+  \pgfpathrectangle{\pgfpoint{#1}{#2}}{\pgfpoint{#3}{#4}}%
+  \pgfusepath{use as bounding box}%
+}
+% \todo{Lattice diagrams inside pgf pictures should be drawn inside
+% their own scope}
+\newenvironment{diagram}
+{%
+  \ifpgfpicture
+    \def\fca@begindiagram{%
+      \begin{pgfscope}%
+        \def\fca@enddiagram{\end{pgfscope}}%
+    }
+  \else
+    \def\fca@begindiagram{%
+      \begin{pgfpicture}%
+        \def\fca@enddiagram{\end{pgfpicture}}%
+    }
+  \fi
+  \noindent
+  \@ifnextchar\bgroup\fca@olddiagram\fca@diagram% This line must be
+                                % executed before \begin{pgfpictire}
+}%
+{%
+  %\fca@DrawCircles
+  \fca@enddiagram%
+}%
 %    \end{macrocode}
+% \changes{2.2}{2022/05/06}{Rename \cs{EdgeThickness} to
+% \cs{fcaEdgeThickness} and \cs{NodeThickness} to \cs{fcaNodeThickness}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %
 % End of diagram environment definition.                                      %

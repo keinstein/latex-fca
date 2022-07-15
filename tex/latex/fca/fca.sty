@@ -58,7 +58,7 @@ Formal Concept Analysis macros]
 }
 \ProcessOptions\relax
 \RequirePackage{pgf}
-\RequirePackage{amssymb,epic,graphics,color,ifthen,rotating,xspace,newdrawline}%%
+\RequirePackage{amssymb,graphics,color,ifthen,rotating,xspace}%%
 \newcommand*\fca@parselength[3]{%
   \pgfmathparse{#2}%
   \ifpgfmathunitsdeclared
@@ -101,7 +101,6 @@ Formal Concept Analysis macros]
 \iffca@compat@macros
   \newcommand{\cxtName}{\fcaCxtName}
 \fi
-
 \newcommand{\fca@cxt@att}[1]{%
   \ifthenelse{\boolean{fca@cxt@ttributes}}{%
     \settoheight{\fca@cxt@ttnameheight}{#1}\adjcxt@name%
@@ -228,16 +227,20 @@ Formal Concept Analysis macros]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\fca@Defaults}{% Do not change this line!  %
-  \newcommand{\ObjectLabelStyle}{\small\baselineskip6pt\rm}% %
-  \newcommand{\AttributeLabelStyle}{\small\baselineskip6pt\it}% %
-  \newcommand{\LabelBoxWidth}{40mm}%
+  \newcommand{\fcaObjectLabelStyle}{\small\baselineskip6pt\rmfamily\upshape}% %
+  \newcommand{\fcaAttributeLabelStyle}{\small\baselineskip6pt\itshape}% %
+  \newcommand{\fcaLabelBoxWidth}{40mm}%
   \let\Node\fca@node
   \let\Edge\fca@edge
   \iffca@compat@macros
   \else
+    \let\fcaObjectLabelStyle\fcaObjectLabelStyle
+    \let\AttributeLabelStyle\fcaAttributeLabelStyle
+    \let\LabelBoxWidth\fcaLabelBoxWidth
     \let\EdgeThickness\fcaEdgeThickness
     \let\NodeThickness\fcaNodeThickness
     \let\Numbers\fcaNumbers
+    \let\noNumbers\fcaNoNumbers
     \let\NodeColor\fcaNodeColor
   \fi
   \let\leftAttbox\fca@leftAttbox
@@ -257,114 +260,414 @@ Formal Concept Analysis macros]
   \newcommand{\fcaDiagramXoffset}{0}% %
   \newcommand{\fcaDiagramYoffset}{0}% %
 \fi
-\newcommand*{\fca@edgethickness}{.8pt}% %
-\newcommand*{\fca@nodethickness}{1pt}% %
-\newcommand*{\fca@nodecolor}{white}% %
-\newcommand*{\fca@nodename}{fca node }%
-\newcommand*{\fca@nodeshape}{circle}%
+\newcommand*{\fca@xunitlength}{\unitlength}%
+\newcommand*{\fca@yunitlength}{\unitlength}%
+\newcommand*{\fca@edge@thickness}{.8pt}% %
+\newcommand*{\fca@node@thickness}{1pt}% %
+\newcommand*{\fca@transform}{}%
+\newcommand*{\fca@options}{}%
+\newcommand*{\fca@usepath}{}%
+\newcommand*{\fca@node@shape}{circle}%
+\newcommand*{\fca@node@radius}{1\unitlength}%
+\newcommand*{\fca@node@number@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
+\newcommand*{\fca@node@number@suffix}{\space number}%
+\newcommand*{\fca@label@edge@thickness}{\@wholewidth}%
+\newcommand*{\fca@label@at}{center}% anchor of node
+\newcommand*{\fca@label@anchor}{center}% anchor of label
+\newcommand*{\fca@label@shift@x}{0pt}%
+\newcommand*{\fca@label@shift@y}{0pt}%
+\newcommand*{\fca@label@shift@x@sign}{}
+\newcommand*{\fca@label@shift@y@sign}{}
+\newcommand*{\fca@label@type}{attributes}%
+\newcommand*{\fca@label@position}{right}%
+\newcommand*{\fca@label@name@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
+\newcommand*{\fca@label@name@suffix}{\space\fca@label@type\space\fca@label@position\space}%
+
+\newcommand*\fca@none{none}
+\newcommand*\fca@firstofthree[3]{#1}
+\newcommand*\fca@secondofthree[3]{#2}
+\newcommand*\fca@thirdofthree[3]{#3}
+\newcommand*\fca@testoption[1]{%
+  \def\fca@tempa{#1}%
+  \ifx\empty\fca@tempa
+    \let\fca@tempb\fca@thirdofthree
+  \else
+    \ifx\fca@tempa\fca@none
+      \let\fca@tempb\fca@secondofthree
+    \else
+      \let\fca@tempb\fca@firstofthree
+    \fi
+  \fi
+  \fca@tempb
+}
+
+\newcommand*\fcaLayer[2]{%
+  \def\@tempa{main}%
+  \edef\@tempb{#2}%
+  \ifx\@tempb\@empty\let\@tempb\@tempa\fi
+  \ifx\@tempa\@tempb
+    \def\@tempa{}%
+    \def\@tempb{}%
+  \else
+    \def\@tempa{%
+      \begin{pgfonlayer}{#2}%
+      }
+      \def\@temb{%
+      \end{pgfonlayer}%
+    }
+  \fi
+  \expandafter\let\csname fca@#1layer\endcsname\@tempa
+  \expandafter\let\csname fca@end#1layer\endcsname\@tempb
+}
+\newcommand*{\fca@labelslayer}{\csname fca@\fca@label@type layer\endcsname}
+\newcommand*{\fca@endlabelslayer}{\csname fca@end\fca@label@type layer\endcsname}
+\newcommand*{\fcaNewLayer}[2]{%
+  \pgfdeclarelayer{#2}%
+  \fcaLayer{#1}{#2}%
+}
+\newcommand*{\fcaDeclareLayers}{%
+  \fcaLayer{nodes}{main}
+  \fcaNewLayer{attributes}{\pgfkeysvalueof{/fca/namespace} attributes}
+  \fcaNewLayer{objects}{\pgfkeysvalueof{/fca/namespace} objects}
+  \fcaNewLayer{edges}{\pgfkeysvalueof{/fca/namespace} edges}
+  \pgfdeclarelayer{\pgfkeysvalueof{/fca/namespace} above nodes}
+  \pgfdeclarelayer{\pgfkeysvalueof{/fca/namespace} below nodes}
+}
+\newcommand*{\fcaSetLayers}{%
+  \pgfsetlayers{
+    \pgfkeysvalueof{/fca/namespace} edges,
+    \pgfkeysvalueof{/fca/namespace} below nodes,
+    main,
+    \pgfkeysvalueof{/fca/namespace} above nodes,
+    \pgfkeysvalueof{/fca/namespace} attributes
+    \pgfkeysvalueof{/fca/namespace} objects,
+  }%
+}
+\newcommand*\fcaNoLayers{%
+  \fcaLayer{nodes}{main}%
+  \fcaLayer{attributes}{main}%
+  \fcaLayer{objects}{main}%
+  \fcaLayer{edges}{main}%
+}
+\fcaNoLayers
+\newcommand*{\fcaLayers}{%
+  \fcaDeclareLayers
+  \fcaSetLayers
+}
+\newcommand\fca@dolabelposition{%
+  \pgfkeysgetvalue{/fca/label/type}{\@tempa}%
+  \pgfkeysgetvalue{/fca/label/position}{\@tempb}%
+  \ifx\pgfnovalue\@tempa
+  \else
+    \ifx\pgfnovalue\@tempb
+    \else
+      \pgfkeysalso{/fca/label/\@tempa{} position=\@tempb}%
+    \fi
+  \fi
+}
+
+\newcommand*\fcaNewLabelType{%
+  \@ifstar{\fca@NewLabelType}{\fca@NewL@belType}%\fistar
+}
+\newcommand*\fca@NewLabelType[1]{%
+  \pgfqkeys{/fca/label}{%
+    type/#1/.style={type=#1},
+    #1 position/.is choice,
+  }%
+}
+\newcommand*\fca@NewL@belType[1]{%
+  \fca@NewLabelType{#1}%
+  \pgfqkeys{/fca/label}{%
+    #1/.style={type=#1}%
+  }%
+}
+\newcommand*\fcaNewLabelPosition{%
+  \@ifstar{\fca@NewLabelPosition}{\fca@NewL@belPosition}%\fistar
+}
+\newcommand*\fca@NewLabelPosition[1]{%
+  \pgfqkeys{/fca/label}{%
+    position/#1/.style={position=#1},
+  }%
+}
+\newcommand*\fca@NewL@belPosition[1]{%
+  \fca@NewLabelPosition{#1}%
+  \pgfqkeys{/fca/label}{%
+    #1/.style={position=#1}%
+  }%
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\pgfqkeys{/fca/node}{%
-  thickness/.initial=1pt,
-  thickness/.value required,
-  color/.initial={white},
-  color/.value required,
-  numbers/.is if=fca@CircledNumbers,
-  radius/.initial=1\unitlength,
-  radius/.value required,
-  label at/.initial=center,
-  label at/.value required,
-  label anchor/.initial=center,
-  label anchor/.value required,
-  label shift/x/.initial=0pt,
-  label shift/y/.initial=0pt,
-  label shift/.value required,
-  label shift/.style args={(#1,#2)}{%
-    label shift/x=#1,
-    label shift/y=#2
-  },%
-  type/.initial=attribute,
-  type/.is choice,
-  type/attribute/.code={
-    \pgfkeyssetvalue{/fca/node/type}{attribute}
-    \pgfqkeys{/fca/node/}{attribute position}{\pgfkeysgetvalue{}}
-
-  },
-  position/.initial=center,
-  position/.code={%
-    \pgfqkeys{/fca/node}{%
-      \pgfkeysqgetvalue{/fca/node}{type} #1}%
-    \pgfkeyssetvalue{/fca/node/\pgfkeysgetvalue{/fca/node/type} position}{}
+\newcommand*\fca@generate@tikz@parameter[3]{%
+  \pgfqkeys{/fca/#1}{.initial={#2},.value required}
+}
+\newcommand*\fca@generate@tikz@parameters{%
+  \@for \fca@tmp:=%
+  {font}{}{\tikz@textfont},%
+  {node font}{}{\tikz@node@textfont},%
+  {text opacity}{}{\tikz@textopacity},%
+  {text width}{}{\tikz@text@width},%
+  {text height}{}{\tikz@text@height},
+  {text depth}{}{\tikz@text@depth},
+  {text action}{}{\tikz@text@action},
+  {options}{}{\tikz@options},%\newcommand*{\fca@node@fill}{white}%
+  {name prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}{\pgfkeysvalueof{/tikz/name prefix}},
+  {name suffix}{}{\pgfkeysvalueof{/tikz/name suffix}}
+  \do {
+    \expandafter\fca@generate@tikz@parameter\fca@tmp
   }
-  left/.style={position=left},
-  right/.style={position=right},
-  center/.style={position=center},
-  attribute position/.is choice,
-  attribute position/left/.style={
-    label at=north west,
-    label anchor=south east
+}
+\fca@generate@tikz@parameters
+
+\newcommand\fca@append[2]{%
+  \expandafter\def\expandafter#1\expandafter{#1#2}%
+}
+
+\pgfqkeys{/fca}{%
+  namespace/.initial=fca,
+  namespace/.value required,
+  font=\small\baselineskip1em\rmfamily,
+  radius/.code={
+    \fca@parselength\@tempdima{#1}\unitlength
+    \@tempdima=.70710678118654752440084436210484\@tempdima
+    \edef\@tempa{\noexpand\pgfkeysalso{/pgf/inner sep=\the\@tempdima}}%
+    \@tempa
   },
-  attribute position/center/.style={
-    label at=north,
-    label anchor=south
+  every node/.style = {},
+  every concept/.style = {
+    radius = 2,
+    fill=white,
+    draw=black
   },
-  attribute position/right/.style={
-    label at=north east,
-    label anchor=south west
+  every attributes/.style = {
+    /fca/font/.append=\itshape
+  },%\newcommand*{\fca@node@fill}{white}%%\newcommand*{\fca@node@fill}{white}%
+  every objects/.style = {
+    /fca/font/.append=\upshape
   },
-  attribute/.code={
-    \pgfqkeys{/fca/node}{%
-      label type=attribute
-    }
-    \ifx\pgfnovalue#1\relax
-      \pgfqkeys{/fca/node}{attribute position=\pgfkeysqgetvalue{/fca/node/position}}
-    \else
-      \pgfqkeys{/fca/node}{attribute position={#1}}
-    \fi
+  every edge/.style = {},
+  every label edge/.style = { dotted, draw=black },
+  node number/.style = { draw=black, fill=red },
+  color/.code={\fca@append\fca@options{#1}},
+  stroke/.code={%
+    \fca@testoption{#1}{%
+      \fca@append\fca@options{%
+        \pgfsetstrokecolor{#1}%
+      }%
+      \fca@append\fca@usepath{stroke,}%
+    }{%
+      \fca@append\fca@options{%
+        \let\pgf@up@stroke\pgfutil@empty
+      }%
+    }{%
+      \fca@append\fca@usepath{stroke,}%
+    }%
   },
-  object position/.is choice,
-  object position/left/.style={
-    label at=south west,
-    label anchor=north east
+  draw/.forward to=/fca/stroke,
+  fill/.code={%
+    \fca@testoption{#1}{%
+      \fca@append\fca@options{%
+        \pgfsetfillcolor{#1}%
+      }%
+      \fca@append\fca@usepath{fill,}%
+    }{%
+      \fca@append\fca@options{%
+        \let\pgf@up@fill\pgfutil@empty
+      }%
+    }{%
+      \fca@append\fca@usepath{fill,}%
+    }%
   },
-  object position/center/.style={
-    label at=south,
-    label anchor=north
+  text/.initial=pgfstrokecolor,
+  text/.value required,
+  label type/.forward to=/fca/label/type,
+  label position/.forward to=/fca/label/position,
+  pgfnode/.initial={%
+    \pgfkeysvalueof{/fca/name prefix}%
+    \pgfkeysvalueof{/fca/node}%
+    \pgfkeysvalueof{/fca/name suffix}%
   },
-  object position/right/.style={
-    label at=south east,
-    label anchor=north west
-  },
-  object/.code={
-    \pgfqkeys{/fca/node}{%
-      label type=object
-    }
-    \ifx\pgfnovalue#1\relax
-      \pgfqkeys{/fca/node}{object position=center}
-    \else
-      \pgfqkeys{/fca/node}{object position={#1}}
-    \fi
+  pgfnode/.value required,
+  node/.initial={},
+  node/.value required,
+  node contents/.initial={},
+  node contents/.value required,
+  shift/x/.store in=\fca@label@shift@x,
+  shift/x/.value required,
+  shift/y/.store in=\fca@label@shift@y,
+  shift/y/.value required,
+  shift/.value required,
+  shift/.style args={(#1,#2)}{%
+    /fca/shift/x=#1,
+    /fca/shift/y=#2
+  },%
+  shift/x/signv2.1/.store in=\fca@label@shift@x@sign,
+  shift/x/signv2.1/.value required,
+  shift/y/signv2.1/.store in=\fca@label@shift@y@sign,
+  shift/y/signv2.1/.value required,
+  dotted/.code={%
+    \fca@append\fca@options{%
+      \pgfsetdash{{\pgflinewidth}{2pt}}{0pt}%
+    }%
+  }%
+  loosely dotted/.code={%
+    \fca@append\fca@options{%
+      \pgfsetdash{{\pgflinewidth}{4pt}}{0pt}%
+    }%
+  }%
+  densely dotted/.code={%
+    \fca@append\fca@options{%
+      \pgfsetdash{{\pgflinewidth}{4pt}}{0pt}%
+    }%
+  }%
+}
+\pgfqkeys{/fca}{%
+  every label/.style = {
+    fill=green,
+    text=pgfstrokecolor,
+    text width=\fcaLabelBoxWidth,
+    /pgf/outer sep=0pt,
+    /pgf/inner sep=0pt,
   },
 }
+
+\pgfqkeys{/fca/node}{%
+  thickness/.store in=\fca@node@thickness,
+  thickness/.value required,
+  shape/.store in=\fca@node@shape,
+  shape/.value required,
+  radius/.style={
+    /pgf/inner sep=#1
+  },
+  layer/.code=\fcalayer{node},%
+  numbers/.is if=fca@CircledNumbers,
+  number prefix/.store in=\fca@node@number@prefix,
+  number prefix/.value required,
+  number suffix/.store in=\fca@node@number@suffix,
+  number suffix/.value required,
+}
+
+
+
+\pgfqkeys{/fca/label}{%
+  fill/.store in=\fca@node@fill,
+  fill/.value required,
+  text width/.store in=\fca@label@text@width,
+  text width/.value required,
+  node font/.store in=\fca@label@node@font,
+  node font/.value required,
+  edge thickness/.store in=\fca@label@edge@thickness,
+  edge thickness/.value required,
+  at/.store in=\fca@label@at,
+  at/.value required,
+  anchor/.store in=\fca@label@anchor,
+  anchor/.value required,
+  type/.store in=\fca@label@type,
+  type/.is choice,
+  type/.append code={%
+    \def\fca@label@type{#1}% the choice does not store the value
+    \pgfqkeysalso{/fca}{every #1/.try}%
+    \pgfqkeysalso{/fca/label}{\fca@label@type\space\fca@label@position}%
+  },
+  type/attributes/.style={},
+  type/objects/.style={},
+  position/.store in=\fca@label@position,
+  position/.is choice,
+  position/.append code={%
+    \def\fca@label@position{#1}% the choice does not store the value
+    \pgfqkeysalso{/fca/label}{\fca@label@type\space\fca@label@position}%
+  },
+  position/left/.style={},
+  position/right/.style={},
+  position/center/.style={},
+  %
+  attributes left/.style={
+    at=north west,
+    anchor=south east,
+    /fca/shift={(-2,2)},
+    /fca/shift/x/signv2.1=-,
+    /fca/shift/y/signv2.1={},
+    /fca/font/.append=\raggedleft
+  },
+  attributes center/.style={
+    at=north,
+    anchor=south,
+    /fca/shift={(0,2)},
+    /fca/shift/x/signv2.1={},
+    /fca/shift/y/signv2.1={},
+    /fca/font/.append=\centering
+  },
+  attributes right/.style={
+    at=north east,
+    anchor=south west,
+    /fca/shift={(2,2)},
+    /fca/shift/x/signv2.1={},
+    /fca/shift/y/signv2.1={},
+    /fca/font/.append=\raggedright
+  },
+  objects left/.style={
+    at=south west,
+    anchor=north east,
+    /fca/shift={(-2,-2)},
+    /fca/shift/x/signv2.1=-,
+    /fca/shift/y/signv2.1=-,
+    /fca/font/.append=\raggedleft
+  },
+  objects center/.style={
+    at=south,
+    anchor=north,
+    /fca/shift={(0,-2)},
+    /fca/shift/x/signv2.1={},
+    /fca/shift/y/signv2.1={},
+    /fca/font/.append=\centering
+  },
+  objects right/.style={
+    at=south east,
+    anchor=north west,
+    /fca/shift={(2,-2)},
+    /fca/shift/x/signv2.1={},
+    /fca/shift/y/signv2.1=-,
+    /fca/font/.append=\raggedright
+  }
+}
+
+\newcommand*\fca@tikz@without@library{%
+  \PackageWarning{fca}{FCA TikZ integration is not activated.^^J
+    You should consider \tikzlibrary{fca} instead of
+    \string\usepackage{fca}
+  }%
+}
+
+\AtBeginDocument{%
+  \@ifundefined{tikz@color}{}{\fca@tikz@without@library}
+}
+
 \newcommand*{\fcaNodeThickness}[1]{\pgfkeyssetvalue{/fca/node/thickness}{#1}}% %
-\newcommand*{\fcaEdgeThickness}[1]{\def\fca@edgethickness{#1}}% %
+\newcommand*{\fcaEdgeThickness}[1]{\def\fca@edge@thickness{#1}}% %
 \newcommand*{\fcaNodeColor}[1]{\pgfkeyssetvalue{/fca/node/color}{#1}}% %
 \newcommand*{\fcaNumbers}{%
   \setboolean{fca@CircledNumbers}{true}%
-  \pgfqkeys{/fca/node}{radius/.append={+2/unitlength}}%
 }%
-\newcommand*{\CircleSize}[1]{\setcounter{fca@CircleDiameter}{#1}}%
+\newcommand*{\fcaNoNumbers}{%
+  \setboolean{fca@CircledNumbers}{false}%
+}%
+\newcommand*{\fcaCircleSize}[1]{\pgfqset{/pgf/node}{inner sep=(#1)*0.5\unitsize}}%
 \iffca@compat@macros
+  \def\fcaObjectLabelStyle{\fcaObjectLabelStyle}%
+  \def\fcaAttributeLabelStyle{\AttributeLabelStyle}%
+  \def\fcaLabelBoxWidth{\LabelBoxWidth}%
   \def\EdgeThickness{\fcaEdgeThickness}%
   \def\NodeThickness{\fcaNodeThickness}%
   \def\NodeColor{\fcaNodeColor}%
   \def\Numbers{\fcaNumbers}%
+  \def\noNumbers{\fcaNoNumbers}
   \def\CircleSize{\fcaCircleSize}%
 \fi
 \pgfqkeys{/fca/edge}{%
   thickness/.code=\fcaEdgeThickness
+  layer/.code=\fcaLayer{edge}%
 }%
-\newcommand*\fcaset[1]{\pgfqkeys{/fca}}
+\newcommand*\fcaset{\pgfqkeys{/fca}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcounter{fca@minNode}%
 \newcounter{fca@maxNode}%
@@ -376,18 +679,58 @@ Formal Concept Analysis macros]
 \def\fca@adjNode#1{%
   \ifthenelse{#1<\value{fca@minNode}}{\setcounter{fca@minNode}{#1}}{}%
   \ifthenelse{\value{fca@maxNode}<#1}{\setcounter{fca@maxNode}{#1}}{}}%
-\newcommand\fca@node{%
-  \@ifnextchar\bgroup\fca@oldnode{%
-      \@ifnextchar(\fca@pictnode\fca@tikznode%)
-      }%
+\newcommand\fca@node[1][]{%
+  \@ifnextchar\bgroup{\fca@oldnode{#1}}{%
+      \@ifnextchar({\fca@pictnode{#1}}{\fca@tikznode{#1}}%)
+    }%
 }
-\newcommand\fca@oldnode[3]{%
-  {%
-    \fca@parselength\@tempdima{#2}\unitlength
-    \fca@parselength\@tempdimb{#3}\unitlength
+\newcommand\fca@typeset@node@content[1]{%
+  \edef\fca@tempa{\pgfkeysvalueof{/fca/text width}}%
+  \ifx\fca@tempa\@empty
+    \let\fca@node@end@content\@empty
+  \else
+    \def\fca@node@end@content{\end{minipage}}%
+    \fca@parselength\@tempdima{\fca@tempa}\fca@xunitlength
+    \begin{minipage}{\@tempdima}%
+  \fi
+  \pgfkeysvalueof{/fca/font}%
+  \color{\pgfkeysvalueof{/fca/text}}%
+  #1%
+  \fca@node@end@content%
+}
+\newcommand\fca@oldnode[4]{%
+  \begin{pgfscope}%
+    \pgfqkeys{/fca}{every node/.try}%
+    \pgfqkeys{/fca}{every concept/.try}%
+    \pgfqkeys{/fca}{#1}%
+    \fca@nodeslayer
+    \pgfkeysvalueof{/fca/node font}%
+    \fca@parselength\@tempdima{#3}\unitlength
+    \fca@parselength\@tempdimb{#4}\unitlength
     \pgftransformshift{\pgfpoint{\@tempdima}{\@tempdimb}}%
-    \pgfnode{\fca@nodeshape}{center}{}{\fca@nodename#1}{\pgfusepath{stroke}}
-  }%
+    \fca@options
+    % \pgfsetstrokecolor{\fca@node@color}%
+    \pgfnode{\fca@node@shape}{center}{}{%
+      \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name suffix}%
+    }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
+    \ifthenelse{\boolean{fca@CircledNumbers}}{%
+      \def\fca@usepath{}%
+      \pgfqkeys{/fca}{node number}
+      \fca@options
+      \pgfnode{\fca@node@shape}{center}{%
+        \fca@typeset@node@content
+        {%
+          \centering
+          \pgfkeysvalueof{/fca/font}%
+          #2%
+        }%
+      }{%
+        \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name
+          suffix} number%
+      }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
+    }{}%
+    \fca@endnodeslayer
+  \end{pgfscope}%
   \ignorespaces
 }
 \iffalse
@@ -522,7 +865,7 @@ Formal Concept Analysis macros]
   \def\fca@v{\fca@ybv}\or\def\fca@v{\fca@ybw}\or\def\fca@v{\fca@ybx}\or%
   \def\fca@v{\fca@yby}\or\def\fca@v{\fca@ybz}\fi}%
 \newcommand{\Edge}[2]{\fca@getNode{#1}\fca@getNodeb{#2}%
-  {\linethickness{\fca@edgethickness}%
+  {\linethickness{\fca@edge@thickness}%
     \fcadrawline(\fca@x,\fca@y)(\fca@u,\fca@v)}}%
 \def\leftAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(#2,0)%
@@ -541,40 +884,59 @@ Formal Concept Analysis macros]
 \def\rightAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(0,0)%
       \put(#2,#3){\makebox(0,0)[lb]{\begin{minipage}{\LabelBoxWidth}%
-            \raggedright\AttributeLabelStyle#4\end{minipage}}}%
+            \raggedright\AttributeLabelStylenn#4\end{minipage}}}%
       \fca@changeaValue{#2}{-1}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,0)(\fca@u,\fca@v)}}{}%
     \end{picture}}}%
 \def\leftObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(#2,#3)%
       \put(0,0){\makebox(0,0)[rt]{\begin{minipage}{\LabelBoxWidth}%
-            \raggedleft\ObjectLabelStyle#4\end{minipage}}}%
+            \raggedleft\fcaObjectLabelStyle#4\end{minipage}}}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,1)(#2,#3)}}{}%
     \end{picture}}}%
 \def\centerObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(0,#3)%
       \put(#2,0){\makebox(0,0)[ct]{\begin{minipage}{\LabelBoxWidth}%
-            \centering\ObjectLabelStyle#4\end{minipage}}}%
+            \centering\fcaObjectLabelStyle#4\end{minipage}}}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(#2,1)}}{}%
     \end{picture}}}%
-\def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@yRechnungsnummer RE-00379166/04/2013 ){%
+\def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y ){%
     \begin{picture}(#2,#3)(0,#3)%
       \put(#2,0){\makebox(0,0)[lt]{\begin{minipage}{\LabelBoxWidth}%
-            \raggedright\ObjectLabelStyle#4\end{minipage}}}%
+            \raggedright\fcaObjectLabelStyle#4\end{minipage}}}%
       \fca@changeaValue{#2}{-1}{\fca@u}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(\fca@u,1)}}{}%
     \end{picture}}}%
 \fi
-\newcommand{\fca@edge}{%
-  \@ifnextchar\bgroup{\fca@oldedge}{\fca@newedge}
+\newcommand{\fca@edge}[1][]{%
+  \@ifnextchar\bgroup{\fca@oldedge{#1}}{\fca@newedge{#1}}
 }
-\newcommand{\fca@oldedge}[2]{%
-  {%
-    \pgfsetlinewidth{\fca@edgethickness}%
-    \pgfpathmoveto{\pgfpointshapeborder{\fca@nodename#1}{\pgfpointanchor{\fca@nodename#2}{center}}}%
-    \pgfpathlineto{\pgfpointshapeborder{\fca@nodename#2}{\pgfpointanchor{\fca@nodename#1}{center}}}%
+\newcommand{\fca@oldedge}[3]{%
+  \begin{pgfscope}%
+    \pgfqkeys{/fca/edge}{#1}%
+    \fca@options
+    \fca@transform
+    \pgfsetlinewidth{\fca@edge@thickness}%
+    \pgfpathmoveto{%
+      \pgfpointshapeborder{%
+        \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name suffix}%%
+      }{%
+        \pgfpointanchor{%
+          \pgfkeysvalueof{/fca/name prefix}#3\pgfkeysvalueof{/fca/name suffix}%%
+        }{center}%
+      }%
+    }%
+    \pgfpathlineto{%
+      \pgfpointshapeborder{%
+        \pgfkeysvalueof{/fca/name prefix}#3\pgfkeysvalueof{/fca/name suffix}%%
+      }{%
+        \pgfpointanchor{%
+        \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name suffix}%%
+        }{center}%
+      }%
+    }%
     \pgfusepath{stroke}%
-  }%
+  \end{pgfscope}%
   \ignorespaces
 }
 \def\fca@changeaValue#1#2#3{\setcounter{fca@AuxCounter}{#1}%
@@ -582,50 +944,167 @@ Formal Concept Analysis macros]
 \def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
   \addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
 \newcommand{\NoDots}{\setboolean{fca@dots}{false}}
-\newcommand\fca@labelBox[5]{%
-  \@ifnextchar\bgroup{%
-    \fca@oldlabelBox{#1}{#2}{#3}{#4}{#5}%
-  }{
-    \let\fca@extrashift\relax
-    \fca@@labelBox{#1}{#2}{#3}{#4}{#5}%
-  }%
+\def\fca@parse@parenlabel#1(#2){#1{#2}}
+\def\fca@parse@paren@vector#1#2#3(#4,#5){%
+  \fca@parse@brace@vector{#1}{#2}{#3}{#4}{#5}%
 }
-\newcommand\fca@oldlabelBox[7]{%
-  \PackageWarning{fca}{The offset parameter of #2 #3 has been
-    ignored.}
-  {%
-    \fca@parselength\@tempdima{#5}\unitlength
-    \fca@parselength\@tempdimb{-(#6)}\unitlength
-    \edef\fca@extrashift{%
-      \noexpand\pgftransformshift{\noexpand\pgfpoint{\the\@tempdima}{\the\@tempdimb}}%
+\newcommand*\fca@parse@label[2]{%
+  \@ifnextchar\bgroup{%\egroup
+    #1%
+  }{%
+    \@ifnextchar(%)
+    {%
+      \fca@parse@parenlabel{#1}%
+    }{%
+      #2
     }%
-    \fca@@labelBox{#1}{#2}{#3}{#4}{#7}%
   }%
 }
-\newcommand\fca@@labelBox[5]{%
+\newcommand*\fca@parse@vector[4]{%
+  \@ifnextchar(%)
   {%
-    \pgftransformshift{\pgfpointanchor{\fca@nodename#4}{#1}}%
-    \fca@extrashift
-    \pgfnode{rectangle}{#2}{#5}{\fca@nodename#3#4}{}%
+    \fca@parse@paren@vector{#1}{#3}{#4}%
+  }{%
+    \@ifnextchar\bgroup{%\egroup
+      \fca@parse@brace@vector{#1}{#3}{#4}%
+    }{#2}%
   }%
 }
-\newcommand\fca@leftAttbox{%
-  \fca@labelBox{north west}{south east}{ attribute left }%
+\newcommand*\fca@parse@brace@vector[5]{%
+  \fca@parselength#2{#4}\fca@xunitlength
+  \fca@parselength#3{#5}\fca@yunitlength
+  #1%
 }
-\newcommand\fca@centerAttbox{%
-  \fca@labelBox{north}{south}{ attribute center }%
+\newcommand*\fca@labelBox[1][]{%
+  \fca@parse@label{\fca@l@belBox{#1}}{\fca@@labelBox{#1}}%
 }
-\newcommand\fca@rightAttbox{%
-  \fca@labelBox{north east}{south west}{ attribute right }%
+\newcommand*\fca@l@belBox[2]{%
+  \@ifnextchar\bgroup{%
+    \fca@lab@lBox{#1}{#2}%
+  }{%
+    \@ifnextchar({%)
+      \fca@parse@vector{%
+        \@ifnextchar\bgroup{%
+          \fca@l@b@lBox{#1,node=#2,shift={(\@tempdima,\@tempdimb)}}%
+        }{%
+          \fca@@labelBox{#1,node=#2,shift={(\@tempdima,\@tempdimb)}}%
+        }%
+      }{}{\@tempdima}{\@tempdimb}
+    }{%
+      \fca@@labelBox{#1,node={#2}}
+    }%
+  }%
 }
-\newcommand\fca@leftObjbox{%
-  \fca@labelBox{south west}{north east}{ object left }%
+\newcommand*\fca@lab@lBox[3]{%
+  \@ifnextchar\bgroup{%
+    \fca@parse@vector{%
+      \@ifnextchar\bgroup{
+        \fca@oldlabelBox{#1,node=#2}{\@tempdima}{\@tempdimb}%
+      }{%
+        \fca@oldlabelBox{#1,node=#2}{\@tempdima}{\@tempdimb}{}%
+      }%
+    }{}{\@tempdima}{\@tempdimb}{#3}%
+  }{%
+    \fca@@labelBox{#1,node={#2},node contents={#3}}%
+  }%
 }
-\newcommand\fca@centerObjbox{%
-  \fca@labelBox{south}{north}{ object center }%
+\newcommand*\fca@l@b@lBox[2]{%
+  \fca@@labelBox{#1,node contents=#2}
 }
-\newcommand\fca@rightObjbox{%
-  \fca@labelBox{south east}{north west}{ object right }%
+\newcommand*\fca@label@shift@sign@{}%
+\expandafter\newcommand\expandafter*\csname fca@label@shift@sign@+\endcsname[1]{+(#1)}
+\expandafter\newcommand\expandafter*\csname fca@label@shift@sign@-\endcsname[1]{-(#1)}
+\newcommand*\fca@addshiftsign[1]{%
+  \expandafter\fca@@ddshiftsign\expandafter{\csname
+  fca@label@shift@#1@sign\endcsname}
+}
+\newcommand*\fca@@ddshiftsign[1]{%
+  \csname fca@label@shift@sign@#1\endcsname
+}
+
+\newcommand\fca@oldlabelBox[4]{%
+  \fca@@labelBox{%
+    shift={({\fca@addshiftsign x{#2}},{\fca@addshiftsign y{#3}})},
+    #1,
+    label/at=center,
+    node contents={#4}%
+  }%
+}
+\newcommand\fca@@labelBox[1]{%
+  \begin{pgfscope}%
+    \pgfqkeys{/fca}{every node/.try,every label/.try,#1}%
+    \fca@labelslayer
+    \pgfkeysvalueof{/fca/node font}%
+    \fca@options
+    \pgftransformshift{%
+      \pgfpointanchor{%
+        \pgfkeysvalueof{/fca/pgfnode}%
+      }{\fca@label@at}%
+    }%
+    \fca@parselength\@tempdima{\fca@label@shift@x}\unitlength
+    \fca@parselength\@tempdimb{\fca@label@shift@y}\unitlength
+    \pgftransformshift{\pgfpoint{\@tempdima}{\@tempdimb}}%
+    \fca@transform
+    \pgfnode{rectangle}{\fca@label@anchor}{%
+      \fca@typeset@node@content
+      {%
+        \pgfkeysvalueof{/fca/node contents}%
+      }%
+    }{%
+      \fca@label@name@prefix\pgfkeysvalueof{/fca/node}%
+      \fca@label@name@suffix
+    }{%
+      \expandafter\pgfusepath\expandafter{\fca@usepath}%
+    }%
+    \fca@endlabelslayer
+    \let\fca@options\empty
+    \pgfqkeys{/fca}{#1}
+    \pgfqkeys{/fca}{every label edge}%
+    \tracingall
+    \fca@options
+    \tracingnone
+    \fca@transform
+    \pgfsetlinewidth{\fca@edge@thickness}%
+    \pgfpathmoveto{%
+      \pgfpointshapeborder{%
+        \pgfkeysvalueof{/fca/pgfnode}%
+      }{%
+        \pgfpointanchor{%
+          \fca@label@name@prefix\pgfkeysvalueof{/fca/node}%
+          \fca@label@name@suffix
+        }{center}%
+      }%
+    }%
+    \pgfpathlineto{%
+      \pgfpointshapeborder{%
+        \fca@label@name@prefix\pgfkeysvalueof{/fca/node}%
+        \fca@label@name@suffix
+      }{%
+        \pgfpointanchor{%
+          \pgfkeysvalueof{/fca/pgfnode}%
+        }{center}%
+      }%
+    }%
+    \pgfusepath{stroke}%
+  \end{pgfscope}%
+}
+\newcommand\fca@leftAttbox[1][]{%
+  \fca@labelBox[label type=attributes,label position=left,#1]
+}
+\newcommand\fca@centerAttbox[1][]{%
+  \fca@labelBox[label type=attributes,label position=center,#1]
+}
+\newcommand\fca@rightAttbox[1][]{%
+  \fca@labelBox[label type=attributes,label position=right,#1]
+}
+\newcommand\fca@leftObjbox[1][]{%
+  \fca@labelBox[label type=objects,label position=left,#1]
+}
+\newcommand\fca@centerObjbox[1][]{%
+  \fca@labelBox[label type=objects,label position=center,#1]
+}
+\newcommand\fca@rightObjbox[1][]{%
+  \fca@labelBox[label type=objects,label position=right,#1]
 }
 \def\fca@ResetDefaults{\setcounter{fca@minNode}{60}%
   \setcounter{fca@maxNode}{0}%
@@ -633,12 +1112,12 @@ Formal Concept Analysis macros]
   \setboolean{fca@CircledNumbers}{false}%
   \fca@Defaults}%
 \def\ColorNode#1{{%
-    \linethickness{\fca@nodethickness}%
+    \linethickness{\fca@node@thickness}%
     \color{#1}{\circle*{\value{fca@CircleDiameter}}}%
     \color{black}{\circle{\value{fca@CircleDiameter}}}}}%
 \def\fca@circle{{%
-    \linethickness{\fca@nodethickness}%
-    \color{\fca@nodecolor}{\circle*{\value{fca@CircleDiameter}}}%
+    \linethickness{\fca@node@thickness}%
+    \color{\fca@node@fill}{\circle*{\value{fca@CircleDiameter}}}%
     \color{black}{\circle{\value{fca@CircleDiameter}}}}}%
 \def\fca@DrawCircles{\setcounter{fca@runNode}{\value{fca@minNode}}%
   \stepcounter{fca@maxNode}%
@@ -684,22 +1163,24 @@ Formal Concept Analysis macros]
   \pgfpathrectangle{\pgfpoint{#1}{#2}}{\pgfpoint{#3}{#4}}%
   \pgfusepath{use as bounding box}%
 }
-\newenvironment{diagram}
+\newenvironment{diagram}[1][]
 {%
   \ifpgfpicture
     \def\fca@begindiagram{%
       \begin{pgfscope}%
+        \fcaset{#1}%
         \def\fca@enddiagram{\end{pgfscope}}%
-    }
+    }%
   \else
     \def\fca@begindiagram{%
       \begin{pgfpicture}%
+        \fcaset{#1}%
         \def\fca@enddiagram{\end{pgfpicture}}%
-    }
+    }%
   \fi
   \noindent
   \@ifnextchar\bgroup\fca@olddiagram\fca@diagram% This line must be
-                                % executed before \begin{pgfpictire}
+                                % executed before \begin{pgfpicture}
 }%
 {%
   %\fca@DrawCircles

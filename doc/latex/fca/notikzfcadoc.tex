@@ -1,0 +1,122 @@
+%%
+%% This is file `notikzfcadoc.tex',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% latex-fca.dtx  (with options: `notikzdriver')
+%%  latex-fca.dtx
+%%  Copyright ℂ 2022 Ernst-Schröder-Zentrum
+%%                   für Begriffliche Wissensverarbeitung
+%%  Authors: Bernhard Ganter
+%%           Tobias Schlemmer
+%% 
+%%  This program is provided under the terms of the
+%%  LaTeX Project Public License distributed from CTAN
+%%  archives in directory macros/latex/base/lppl.txt.
+%% 
+%%  This work is "maintained" (as per LPPL maintenance status) by
+%%  Tobias Schlemmer <keinstein@users.sf.net>.
+%% 
+%%  This work consists of the files
+%%    latex-fca.dtx and
+%%    latex-fca.ins
+%% 
+%%  and the derived files
+%%    cxtinput.sty,
+%%    fca.sty,
+%%    formula1.cxt.
+%% 
+\ProvidesFile{notikzfcadoc.tex}
+    [2022/02/26 v2.2
+Formal Concept Analysis macros]
+\expandafter\newif\csname iffcatikzdoc\endcsname
+\fcatikzdocfalse
+\edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|\relax}%
+\documentclass[a4paper]{ltxdoc}
+\def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
+\usepackage{dtxdescribe}
+\iffcatikzdoc
+  \usepackage{tikz}
+  \usetikzlibrary{fca}
+\else
+  \usepackage{fca}
+\fi
+\usepackage{cxtinput}
+\let\tsdtxexample\dtxexample
+\def\dtxexample#1{%
+  \typeout{#1}%
+  \tsdtxexample{#1}%
+}
+
+\iftrue
+  \NeedsTeXFormat{LaTeX2e}[1999/12/01]
+  \expandafter\def\expandafter\cxt
+  \expandafter{\expandafter\catcodebarlatex\cxt}%
+  \expandafter\def\expandafter\endcxt
+  \expandafter{\endcxt\catcodebarltxdoc}%
+\else
+  \NeedsTeXFormat{LaTeX2e}[2020/08/21]
+  \AddToHook{env/cxt/before}{%
+    \catcodebarlatex
+  }
+  \AddToHook{env/cxt/after}{%
+    \catcodebarltxdoc
+  }
+\fi
+
+\makeatletter
+\newcommand\fca@parseversion{}
+\def\fca@parseversion#1 #2 #3\fca@parseversion{%
+  \def\fcacurrentversiondate{#1}%
+  \def\fcacurrentversionversion{#2}%
+  \def\fcacurrentversiondescription{#3}%
+}
+\newcommand\fcaparseversion[1]{%
+  \edef\@tempa{\noexpand\fca@parseversion\csname ver@#1\endcsname{}
+    \noexpand\fca@parseversion}%
+  \@tempa
+}
+\makeatother
+
+\usepackage{iftex}
+\ifluatex
+\else
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+\fi
+\usepackage[english]{babel}
+\usepackage{lmodern}
+\usepackage{xcolor}
+
+\RequirePackage{stmaryrd}
+\usepackage[numbered]{hypdoc}
+\hypersetup{
+   pdfauthor = {Bernhard Ganter, Tobias Schlemmer},
+   pdfkeywords = {FCA LaTeX sytle diagrame context},
+   pdftitle = {fca.sty – LaTeX macros for Formal Concept Analysis},
+   pdfsubject = {LaTeX style file for typesetting formal contexts and
+     concept latticees}
+}
+\EnableCrossrefs
+\CodelineIndex
+\RecordChanges
+\def\fcastyle{\texttt{fca.sty}\xspace}
+\fcaparseversion{\jobname.tex}
+\title{\fcastyle\\\LaTeX--macros for Formal Concept Analysis\\
+  \fcacurrentversionversion}
+\author{Bernhard Ganter\thanks{TU Dresden\\Ernst-Schröder-Zentrum
+    f\"ur Begriffliche Wissensverarbeitung}\\
+  Tobias Schlemmer\thanks{TU Dresden}}
+\date{\fcacurrentversiondate}
+\typeout{vor document}
+\begin{document}
+\typeout{document anfang}%
+\DocInput{latex-fca.dtx}
+\typeout{document ende}%
+\end{document}
+\typeout{nach document}%
+
+\endinput
+%%
+%% End of file `notikzfcadoc.tex'.

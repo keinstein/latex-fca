@@ -93,11 +93,22 @@ http://www.latex-project.org/lppl.txt
                 \usepostamble\defaultpostamble
                 \from{latex-fca.dtx}{fca.sty,package}}
             }
+\usedir{tex/generic/fca}
+\generate{%
+        \file{tikzlibraryfca.code.tex}{%
+                \usepreamble\defaultpreamble
+                \usepostamble\defaultpostamble
+                \from{latex-fca.dtx}{tikz,package}}
+            }
 \usedir{doc/latex/fca}
 \generate{%
   \file{formula1.cxt}{
     \nopreamble\nopostamble
     \from{latex-fca.dtx}{formula1.cxt}}
+  \file{notikzfcadoc.tex}{%
+    \usepreamble\defaultpreamble
+    \usepostamble\defaultpostamble
+    \from{latex-fca.dtx}{notikzdriver}}
 }
 %</install>
 %<install>\endbatchfile
@@ -142,20 +153,37 @@ http://www.latex-project.org/lppl.txt
 % Copyright (C) 2022 Tobias Schlemmer, all rights reserved.
 % \fi
 % \iffalse
+%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<*driver>
 \ProvidesFile{latex-fca.dtx}
 %</driver>
-%<package>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<notikzdriver>\ProvidesFile{notikzfcadoc.tex}
 %<fca.sty>\ProvidesPackage{fca}
+%<tikz>\ProvidesFile{tikzlibraryfca.code.tex}
 %<cxtinput.sty>\ProvidesPackage{cxtinput}
-%<*package>
+%<*package|driver|notikzdriver>
     [2022/02/26 v2.2
-%</package>
-%<*fca.sty|driver>
+%</package|driver|notikzdriver>
+%<*fca.sty|driver|notikzdriver>
 Formal Concept Analysis macros]
-%</fca.sty|driver>
+%</fca.sty|driver|notikzdriver>
 %<cxtinput.sty> Reading formal contexts in Burmeister format]
+%<tikz> TikZ support for Formal concept Analysis]
+%<*driver|notikzdriver>
+% In the DocInput part this code is blocked by the preceeding
+% \backslash iffalse.
+% However, TeX scans for all \backslash if statements in a fast
+% forward mode in order to find nested ifs. Thus it also sees
+% the following statement, if it is written in assembled form.
+% That's why we use |csname|, here.
+\expandafter\newif\csname iffcatikzdoc\endcsname
+%</driver|notikzdriver>
+%<notikzdriver>\fcatikzdocfalse
 %<*driver>
+% Check whether we should disable TikZ for documentation generation
+\fcatikzdoctrue
+%</driver>
+%<*driver|notikzdriver>
 % Hack around the convention to use the vertical bar for macro names.
 % This clashes with the tabular environment.
 \edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|\relax}%
@@ -163,7 +191,12 @@ Formal Concept Analysis macros]
 \def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
 %\usepackage{a4}
 \usepackage{dtxdescribe}
-\usepackage{fca}
+\iffcatikzdoc
+  \usepackage{tikz}
+  \usetikzlibrary{fca}
+\else
+  \usepackage{fca}
+\fi
 \usepackage{cxtinput}
 
 % we hack the cxt environment so that it deactivates the vertical
@@ -234,7 +267,10 @@ Formal Concept Analysis macros]
 \CodelineIndex
 \RecordChanges
 \def\fcastyle{\texttt{fca.sty}\xspace}
-\fcaparseversion{latex-fca.dtx}
+%<*driver>
+\fcaparseversion{\jobname.dtx}
+%</driver>
+%<notikzdriver>\fcaparseversion{\jobname.tex}
 \title{\fcastyle\\\LaTeX--macros for Formal Concept Analysis\\
   \fcacurrentversionversion}
 \author{Bernhard Ganter\thanks{TU Dresden\\Ernst-Schröder-Zentrum
@@ -244,7 +280,7 @@ Formal Concept Analysis macros]
 \begin{document}
 \DocInput{latex-fca.dtx}
 \end{document}
-%</driver>
+%</driver|notikzdriver>
 % \fi
 % \maketitle
 % \begin{abstract}

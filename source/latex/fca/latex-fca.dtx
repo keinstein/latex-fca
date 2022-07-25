@@ -3186,10 +3186,18 @@ dotted
 }
 
 \newcommand\fca@oldlabelBox[4]{%
-  \fca@@labelBox{%
-    shift={({\fca@addshiftsign x{#2}},{\fca@addshiftsign y{#3}})},
+  \def\fca@tempa{%
     #1,
     label/at=center,
+    shift=
+  }%
+  \edef\fca@tempb{%
+    {({\noexpand\fca@addshiftsign x{#2}},{\noexpand\fca@addshiftsign y{#3}})}%
+  }%
+  \expandafter\expandafter\expandafter\fca@@labelBox
+  \expandafter\expandafter\expandafter{%
+    \expandafter\fca@tempa
+    \fca@tempb,
     node contents={#4}%
   }%
 }

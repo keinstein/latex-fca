@@ -637,7 +637,65 @@ Formal Concept Analysis macros]
 % 
 % {\unitlength 1.2mm\relax
 % \begin{dtxexample}{A diagram}
-%   \begin{diagram}{40}{55}
+%   \begin{diagram}[
+%     every attributes/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=blue,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         label/at=center,
+%         solid
+%       }
+%     },
+%     every objects/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=black,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         label/at=center,
+%         solid,
+%         rotate=180
+%       }
+%     }]
+%     \Node(1)(20,10)
+%     \Node(2)(35,20)
+%     \Node(3)(5,30)
+%     \Node(4)(35,40)
+%     \Node(5)(20,50)
+%     \Edge(1)(2)
+%     \Edge(1)(3)
+%     \Edge(2)(4)
+%     \Edge(3)(5)
+%     \Edge(4)(5)
+%     \leftAttbox(3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox(3){Hamilton}
+%     \rightObjbox(2){Massa}
+%     \rightObjbox(4){Alonso}
+%     \begin{pgfscope}%
+%       \edef\tempa{%
+%       \noexpand\pgftransformshift{%
+%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%
+%     }%
+%       \tempa
+%       \pgfmoveto{\pgfpoint{0pt}{0pt}}%
+%       \pgflineto{\pgfpoint{4\unitlength}{0pt}}
+%       \pgfsetstrokecolor{red}
+%       \pgfusepath{stroke}
+%     \end{pgfscope}%
+%   \end{diagram}
+% \end{dtxexample}
+% }
+%
+%   The old syntax is also supported:
+%
+% {\unitlength 1.2mm\relax
+% \begin{dtxexample}{A diagram}
 %   \begin{diagram}[
 %     every attributes/.append style={
 %       label concept/.append style={

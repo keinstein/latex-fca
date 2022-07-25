@@ -2840,6 +2840,16 @@ dotted
   \end{pgfscope}%
   \ignorespaces
 }
+\newcommand\fca@pictnode[1]{%
+  \fca@parse@parenlabel{\fca@pictn@de{#1}}%
+}
+\newcommand\fca@pictn@de[2]{%
+  \fca@parse@paren@vector{%
+    \edef\fca@tempa{{\the\@tempdima}{\the\@tempdimb}}%
+    \def\fca@tempb{\fca@oldnode{#1}{#2}}%
+    \expandafter\fca@tempb\fca@tempa
+  }\@tempdima\@tempdimb
+}
 \iffalse
 \def\Node#1#2#3{\fca@adjNode{#1}\ifcase#1%
   \def\fca@xaa{#2}\def\fca@yaa{#3}\or%
@@ -3023,8 +3033,14 @@ dotted
 %
 \fi
 \newcommand{\fca@edge}[1][]{%
-  \@ifnextchar\bgroup{\fca@oldedge{#1}}{\fca@newedge{#1}}
+  \@ifnextchar\bgroup{\fca@oldedge{#1}}{\fca@newedge{#1}}%
 % \egroup
+}
+\newcommand\fca@newedge[1]{%
+  \fca@parse@parenlabel{\fca@new@dge{#1}}%
+}
+\newcommand\fca@new@dge[2]{%
+  \fca@parse@parenlabel{\fca@oldedge{#1}{#2}}%
 }
 \newcommand{\fca@oldedge}[3]{%
   \begin{pgfscope}%
@@ -3147,10 +3163,17 @@ dotted
   }{%
     \@ifnextchar({%)
       \fca@parse@vector{%
+        \def\fca@tempa{outer sep=1pt,#1,node=#2,shift=}%
+        \edef\fca@tempb{(\the\@tempdima,\the\@tempdimb)}
+        \expandafter\fca@append\expandafter\fca@tempa\expandafter{%
+          \expandafter{%
+            \fca@tempb%
+          }%
+        }%
         \@ifnextchar\bgroup{%
-          \fca@l@b@lBox{#1,node=#2,shift={(\@tempdima,\@tempdimb)}}%
+          \expandafter\fca@l@b@lBox\expandafter{\fca@tempa}%
         }{%
-          \fca@@labelBox{#1,node=#2,shift={(\@tempdima,\@tempdimb)}}%
+          \expandafter\fca@@labelBox\expandafter{\fca@tempa}%
         }%
       }{}{\@tempdima}{\@tempdimb}
     }{%
@@ -3161,10 +3184,10 @@ dotted
 \newcommand*\fca@lab@lBox[3]{%
   \@ifnextchar\bgroup{%
     \fca@parse@vector{%
-      \@ifnextchar\bgroup{
-        \fca@oldlabelBox{#1,node=#2}{\@tempdima}{\@tempdimb}%
+      \@ifnextchar\bgroup{%
+        \fca@oldlabelBox{#1,node=#2}{\the\@tempdima}{\the\@tempdimb}%
       }{%
-        \fca@oldlabelBox{#1,node=#2}{\@tempdima}{\@tempdimb}{}%
+        \fca@oldlabelBox{#1,node=#2}{\the\@tempdima}{\the\@tempdimb}{}%
       }%
     }{}{\@tempdima}{\@tempdimb}{#3}%
   }{%

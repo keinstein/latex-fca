@@ -2293,10 +2293,15 @@ Formal Concept Analysis macros]
   \ifx\empty\fca@tempa
     \let\fca@tempb\fca@thirdofthree
   \else
-    \ifx\fca@tempa\fca@none
-      \let\fca@tempb\fca@secondofthree
+    \def\fca@tempb{\pgfkeysnovalue}%
+    \ifx\fca@tempa\fca@tempb
+      \let\fca@tempb\fca@thirdofthree
     \else
-      \let\fca@tempb\fca@firstofthree
+      \ifx\fca@tempa\fca@none
+        \let\fca@tempb\fca@secondofthree
+      \else
+        \let\fca@tempb\fca@firstofthree
+      \fi
     \fi
   \fi
   \fca@tempb

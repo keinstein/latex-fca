@@ -2460,15 +2460,36 @@ fill opacity,%
 opacity,%
 blend mode,%
 color,%
-dotted
+solid,%
+rotate,%
+dotted,%
+loosely dotted,%
+densely dotted%
 \do {
   \edef\@tempb{%
-    \noexpand\pgfkeysdef{/fca/\@tempa}{\noexpand\pgfkeys{/tikz/\@tempa={##1}}}%
+    \noexpand\pgfkeysdef{/fca/\@tempa}{\noexpand\pgfqkeys{/tikz}{\@tempa={##1}}}%
   }%
   \@tempb
 }
 \pgfkeysdef{/fca/options}{\tikz@addoption{#1}}
+\pgfkeysdef{/fca/stroke}{%
+  \pgfqkeys{/tikz}{stroke={#1}}%
+  \fca@testoption{#1}{%
+    \fca@append\fca@usepath{stroke,}%
+  }{}{%
+    \fca@append\fca@usepath{stroke,}%
+  }%
+}
+\pgfkeysdef{/fca/fill}{%
+  \pgfqkeys{/tikz}{fill={#1}}%
+  \fca@testoption{#1}{%
+    \fca@append\fca@usepath{fill,}%
+  }{}{%
+    \fca@append\fca@usepath{fill,}%
+  }%
+}
 \def\fca@options{\tikz@options}%
+\def\fca@defaultoptions{\tikz@options}%
 \def\fca@transform{\tikz@transform}%
 \@ifundefined{tikz@transform}{\let\tikz@transform\empty}{}
 %    \end{macrocode}

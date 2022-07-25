@@ -638,6 +638,28 @@ Formal Concept Analysis macros]
 % {\unitlength 1.2mm\relax
 % \begin{dtxexample}{A diagram}
 %   \begin{diagram}{40}{55}
+%   \begin{diagram}[
+%     every attributes/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=blue,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         solid
+%       }
+%     },
+%     every objects/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=black,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         solid,
+%         rotate=180
+%       }
+%     }]{40}{55}
 %     \Node{1}{20}{10}
 %     \Node{2}{35}{20}
 %     \Node{3}{5}{30}
@@ -648,6 +670,8 @@ Formal Concept Analysis macros]
 %     \Edge{2}{4}
 %     \Edge{3}{5}
 %     \Edge{4}{5}
+%     \Numbers
+%     \leftAttbox{3}{2}{2}{1.}
 %     \rightAttbox{2}{2}{2}{disqualified}
 %     \rightAttbox{4}{2}{2}{2.}
 %     \leftObjbox{3}{2}{2}{Hamilton}

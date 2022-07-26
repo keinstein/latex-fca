@@ -8,7 +8,7 @@
 -------:| -----------------------------------------------------------------
     fca:| Typesetting Formal Concep Analysis with LaTeX
  Author:| Bernhard Ganter
-        | Tobias Schlemmer <keinstein@users.sf.net>   
+        | Tobias Schlemmer <keinstein@users.sf.net>
  E-mail:| keinstein@users.sf.net
 License:| Released under the LaTeX Project Public License v1
     See:| http://www.latex-project.org/lppl.txt
@@ -40,12 +40,12 @@ Short description:
 \input docstrip
 
 \iffalse
-          
+
  This program is provided under the terms of the                             %
  LaTeX Project Public License distributed from CTAN                          %
  archives in directory macros/latex/base/lppl.txt.                           %
 \ else
- 
+
 This work may be distributed and/or modified under the
 conditions of the LaTeX Project Public License (LPPL), either
 version 1.3c of this license or (at your option) any later
@@ -178,7 +178,7 @@ Formal Concept Analysis macros]
 % That's why we use |csname|, here.
 \expandafter\newif\csname iffcatikzdoc\endcsname
 %</driver|notikzdriver>
-%<notikzdriver>\fcatikzdocfalse
+%<notikzdriver>  \fcatikzdocfalse
 %<*driver>
 % Check whether we should disable TikZ for documentation generation
 \fcatikzdoctrue
@@ -236,7 +236,7 @@ Formal Concept Analysis macros]
   \def\fcacurrentversiondescription{#3}%
 }
 \newcommand\fcaparseversion[1]{%
-  \edef\@tempa{\noexpand\fca@parseversion\csname ver@#1\endcsname{} 
+  \edef\@tempa{\noexpand\fca@parseversion\csname ver@#1\endcsname{}
     \noexpand\fca@parseversion}%
   \@tempa
 }
@@ -310,8 +310,8 @@ Formal Concept Analysis macros]
 %  \url{https://github.com/keinstein/latex-fca}
 % \end{center}
 % \end{abstract}
-% 
-% 
+%
+%
 % \tableofcontents
 %
 % \section{Loading the package}
@@ -324,7 +324,7 @@ Formal Concept Analysis macros]
 %
 % If you want to include context files in the Burmeister format,
 % you should also load the packages |cxtinput|:
-% 
+%
 % \begin{verbatim}
 % \usepackage{fca}
 % \usepackage{cxtinput}
@@ -336,7 +336,7 @@ Formal Concept Analysis macros]
 %
 % \DescribeOption{compat}
 %
-% In order to reduce incompatibilities with other packages, 
+% In order to reduce incompatibilities with other packages,
 % since version 2.2 |fca.sty| nearly all macros of |fca.sty| and
 % |cxtinput.sty| belong to a so called namespace. That means most of
 % them start with the |\fca...|. Only in the environments |cxt| and
@@ -373,20 +373,20 @@ Formal Concept Analysis macros]
 %     \obj{.xx}{Massa}
 %   \end{cxt}
 % \end{dtxexample}
-% 
+%
 % \DescribeEnv{cxt}\oarg{alignment}
 %
 % |cxt| generates a tabular of the appropriate format. It takes
 % an optional alignment parameter, that is passed to the tabular
 % environment (see there for further documentation). The tabular is
-% defined as soon as the first |\obj| command is given. Spaces in the 
+% defined as soon as the first |\obj| command is given. Spaces in the
 % preceding lines are not ignored in general. The standard macros have
 % been designed to ignore following spaces. But this cannot be extended
 % to other macros. Therefore, each line that contains individual
 % (non-cxt-code) should be ended with a |%|\ .
-% 
+%
 % A short demonstration of the alignment parameter:
-% 
+%
 % \begin{dtxexample}{Alignment parameter of the formal context}
 %   \makebox{%
 %   \begin{cxt}[t]
@@ -425,7 +425,7 @@ Formal Concept Analysis macros]
 %   }
 % \end{dtxexample}
 % The commands within a \env{cxt} environment are
-% 
+%
 % \begin{description}
 % \item[]|\cxtName{}|\quad Define the text for the upper left cell of the
 %  table. Optional. The default is no text.
@@ -436,19 +436,19 @@ Formal Concept Analysis macros]
 % \item[]|\obj{}{}|\quad Give an object's name and its incidence vector,
 %  consisting of dots and `x'es. The incidences come first, for better
 %  alignment. The length of each incidence vector must be the number of
-%  attributes. 
-% 
+%  attributes.
+%
 % Each  instance of |\obj| is directly translated to a row of the
 % |tabular|-environment. It is therefore possible to mix  |\obj|
 % commands with usual  |tabular|-commands.
 % \end{description}
 % \texttt{cxt} can handle an arbitrary number of attributes.
 % \bigbreak
-% 
+%
 % The arrow relations may also be used. Instead of \texttt{x} and \texttt{.},
-% type \texttt{d} (for ``down''), \texttt{u} (``up''), or \texttt{b} (``both''), 
-% as in the following example:\bigbreak 
-% 
+% type \texttt{d} (for ``down''), \texttt{u} (``up''), or \texttt{b} (``both''),
+% as in the following example:\bigbreak
+%
 % \noindent\begin{minipage}{.45\textwidth}
 % \begin{verbatim}
 % \begin{cxt}%
@@ -478,17 +478,17 @@ Formal Concept Analysis macros]
 % \end{cxt}
 % \end{minipage}
 % \bigbreak
-% 
+%
 % The default for |\fcaCxtArrowStyle| is |\footnotesize|. In the above
 % example we have changed it using |\renewcommand| in order to make the
-% arrows red. The default colour is black. 
-% 
+% arrows red. The default colour is black.
+%
 % You can define your own markers using |\cxtMakeChar|. It
 % works like |\newcommand| but defines a single Character. For
 % single signs use |\cxtrlap| in order to give it an apropriate
 % size as in the following example:
-% \bigbreak 
-% 
+% \bigbreak
+%
 % \noindent\begin{minipage}{.45\textwidth}
 % \begin{verbatim}
 % \begin{cxt}%
@@ -522,17 +522,17 @@ Formal Concept Analysis macros]
 % \end{cxt}
 % \end{minipage}
 % \bigbreak
-% 
-% 
+%
+%
 % For many-valued contexts you have two options. On the one hand you can
 % define a marker with one argument that typesets its argument. On the
 % other hand there is a macro |\freeobj| that takes a tabular row
 % as argument instead of the usual markers. Single character nubers are
 % predefined to work as themselves. The following examples
 % illustrates such a setting:
-% 
-% \bigbreak 
-% 
+%
+% \bigbreak
+%
 % \noindent\begin{minipage}{.45\textwidth}
 % \begin{verbatim}
 % \begin{cxt}%
@@ -562,16 +562,16 @@ Formal Concept Analysis macros]
 % \end{cxt}
 % \end{minipage}
 % \bigbreak
-% 
+%
 %
 % \section{Including Burmeister context files}
-% 
+%
 % The package |cxtinput| allows to use context files in Burmeister
 % format to be included directly in a \LaTeX{} document. It's usage is
 % as simple as possible. In order to allow for certain customizations it
 % needs to be issued inside a |cxt| environment.
 % \medbreak
-% 
+%
 % \noindent\begin{minipage}{.45\textwidth}
 % \begin{verbatim}
 % \documentclass{article}
@@ -592,9 +592,9 @@ Formal Concept Analysis macros]
 % \end{cxt}
 % \end{minipage}
 % \bigbreak
-% 
+%
 % Unrotated attribute names can be achieved using the following code:
-% 
+%
 % \noindent\begin{minipage}{.45\textwidth}
 % \begin{verbatim}
 % \documentclass{article}
@@ -604,7 +604,7 @@ Formal Concept Analysis macros]
 % \cxtName{Formula 1}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
-% 
+%
 % \begin{cxt}%
 % \cxtName{Formula 2}%
 % \cxtinput{formula1.cxt}%
@@ -620,7 +620,7 @@ Formal Concept Analysis macros]
 % \renewcommand{\atr}{\att}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
-% 
+%
 % \bigskip
 % \begin{cxt}
 % \cxtName{Formula 2}%
@@ -628,13 +628,13 @@ Formal Concept Analysis macros]
 % \end{cxt}
 % \end{minipage}
 % \bigbreak
-% 
+%
 % \section{Environment \texttt{diagram}}
 % The \texttt{diagram} environment helps typesetting diagrams of concept
 % lattices, but can be used for ordered sets and graphs as well. Again we start
 % with a small example (for which we have set |\unitlength 1.2mm|):
 % \bigbreak
-% 
+%
 % {\unitlength 1.2mm\relax
 % \begin{dtxexample}{A diagram}
 %   \begin{diagram}[
@@ -749,12 +749,11 @@ Formal Concept Analysis macros]
 %   \end{diagram}
 % \end{dtxexample}
 % }
-% 
+%
 % Here are the commands of the \texttt{diagram}--environment:
-% \begin{description}
-%   \ItemDescribeEnv{diagram}\marg{width}\marg{height}
+%   \DescribeEnv{diagram}\parg{width,height}
 % Starts a PGF picture and sets its bounding box.
-% 
+%
 % The offsets are zero by default. They can be modified using
 % |\renewcommand|. Note that the diagram dimensions do not take the lables
 % into account, these may overlap. Putting an |\fbox| around the above
@@ -783,10 +782,10 @@ Formal Concept Analysis macros]
 %       \rightObjbox{4}{2}{2}{Alonso}
 %     \end{diagram}}
 % \end{dtxexample}
-% \ItemDescribeEnv{diagram}
+% \DescribeEnv{diagram}
 % If the diagram environment is called without parameters, the
 % bounding box is calculated automatically by PGF.
-% 
+%
 % \begin{dtxexample}{Automatic bounding box}
 %   \fbox{%
 %   \begin{diagram}
@@ -809,18 +808,18 @@ Formal Concept Analysis macros]
 %     \rightObjbox{4}{2}{2}{Alonso}
 %   \end{diagram}}
 % \end{dtxexample}
-% \ItemDescribeMacro{\Node}{nodenumber}\marg{xpos}\marg{ypos}
-% Puts a circle at position \texttt{(xpos,ypos)} of the picture. 
+% \DescribeMacro{\Node}\parg{nodenumber}\parg{xpos,ypos}
+% Puts a circle at position \texttt{(xpos,ypos)} of the picture.
 % These circles are drawn when |\end{diagram}| is invoked. The default
 % diameter of the circles is 4 (times |\unitlength|). It can be changed
 % (for all circles) with |\fcaCircleSize{}|. The argument must be an integer.
 % The node numbers must be different, consecutive between 0 and 51, but need not
-% necessarily be given in ascending order. 
-% 
-% \ItemDescribeMacro{\Numbers} Puts numbers inside circles.  While working on a
-%  diagram it can be helpful to have a picture with numbered 
+% necessarily be given in ascending order.
+%
+% \DescribeMacro{\Numbers} Puts numbers inside circles.  While working on a
+%  diagram it can be helpful to have a picture with numbered
 % nodes. The result of the following command sequence is shown on the right:
-% 
+%
 % \begin{dtxexample}{Plotting numbers inside of nodes}
 %   \fbox{\unitlength .7mm
 %   \begin{diagram}{40}{55}
@@ -832,14 +831,14 @@ Formal Concept Analysis macros]
 %     \Node{7}{20}{50}
 %   \end{diagram}}
 % \end{dtxexample}
-% 
+%
 % We recommend to remove the |\Numbers|--command when the diagram is
-% ready. In most cases it is not a good idea to put text inside the nodes of a diagram. 
+% ready. In most cases it is not a good idea to put text inside the nodes of a diagram.
 %
 %
-% \ItemDescribeMacro{\noNumbers} switches numbers off. So you can
+% \DescribeMacro{\noNumbers} switches numbers off. So you can
 % enable numbers only for special nodes:
-% 
+%
 % \begin{dtxexample}{Switching numbers on and off}
 %   \fbox{\unitlength .7mm
 %   \begin{diagram}{40}{55}
@@ -854,40 +853,45 @@ Formal Concept Analysis macros]
 %     \Node{7}{20}{50}
 %   \end{diagram}}
 % \end{dtxexample}
-% 
-% \item[]|\Edge{nodenumber1}{nodenumber2}|\quad
+%
+% \DescribeMacro{\Edge}\marg{nodenumber1}\marg{nodenumber2}
 % Puts a line between the two nodes with the given numbers. These must have been
 % declared earlier with a |\Node|--command. For nodes with coordinates
-% |(u,v)| and |(x,y)| the command translates to 
+% |(u,v)| and |(x,y)| the command translates to
 % \begin{center}|\fcadrawline(u,v)(x,y)|.\end{center}
 % |\fcadrawline(u,v)(x,y)| is a pdf\LaTeX--compatible reimplementation of
 % the |\drawline| command, the latter provided by the \texttt{eepic}
-% package. 
-% 
+% package.
+%
 % The |\Edge|--command is executed immediately. It can be mixed with other
 % \texttt{picture}- and \texttt{eepic}--commands like |\spline|
-% (see the \texttt{eepic} manual).  
-% 
-% \item[]|\leftAttbox{nodenumber}{xoffset}{yoffset}{text1\\ text2\\ ...}|\quad\par
-% This is one of six commands 
-% \begin{center}
-%  \{|\left|, |\center|, |\right|\}$\times$\{|Attbox|,
-%  |Objbox|\}.\end{center}  These are used to put
+% (see the \texttt{eepic} manual).
+%
+% \DescribeMacro{\leftAttbox}\oarg{options}\parg{nodenumber}\marg{text}\\
+% \DescribeMacro{\centerAttbox}\oarg{options}\parg{nodenumber}\marg{text}\\
+% \DescribeMacro{\rightAttbox}\oarg{options}\parg{nodenumber}\marg{text}\\
+% \DescribeMacro{\leftObjbox}\oarg{options}\parg{nodenumber}\marg{text}\\
+% \DescribeMacro{\centerObjbox}\oarg{options}\parg{nodenumber}\marg{text}\\
+% \DescribeMacro{\rightObjbox}\oarg{options}\parg{nodenumber}\marg{text}
+%
+% These are used to put
 % text to diagram nodes. The |Attbox|--commands place the text above the
 % corresponding node, the |Objbox| below. Similarly, the text can be placed
 % to the left, be centered, or be placed to the right of the labelled node. All
-% this can be modified with the \texttt{xoffset, yoffset}--parameters. 
-% 
+% this can be modified with the |shift| option.
+%
+% \iffalse
 % The offsets increase the placement effect. A |\rightObjbox|, which is
 % placed to the lower right of the corresponding node, will be moved even
 % further to the lower right if the offsets are positive. Similarly, positive
 % offsets will push a |\leftAttbox| even more to the upper left, etc.
-% 
+% \fi
+%
 % The text of the label is put in a |\parbox|. It can be broken into
 % several lines using |\\|. The width of the |\parbox| is
 % |\fcaLabelBoxWidth|, with a default value of 40mm. This can be changed using
 % |\renewcommand|.
-% 
+%
 % The label text and the labelled node are connected with a dotted line.
 % Here is an example:
 %
@@ -909,24 +913,23 @@ Formal Concept Analysis macros]
 %
 % The style of the lables is given by
 % \begin{description}
-% \item[]|\fcaObjectLabelStyle|\hspace*{3.5ex}\quad 
+% \item[]|\fcaObjectLabelStyle|\hspace*{3.5ex}\quad
 % Default: |\small\baselineskip6pt\rm|
-% \item[]|\fcaAttributeLabelStyle|\quad 
+% \item[]|\fcaAttributeLabelStyle|\quad
 % Default: |\small\baselineskip6pt\it|.
 % \end{description}
 % These values can be changed with |\renewcommand|.
-% 
-% \item[]|\end{diagram}|\quad This concludes the diagram. The circles
+%
+% \DescribeMacro{\end\{diagram\}} This concludes the diagram. The circles
 %  representing the nodes are drawn and filled with white. Everything inside
 %  such a circle (except for the numbers caused by the |\Numbers| command)
 %  is erased.
-% \end{description}
-% 
+%
 % \subsection{Error messages}
 % Package error messages for the \texttt{diagram} environment are not yet
 % implemented. Errors usually are caused by using node numbers that have not
 % been defined earlier.
-% 
+%
 % \subsection{Fine tuning}
 % You can change certain layout parameters either permanently (by modifying the
 % file \texttt{fca.sty}) or temporarily using the following commands:
@@ -946,7 +949,7 @@ Formal Concept Analysis macros]
 % \ItemDescribeMacro {\fcaObjectLabelStyle} can be redefined to set the
 % style of object labels,
 % \ItemDescribeMacro {\fcaAttributeLabelStyle} can be redefined to set
-% the syele of attribute labels, 
+% the style of attribute labels,
 % \ItemDescribeMacro {\fcaLabelBoxWidth} can be redefined to a width,
 % which will be used to set the width of the object and attribute boxes.
 % \end{description}
@@ -956,13 +959,13 @@ Formal Concept Analysis macros]
 % |{\NoDots\centerObjbox{nodenumber}{xoffset}{yoffset}{labeltext}}|
 % \end{center}
 % generates a single centered object label without dotted line.
-% 
+%
 % \subsection{pdf\LaTeX \ compatibility}
 % Version 2 of the \texttt{diagram} environment was designed to be pdf\LaTeX\
 % compatibile. It no longer uses \texttt{eepic.sty}, which is not supported by
 % pdf\LaTeX. Instead it uses \texttt{pict2e} and a |\fcadrawline| command,
-% that replaces \texttt{eepic}'s |\drawline|. 
-% 
+% that replaces \texttt{eepic}'s |\drawline|.
+%
 % \subsection{Problems with colour}
 % Since the diagrams are drawn using the \texttt{picture}--commands and the
 % \texttt{pict2e} package, we can combine with other packages, for example, with
@@ -971,13 +974,13 @@ Formal Concept Analysis macros]
 % However, \texttt{color} has a problem with spacing. Changing colors can cause
 % unwanted spaces, and these are particularly unpleasant in pictures. Have a
 % look at the following:\medbreak
-% 
+%
 % \begin{minipage}{.6\textwidth}
 % \begin{verbatim}
 % {\unitlength 2mm
 % \begin{diagram}{20}{20}
-% \Node{1}{5}{5}  
-% \Node{2}{15}{15}  
+% \Node{1}{5}{5}
+% \Node{2}{15}{15}
 % {\color{red}\Edge{1}{2}}
 % {\color{blue}\Edge{1}{2}}
 % {\color{red}\Edge{1}{2}}
@@ -988,25 +991,25 @@ Formal Concept Analysis macros]
 % \begin{minipage}{.3\textwidth}
 % {\unitlength 2mm
 % \begin{diagram}{20}{20}
-% \Node{1}{5}{5}  
-% \Node{2}{15}{15}  
+% \Node{1}{5}{5}
+% \Node{2}{15}{15}
 % {\color{red}\Edge{1}{2}}
 % {\color{blue}\Edge{1}{2}}
 % {\color{red}\Edge{1}{2}}
 % {\color{blue}\Edge{1}{2}}
 % \end{diagram}}
 % \end{minipage}
-% \medbreak 
-% 
+% \medbreak
+%
 % \noindent This effect disappears when spaces are avoided. Here is a better
-% version:\medbreak 
-% 
+% version:\medbreak
+%
 % \begin{minipage}{.6\textwidth}
 % \begin{verbatim}
 % {\unitlength 2mm
 % \begin{diagram}{20}{20}
-% \Node{1}{5}{5}  
-% \Node{2}{15}{15}  
+% \Node{1}{5}{5}
+% \Node{2}{15}{15}
 % {\color{red}\Edge{1}{2}}%
 % {\color{blue}\Edge{1}{2}}%
 % {\color{red}\Edge{1}{2}}%
@@ -1017,16 +1020,16 @@ Formal Concept Analysis macros]
 % \begin{minipage}{.3\textwidth}
 % {\unitlength 2mm
 % \begin{diagram}{20}{20}
-% \Node{1}{5}{5}  
-% \Node{2}{15}{15}  
+% \Node{1}{5}{5}
+% \Node{2}{15}{15}
 % {\color{red}\Edge{1}{2}}%
 % {\color{blue}\Edge{1}{2}}%
 % {\color{red}\Edge{1}{2}}%
 % {\color{blue}\Edge{1}{2}}%
 % \end{diagram}}
 % \end{minipage}
-% 
-% 
+%
+%
 % \subsection{Colouring nodes}
 % \label{subsec:colornode}
 % Nodes are filled with white by default. This can be changed to any other colour
@@ -1037,15 +1040,15 @@ Formal Concept Analysis macros]
 % work. Other colors may be defined with the |\definecolor| command, see
 % the documentation of the \texttt{graphics} bundle. For finer colour
 % nuances use the \texttt{xcolor} package and its documentation.
-% 
+%
 % \fcastyle does not support individual node colouring, but there is a trick to
-% do it nevertheless. Simply include the \texttt{diagram} environment into a 
+% do it nevertheless. Simply include the \texttt{diagram} environment into a
 % \texttt{picture} environment and insert the coloured nodes after the diagram
 % is drawn. How this is done should become clear from the example
 % below. \fcastyle provides a command |\ColorNode{colorname}| for this.
 % It overwrites numbers generated by the |\Numbers| command.
 % \medbreak
-% 
+%
 % \begin{minipage}{.6\textwidth}
 % \begin{verbatim}
 % {\definecolor{grey}{gray}{.8}
@@ -1056,8 +1059,8 @@ Formal Concept Analysis macros]
 % \put(0,0){%
 % \begin{diagram}{20}{20}
 % \NodeColor{grey}
-% \Node{1}{5}{5}  
-% \Node{2}{15}{15}  
+% \Node{1}{5}{5}
+% \Node{2}{15}{15}
 % \Edge{1}{2}%
 % \end{diagram}}
 % \put(5,5){\ColorNode{green}}
@@ -1072,14 +1075,14 @@ Formal Concept Analysis macros]
 % \put(0,0){%
 % \begin{diagram}{20}{20}
 % \NodeColor{grey}
-% \Node{1}{5}{5}  
-% \Node{2}{15}{15}  
+% \Node{1}{5}{5}
+% \Node{2}{15}{15}
 % \Edge{1}{2}%
 % \end{diagram}}
 % \put(5,5){\ColorNode{green}}
 % \end{picture}}
 % \end{minipage}
-% 
+%
 % \clearpage
 % \section{Some macros}
 % For a short description see Figure~\ref{fig:macros}.
@@ -1128,44 +1131,44 @@ Formal Concept Analysis macros]
 % $\sqcap$&|\sqcap|&\\
 % $\bigsqcup$&|\bigsqcup|&\\
 % $\bigsqcap$&|\bigsqcap|&stmaryrd\\\hline
-% &||&\\  
+% &||&\\
 % \end{tabular}
 % \caption{Other symbols that are used in \FCA, and the commands that generate
-%  them.}\label{fig:2}\end{center} 
+%  them.}\label{fig:2}\end{center}
 % \end{figure}
-% 
-% 
+%
+%
 % \begin{description}
-% \item[]|\GMI|\quad The formal context $\GMI$. 
+% \item[]|\GMI|\quad The formal context $\GMI$.
 % \item[]|\context|\quad The symbol $\context$, a frequently used name for
 %  a formal context.
 % \item[]|\context[S]|\quad Other letters, such as $\context[S]$, may also
-%  be used. 
+%  be used.
 % \item[]|\CL|\quad The symbol $\CL$ for the concept lattice operator. If
 %  ${\mathbb K}$ is a formal context, then $\CL({\mathbb K})$ denotes its
-%  concept lattice.   
-% \item[]|\BV|\quad same as |\CL|.  
+%  concept lattice.
+% \item[]|\BV|\quad same as |\CL|.
 % \item[]|\CLGMI|\quad The concept lattice $\CLGMI$ of the formal context
-%  $(G,M,I)$.   
-% \item[]|\BVGMI|\quad Same as |\CLGMI|.  
+%  $(G,M,I)$.
+% \item[]|\BVGMI|\quad Same as |\CLGMI|.
 % \item[]|\CGMI|\quad The set $\CGMI$ of all formal concepts of the formal
-%  context   $(G,M,I)$.   
-% \item[]|\BGMI|\quad Same as |\CGMI|.  
+%  context   $(G,M,I)$.
+% \item[]|\BGMI|\quad Same as |\CGMI|.
 % \item[]|\extent|\quad The extent $\extent{\mathfrak{c}}$ of the formal
-%  concept $\mathfrak{c}:=(A,B)$ is  $A$. 
+%  concept $\mathfrak{c}:=(A,B)$ is  $A$.
 % \item[]|\intent|\quad The intent $\intent{\mathfrak{c}}$ of the formal
-%  concept $\mathfrak{c}:=(A,B)$ is  $B$. 
+%  concept $\mathfrak{c}:=(A,B)$ is  $B$.
 % \item[]|\extents|\quad The set $\extents{\context}$ of extents of the
-%  formal context $\context$.  
+%  formal context $\context$.
 % \item[]|\intents|\quad The set $\intents{\context}$ of intents of the
-%  formal context $\context$.  
-% \item[]|\HNI|\quad The subcontext $\HNI$.  
-% \item[]|\relI|\quad The incidence relation $\relI$.  
+%  formal context $\context$.
+% \item[]|\HNI|\quad The subcontext $\HNI$.
+% \item[]|\relI|\quad The incidence relation $\relI$.
 % \item[]|\notI|\quad The negation $\notI$ of the incidence
-%  relation.  
+%  relation.
 % \item[]|\bigtimes|\quad The product symbol $\bigtimes$.
-% \item[]|\DownArrow|\quad The $\Runterpfeil$ of the arrow relations.  
-% \item[]|\Runterpfeil|\quad Same as |\DownArrow|. 
+% \item[]|\DownArrow|\quad The $\Runterpfeil$ of the arrow relations.
+% \item[]|\Runterpfeil|\quad Same as |\DownArrow|.
 % \item[]|\UpArrow|\quad The $\Hochpfeil$ of the arrow relations.
 % \item[]|\Hochpfeil|\quad   Same as |\UpArrow|.
 % \item[]|\DoubleArrow|\quad  The $\Doppelpfeil$ of the arrow relations.
@@ -1181,25 +1184,25 @@ Formal Concept Analysis macros]
 %  in the  definition of $\DPfeil$.
 % \item[]|\IHochpfeil|\quad  Same as |\IUpArrow|.
 % \item[]|\DDArrow|\quad Gives $\DDPfeil$, the symbol for the transitive
-%  closure of the arrow relations.  
+%  closure of the arrow relations.
 % \item[]|\DDPfeil|\quad  Same as |\DDArrow|.
 % \item[]|\NDDArrow|\quad Gives $\NDDPfeil$ the symbol for the negation of
-%  $\DDPfeil$.   
+%  $\DDPfeil$.
 % \item[]|\NDDPfeil|\quad  Same as |\NDDArrow|.
-% \item[]|\Semi|\quad Gives $\Semi$, the symbol for the semi-product.  
+% \item[]|\Semi|\quad Gives $\Semi$, the symbol for the semi-product.
 % \item[]|\FCA|\quad Prints ``\FCA''.  In most cases, this command does not
-%  eat the space following it (thanks to |\xspace|).  
+%  eat the space following it (thanks to |\xspace|).
 % \item[]|\FBA, \FnBA|\quad Print ``Formale(n) Begriffsanalyse''. These
 %  commands also use |\xspace| so that blanks are preserved.
 % \item[]Some symbols that are provided by \LaTeX\ are listed in
-%  Figure~\ref{fig:2}. 
+%  Figure~\ref{fig:2}.
 % \end{description}
-% 
+%
 % \par\noindent
 % Here is a sample text:
 % \begin{verbatim}
-% \FCA offers an elegant way to determine the congruence relations 
-% of a complete lattice: The congruence lattice of a doubly founded 
+% \FCA offers an elegant way to determine the congruence relations
+% of a complete lattice: The congruence lattice of a doubly founded
 % concept lattice $\CLGMI$ is isomorphic to $\CL(G,M,\NDDArrow)$.
 % \end{verbatim}
 % This translates to:
@@ -1210,8 +1213,8 @@ Formal Concept Analysis macros]
 %  $\CLGMI$ is   isomorphic to $\CL(G,M,\NDDArrow)$.
 %  \end{minipage}
 % \end{center}
-% 
-% 
+%
+%
 % \section{To do}
 % \begin{itemize}
 % \item Improve the placement of the dotted lines connecting nodes with
@@ -1220,15 +1223,15 @@ Formal Concept Analysis macros]
 %  (optionally) automatic for object- and attribute concepts.
 % \item Improve the code to avoid unwanted blanks.
 % \end{itemize}
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
+%
+%
+%
+%
+%
+%
+%
+%
+%
 % \StopEventually{\PrintChanges}
 % \section{The Code}
 % \iffalse
@@ -1294,7 +1297,7 @@ Formal Concept Analysis macros]
   \fi
 }
 %    \end{macrocode}
-%   
+%
 % \end{macro}
 %
 % \subsection{The context environment \env{cxt}}
@@ -1352,12 +1355,12 @@ Formal Concept Analysis macros]
 % Helper length for vertical alignment of the context and attribute names.
 %
 % \changes{2.2}{2022/03/08}{Rename \cs{@ttnameheight} to \cs{fca@cxt@ttnameheight}}
-% 
+%
 %    \begin{macrocode}
 \newlength{\fca@cxt@nameraise}%
 \newlength{\fca@cxt@ttnameheight}%
 %    \end{macrocode}
-% 
+%
 %
 % \begin{macro}{\adjcxt@name}
 % Adjusts the the vertical alignment of the attributes.
@@ -1577,7 +1580,7 @@ Formal Concept Analysis macros]
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
-% 
+%
 % \begin{macro}{\fca@cxt@tabdef@}\marg{alignment}
 %   Do the work of \cs{fca@cxt@tabdef}: Open the tabular
 %   environment. The parameter \marg{alignment} will be used to set
@@ -1822,7 +1825,7 @@ Formal Concept Analysis macros]
 % \ItemDescribeOther[context character]{8} Eight in a many-valued context.
 % \ItemDescribeOther[context character]{9} Nine in a many-valued context.
 % \end{description}
-% 
+%
 %    \begin{macrocode}
 \cxtMakeChar .{\cxtphantom}
 \cxtMakeChar x{\fca@cxt@Kreuz}
@@ -2470,7 +2473,7 @@ Formal Concept Analysis macros]
   \@for \fca@tmp:=%
   {font}{}{\tikz@textfont},%
   {node font}{}{\tikz@node@textfont},%
-  {text opacity}{}{\tikz@textopacity},% 
+  {text opacity}{}{\tikz@textopacity},%
   {text width}{\pgfkeysnovalue}{\tikz@text@width},%
   {text height}{}{\tikz@text@height},
   {text depth}{}{\tikz@text@depth},
@@ -2840,7 +2843,7 @@ densely dotted%
 \newcommand*\fcaset{\pgfqkeys{/fca}}
 %    \end{macrocode}
 % \end{macro}
-%                                                                             % 
+%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
 \newcounter{fca@minNode}%
@@ -3064,7 +3067,7 @@ densely dotted%
       \fca@changebValue{#3}{-1}{\fca@u}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,\fca@u)(#2,0)}}{}%
     \end{picture}}}%
-% 
+%
 \def\centerAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(0,0)%
       \put(#2,#3){\makebox(0,0)[cb]{\begin{minipage}{\LabelBoxWidth}%
@@ -3072,7 +3075,7 @@ densely dotted%
       \fca@changeaValue{#2}{0}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(\fca@u,\fca@v)(0,0)}}{}%
     \end{picture}}}%
-% 
+%
 \def\rightAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(0,0)%
       \put(#2,#3){\makebox(0,0)[lb]{\begin{minipage}{\LabelBoxWidth}%
@@ -3080,21 +3083,21 @@ densely dotted%
       \fca@changeaValue{#2}{-1}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,0)(\fca@u,\fca@v)}}{}%
     \end{picture}}}%
-% 
+%
 \def\leftObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(#2,#3)%
       \put(0,0){\makebox(0,0)[rt]{\begin{minipage}{\LabelBoxWidth}%
             \raggedleft\fcaObjectLabelStyle#4\end{minipage}}}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,1)(#2,#3)}}{}%
     \end{picture}}}%
-% 
+%
 \def\centerObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
     \begin{picture}(#2,#3)(0,#3)%
       \put(#2,0){\makebox(0,0)[ct]{\begin{minipage}{\LabelBoxWidth}%
             \centering\fcaObjectLabelStyle#4\end{minipage}}}%
       \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(#2,1)}}{}%
     \end{picture}}}%
-% 
+%
 \def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y ){%
     \begin{picture}(#2,#3)(0,#3)%
       \put(#2,0){\makebox(0,0)[lt]{\begin{minipage}{\LabelBoxWidth}%
@@ -3142,7 +3145,7 @@ densely dotted%
   \end{pgfscope}%
   \ignorespaces
 }
-% 
+%
 \def\fca@changeaValue#1#2#3{\setcounter{fca@AuxCounter}{#1}%
   \addtocounter{fca@AuxCounter}{#2}\def#3{\value{fca@AuxCounter}}}%
 \def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
@@ -3435,23 +3438,23 @@ densely dotted%
 \newcommand\fca@rightObjbox[1][]{%
   \fca@labelBox[label type=objects,label position=right,#1]
 }
-% 
+%
 \def\fca@ResetDefaults{\setcounter{fca@minNode}{60}%
   \setcounter{fca@maxNode}{0}%
   \setcounter{fca@CircleDiameter}{4}%
   \setboolean{fca@CircledNumbers}{false}%
   \fca@Defaults}%
-% 
+%
 \def\ColorNode#1{{%
     \linethickness{\fca@node@thickness}%
     \color{#1}{\circle*{\value{fca@CircleDiameter}}}%
     \color{black}{\circle{\value{fca@CircleDiameter}}}}}%
-% 
+%
 \def\fca@circle{{%
     \linethickness{\fca@node@thickness}%
     \color{\fca@node@fill}{\circle*{\value{fca@CircleDiameter}}}%
     \color{black}{\circle{\value{fca@CircleDiameter}}}}}%
-% 
+%
 \def\fca@DrawCircles{\setcounter{fca@runNode}{\value{fca@minNode}}%
   \stepcounter{fca@maxNode}%
   \whiledo{\value{fca@runNode}<\value{fca@maxNode}}%
@@ -3556,11 +3559,11 @@ densely dotted%
 \providecommand{\relI}{\mathrel{I}}
 \providecommand{\notI}{\mathrel{\mbox{\rlap{\char'40}%
       {\it I}\hspace*{-0.09em}\raisebox{.27ex}{\char'40}}}}%
-% 
+%
 \providecommand{\bigtimes}{\mathop{%
     \mathchoice{\raisebox{-2pt}{\huge$\times$}}{\mbox{\LARGE$\times$}}%
     {\raisebox{0pt}{\Large$\times$}}{\times}}\displaylimits}%
-% 
+%
 \providecommand{\Runterpfeil}{\mathrel{\swarrow}}
 \providecommand{\DownArrow}{\Runterpfeil}
 \providecommand{\Hochpfeil}{\mathrel{\nearrow}}
@@ -3571,13 +3574,13 @@ densely dotted%
 \providecommand{\IUpArrow}{\IHochpfeil}
 \providecommand{\Doppelpfeil}{\mathrel{\!\!\rlap{$\;\nearrow$}\swarrow}}
 \providecommand{\DoubleArrow}{\Doppelpfeil}
-% 
+%
 \newcommand{\DDPfeil}{\mathrel{\mathchoice%
     {\mbox{$\displaystyle\swarrow\hspace{-.7em}\swarrow$}}
     {\mbox{$\textstyle\swarrow\hspace{-.7em}\swarrow$}}
     {\mbox{$\scriptstyle\swarrow\hspace{-.5em}\swarrow$}}
     {\mbox{$\scriptscriptstyle\swarrow\hspace{-.35em}\swarrow$}}}}
-% 
+%
 \newcommand{\NDDPfeil}{\mathrel{\mathchoice%
     {\mbox{$\displaystyle\swarrow\hspace{-.7em}\swarrow%
         \hspace{-1.2em}\backslash\hspace{.4em}$}}
@@ -3587,7 +3590,7 @@ densely dotted%
         \hspace{-.6em}\backslash\hspace{.2em}$}}
     {\mbox{$\scriptscriptstyle\swarrow\hspace{-.35em}\swarrow
         \hspace{-.5em}\backslash\hspace{.1em}$}}}}
-% 
+%
 \providecommand{\DPfeil}{\DDPfeil}
 \providecommand{\NDPfeil}{\NDDPfeil}
 \newcommand{\DDArrow}{\DDPfeil}
@@ -3598,9 +3601,9 @@ densely dotted%
       {$\smash{\vee}$}\hspace*{-.835em}\bigcirc\hspace{.2em}}$}}
 \def\owedge{\mbox{\small$\mathrel{\hspace{.35em}\smash{\wedge}%
       \hspace*{-.835em}\bigcirc\hspace{.2em}}$}}
-% 
+%
 \providecommand{\ptimes}[1]{\mathrel{\stackrel{#1}{\times}}}
-% 
+%
 \providecommand{\FCA}{Formal Concept Analysis\xspace}
 \providecommand{\FBA}{Formale Begriffsanalyse\xspace}
 \providecommand{\FnBA}{Formalen Begriffsanalyse\xspace}

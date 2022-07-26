@@ -890,34 +890,23 @@ Formal Concept Analysis macros]
 % 
 % The label text and the labelled node are connected with a dotted line.
 % Here is an example:
-% 
-% \begin{minipage}{.6\textwidth}
-% \begin{verbatim}
+%
 % {\unitlength .7mm
-% \begin{diagram}{40}{15}
-% \Node{0}{20}{10}
-% \leftAttbox{0}{1}{1}{left\\ 
-% attribute\\ label}
-% \rightAttbox{0}{10}{10}{right
-% attri-\\ bute label}
-% \rightObjbox{0}{20}{5}{right\\ 
-% object\\ label}
-% \centerObjbox{0}{0}{5}{centered\\ 
-% object label}
-% \end{diagram}}
-% \end{verbatim}
-% \end{minipage}\hfill
-% \begin{minipage}{.3\textwidth}
-% {\unitlength .7mm
-% \begin{diagram}{40}{15}
-% \Node{0}{20}{10}
-% \leftAttbox{0}{1}{1}{left\\ attribute\\ label}
-% \rightAttbox{0}{10}{10}{right attri-\\ bute label}
-% \rightObjbox{0}{20}{5}{right\\ object\\ label}
-% \centerObjbox{0}{0}{5}{centered\\ object label}
-% \end{diagram}}
-% \end{minipage}
-% 
+% \begin{dtxexample}{Node labels}
+%   \begin{diagram}[text width=4cm]%originally{40}{15}
+%     \Node{0}{20}{10}
+%     \leftAttbox[draw]{0}{1}{1}{left\\
+%     attribute\\ label}
+%     \rightAttbox[fill=red!50!blue!20]{0}{10}{10}{right
+%     attri-\\ bute label}
+%     \rightObjbox[draw]{0}{20}{5}{right\\
+%     object\\ label}
+%     \centerObjbox{0}{0}{5}{centered\\
+%     object label}
+%   \end{diagram}
+% \end{dtxexample}
+% }
+%
 % The style of the lables is given by
 % \begin{description}
 % \item[]|\fcaObjectLabelStyle|\hspace*{3.5ex}\quad 
@@ -2482,7 +2471,7 @@ Formal Concept Analysis macros]
   {font}{}{\tikz@textfont},%
   {node font}{}{\tikz@node@textfont},%
   {text opacity}{}{\tikz@textopacity},% 
-  {text width}{}{\tikz@text@width},%
+  {text width}{\pgfkeysnovalue}{\tikz@text@width},%
   {text height}{}{\tikz@text@height},
   {text depth}{}{\tikz@text@depth},
   {text action}{}{\tikz@text@action},
@@ -2687,7 +2676,6 @@ densely dotted%
 \pgfqkeys{/fca}{%
   every label/.style = {
     text=pgfstrokecolor,
-    text width=\fcaLabelBoxWidth,
     /pgf/outer sep=0pt,
     /pgf/inner sep=0pt,
   },
@@ -2872,14 +2860,18 @@ densely dotted%
 % \egroup
 }
 \newcommand\fca@typeset@node@content[1]{%
-  \edef\fca@tempa{\pgfkeysvalueof{/fca/text width}}%
-  \ifx\fca@tempa\@empty
-    \let\fca@node@end@content\@empty
-  \else
+  \pgfkeysgetvalue{/fca/text width}\@tempa
+  \expandafter\fca@testoption\expandafter{\@tempa}{%
     \def\fca@node@end@content{\end{minipage}}%
     \fca@parselength\@tempdima{\fca@tempa}\fca@xunitlength
     \begin{minipage}{\@tempdima}%
-  \fi
+  }{%
+    \let\fca@node@end@content\egroup
+    \makebox\bgroup%
+  }{%
+    \let\fca@node@end@content\egroup
+    \makebox\bgroup
+  }%
   \pgfkeysvalueof{/fca/font}%
   \color{\pgfkeysvalueof{/fca/text}}%
   #1%

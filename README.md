@@ -24,6 +24,49 @@ conexp2fca.pas: The Free Pascal source code of the program.
 Installation
 ============
 
+The package uses `pgf.sty` so PGF must be installed. This is typically
+the case for modern TeX distributions.
+
+There are two ways to use the package you can put everything into the
+same folder where your document resides. This is useful, when you want
+to evaluate the package, or when you want to bundle the package with
+your document.
+
+
+Direct usage
+------------
+
+Download
+https://github.com/keinstein/latex-fca/blob/master/source/latex/fca/latex-fca.dtx
+and put it into the same folder as your document resides. Then you
+must run
+```
+latex latex-fca.dtx
+```
+at least once in order to generate all necessary files and the
+documentation. Instead of `latex` you can also use `pdflatex`,
+`xelatex`, `lualatex` or whatever your LaTeX command is called.
+
+Installation in the TeX tree
+----------------------------
+
+At first you must download the repository. There are two options:
+1. You can clone the repository. For that you must have git installed
+   on your computer. In the command line you can enter
+   ```
+   git clone https://github.com/keinstein/latex-fca.git
+   ```
+   and git will download the repository and check out the master
+   branch.
+
+   In a GUI tool you have to use
+   https://github.com/keinstein/latex-fca.git as the repository
+   address.
+
+2. You can download
+   https://github.com/keinstein/latex-fca/archive/refs/heads/master.zip
+   and unzip the file with you favourite file compression tool.
+
 The repository is structured according to the TDS. You can copy the
 subdirs into your user specific tex tree. You can find it by issuing
 the command
@@ -32,11 +75,16 @@ kpsexpand '$TEXMFHOME'
 ```
 in a suitable shell that knows about your TeX installation.
 On MacOS, Linux, Unix and similar systems this should be the case out
-of the box. Windows users must open a special shell environment which
-can usually be found in the start menu.
+of the box. On Wndows systems such a shell can be usually found in the
+Application menu in the folder of the (La)TeX installation.
 
-Note that the user TeX tree is not necessarily empty. You can merge the
-trees of different packages in that case.
+Note that the user TeX directory tree starting with the above
+mentioned `$TEXMFHOME` is not necessarily empty. You
+can merge the trees of different packages in that case. Just create
+the necessary subfolders and put the corresponding files into them.
+
+**Tip:** You can check out the repository and put symbolic links to
+         the folders
 
 After copying the files you should make shure that the package can be
 loaded. Some TeX trees contain a file named `ls-R`. This is an index of
@@ -64,6 +112,7 @@ documentation
 ```
 latex-fca.pdf
 ```
+
 
 Development
 ===========

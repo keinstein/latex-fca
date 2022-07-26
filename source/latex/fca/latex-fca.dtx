@@ -191,10 +191,17 @@ Formal Concept Analysis macros]
 \def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
 %\usepackage{a4}
 \usepackage{dtxdescribe}
+\usepackage{iftex}
 \iffcatikzdoc
   \usepackage{tikz}
+  \ifluatex
+    \usetikzlibrary{luamath}
+  \fi
   \usetikzlibrary{fca}
 \else
+  \ifluatex
+    \usepgflibrary{luamath}
+  \fi
   \usepackage{fca}
 \fi
 \usepackage{cxtinput}

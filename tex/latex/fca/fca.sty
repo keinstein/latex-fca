@@ -1168,7 +1168,6 @@ Formal Concept Analysis macros]
     \pgfqkeys{/fca}{#1}%
     \pgfqkeys{/fca}{every label edge/.try}%
     \fca@options
-    \typeout{nach \string\fca@options }
     \fca@transform
     \pgfsetlinewidth{\fca@edge@thickness}%
     \fca@prepare@node\fca@temp@start@point\fca@temp@start@point@{}{}{\pgfkeysvalueof{/fca/pgfnode}}%
@@ -1365,7 +1364,6 @@ Formal Concept Analysis macros]
 \providecommand{\FnBA}{Formalen Begriffsanalyse\xspace}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \endinput
 %%
 %% End of file `fca.sty'.

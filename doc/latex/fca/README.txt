@@ -21,4 +21,3 @@ Short description:
               This environment may be of some interest for other
               surposes as well, since it can also be used for
               arbitrary ordered sets and graphs.
-

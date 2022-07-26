@@ -289,13 +289,9 @@ Formal Concept Analysis macros]
     f\"ur Begriffliche Wissensverarbeitung}\\
   Tobias Schlemmer\thanks{TU Dresden}}
 \date{\fcacurrentversiondate}
-\typeout{vor document}
 \begin{document}
-\typeout{document anfang}%
 \DocInput{latex-fca.dtx}
-\typeout{document ende}%
 \end{document}
-\typeout{nach document}%
 %</driver|notikzdriver>
 % \fi
 % \maketitle
@@ -667,21 +663,27 @@ Formal Concept Analysis macros]
 %         solid,
 %         rotate=180
 %       }
-%     }]
+%       }]
+%     \begin{pgfscope}
+%       \color{red}
+%       \pgftransformshift{\pgfpoint{20\unitlength}{30\unitlength}}%
+%       \pgfnode{circle}{center}{\Huge Example}{example
+%       text}{\pgfusepath{stroke}}%
+%     \end{pgfscope}
 %     \Node(1)(20,10)
 %     \Node(2)(35,20)
-%     \Node(3)(5,30)
+%     \Node[/tikz/opacity=0.3](3)(5,30)
 %     \Node(4)(35,40)
 %     \Node(5)(20,50)
 %     \Edge(1)(2)
-%     \Edge(1)(3)
-%     \Edge(2)(4)
-%     \Edge(3)(5)
+%     \Edge[/tikz/opacity=0.3](1)(3)
+%     \Edge[/tikz/arrows=<->](2)(4)
+%     \Edge[/tikz/opacity=0.3](3)(5)
 %     \Edge(4)(5)
-%     \leftAttbox(3){1.}
+%     \leftAttbox[/tikz/opacity=0.3](3){1.}
 %     \rightAttbox(2){disqualified}
 %     \rightAttbox(4){2.}
-%     \leftObjbox(3){Hamilton}
+%     \leftObjbox[/tikz/opacity=0.3](3){Hamilton}
 %     \rightObjbox(2){Massa}
 %     \rightObjbox(4){Alonso}
 %     \begin{pgfscope}%
@@ -695,6 +697,12 @@ Formal Concept Analysis macros]
 %       \pgfsetstrokecolor{red}
 %       \pgfusepath{stroke}
 %     \end{pgfscope}%
+%     {
+%       \pgfmoveto{\pgfpointanchor{fca node 5}{west}}
+%       \pgflineto{\pgfpointanchor{fca node 1}{north east}}
+%       \pgfsetstrokecolor{green}
+%       \pgfusepath{stroke}
+%     }
 %   \end{diagram}
 % \end{dtxexample}
 % }
@@ -2805,6 +2813,9 @@ densely dotted%
   }
 }
 
+\pgfqkeys{/fca}{%
+}
+
 \newcommand*\fca@tikz@without@library{%
   \PackageWarning{fca}{FCA TikZ integration is not activated.^^J
     You should consider \tikzlibrary{fca} instead of
@@ -3670,7 +3681,7 @@ X..
 % \fi
 % \Finale
 % \PrintChanges
-
+%
 % \endinput
 % Local Variables:
 % mode: doctex

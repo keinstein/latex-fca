@@ -31,15 +31,22 @@
     [2022/02/26 v2.2
 Formal Concept Analysis macros]
 \expandafter\newif\csname iffcatikzdoc\endcsname
-\fcatikzdocfalse
+  \fcatikzdocfalse
 \edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|\relax}%
 \documentclass[a4paper]{ltxdoc}
 \def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
 \usepackage{dtxdescribe}
+\usepackage{iftex}
 \iffcatikzdoc
   \usepackage{tikz}
+  \ifluatex
+    \usetikzlibrary{luamath}
+  \fi
   \usetikzlibrary{fca}
 \else
+  \ifluatex
+    \usepgflibrary{luamath}
+  \fi
   \usepackage{fca}
 \fi
 \usepackage{cxtinput}

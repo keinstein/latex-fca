@@ -185,6 +185,11 @@ Formal Concept Analysis macros]
 %\usepackage{a4}
 \usepackage{dtxdescribe}
 \usepackage{iftex}
+\makeatletter
+\@ifundefined{ifluatex}{
+  \usepackage{ifluatex}
+}{}
+\makeatother
 \iffcatikzdoc
   \usepackage{tikz}
   \ifluatex

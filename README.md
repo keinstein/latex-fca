@@ -27,10 +27,14 @@ Installation
 The package uses `pgf.sty` so PGF must be installed. This is typically
 the case for modern TeX distributions.
 
-There are two ways to use the package you can put everything into the
-same folder where your document resides. This is useful, when you want
-to evaluate the package, or when you want to bundle the package with
-your document.
+There are two ways to use the package:
+
+- You can put everything into the same folder where your document resides. This is useful, when you want
+  to evaluate the package, or when you want to bundle the package with
+  your document.
+- You can install the package in the TeX tree for use in different
+  documents. Either in your local TeX tree for your personal usage or
+  in the global TeX tree for all users of the corresponding computer.
 
 
 Direct usage

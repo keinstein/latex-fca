@@ -48,11 +48,14 @@ Formal Concept Analysis macros]
   \fi
   \usepackage{fca}
 \fi
-\let\tsdtxexample\dtxexample
-\def\dtxexample#1{%
-  \typeout{#1}%
-  \tsdtxexample{#1}%
+\let\fcadtxexample\dtxexample
+\makeatletter
+\def\fca@dtxexample#1#2{%
+  \typeout{Example: #2}%
+  \tsdtxexample#1{#2}%
 }
+\def\fcadtxexample{\@ifstar{\fca@dtxexample*}{\fca@dtxexample{}}}
+\makeatother
 
 \iftrue
   \NeedsTeXFormat{LaTeX2e}[1999/12/01]

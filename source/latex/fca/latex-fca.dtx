@@ -198,11 +198,14 @@ Formal Concept Analysis macros]
   \usepackage{fca}
 \fi
 %
-\let\tsdtxexample\dtxexample
-\def\dtxexample#1{%
-  \typeout{#1}%
-  \tsdtxexample{#1}%
+\let\fcadtxexample\dtxexample
+\makeatletter
+\def\fca@dtxexample#1#2{%
+  \typeout{Example: #2}%
+  \tsdtxexample#1{#2}%
 }
+\def\fcadtxexample{\@ifstar{\fca@dtxexample*}{\fca@dtxexample{}}}
+\makeatother
 
 % we hack the cxt environment so that it deactivates the vertical
 % bar. Otherwise it would break vertical column rules in context.
@@ -624,7 +627,7 @@ Formal Concept Analysis macros]
 % \bigbreak
 %
 % {\unitlength 1.2mm\relax
-% \begin{dtxexample}{A diagram}
+% \begin{dtxexample}*{A TikZ enhanced diagram}
 %   \begin{diagram}[
 %     every attributes/.append style={
 %       label concept/.append style={
@@ -692,10 +695,102 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 % }
 %
+% The same diagram can be typeset using TikZ:
+% {\unitlength 1.2mm\relax
+% \begin{dtxexample}*{A PGF enhanced diagram}
+%   \begin{diagram}[
+%     every attributes/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=blue,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         label/at=center,
+%         solid
+%       }
+%     },
+%     every objects/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=black,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         label/at=center,
+%         solid,
+%         rotate=180
+%       }
+%       }]
+%     \begin{pgfscope}
+%       \color{red}
+%       \pgftransformshift{\pgfpoint{20\unitlength}{30\unitlength}}%
+%       \pgfnode{circle}{center}{\Huge Example}{example
+%       text}{\pgfusepath{stroke}}%
+%     \end{pgfscope}
+%     \Node(1)(20,10)
+%     \Node(2)(35,20)
+%     \begin{pgfscope}
+%       \pgfsetstrokeopacity{0.3}
+%       \pgfsetfillopacity{0.3}
+%       \Node(3)(5,30)
+%     \end{pgfscope}
+%     \Node(4)(35,40)
+%     \Node(5)(20,50)
+%     \Edge(1)(2)
+%     \begin{pgfscope}
+%       \pgfsetstrokeopacity{0.3}
+%       \Edge(1)(3)
+%     \end{pgfscope}
+%     \begin{pgfscope}
+%       \pgfsetarrows{<->}
+%       \Edge(2)(4)
+%     \end{pgfscope}
+%     \begin{pgfscope}
+%       \pgfsetstrokeopacity{0.3}
+%       \Edge(3)(5)
+%     \end{pgfscope}
+%     \Edge(4)(5)
+%     \begin{pgfscope}
+%       \pgfsetstrokeopacity{0.3}
+%       \pgfsetfillopacity{0.3}
+%       \leftAttbox(3){1.}
+%     \end{pgfscope}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \begin{pgfscope}
+%       \pgfsetstrokeopacity{0.3}
+%       \pgfsetfillopacity{0.3}
+%       \leftObjbox(3){Hamilton}
+%    \end{pgfscope}
+%     \rightObjbox(2){Massa}
+%     \rightObjbox(4){Alonso}
+%     \begin{pgfscope}%
+%       \edef\tempa{%
+%       \noexpand\pgftransformshift{%
+%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%
+%     }%
+%       \tempa
+%       \pgfmoveto{\pgfpoint{0pt}{0pt}}%
+%       \pgflineto{\pgfpoint{4\unitlength}{0pt}}
+%       \pgfsetstrokecolor{red}
+%       \pgfusepath{stroke}
+%     \end{pgfscope}%
+%     {
+%       \pgfmoveto{\pgfpointanchor{fca node 5}{west}}
+%       \pgflineto{\pgfpointanchor{fca node 1}{north east}}
+%       \pgfsetstrokecolor{green}
+%       \pgfusepath{stroke}
+%     }
+%   \end{diagram}
+% \end{dtxexample}
+% }
+%
+%
 %   The old syntax is also supported:
 %
 % {\unitlength 1.2mm\relax
-% \begin{dtxexample}{A diagram}
+% \begin{dtxexample}*{A diagram}
 %   \begin{diagram}[
 %     every attributes/.append style={
 %       label concept/.append style={

@@ -118,7 +118,13 @@ Formal Concept Analysis macros]
   Tobias Schlemmer\thanks{TU Dresden}}
 \date{\fcacurrentversiondate}
 \begin{document}
-\DocInput{latex-fca.dtx}
+\edef\latexfcajobname{\jobname}%
+\edef\latexfcasourcefile{\detokenize{latex-fca}}%
+\ifx\latexfcajobname\latexfcasourcefile
+  \DocInput{latex-fca.dtx}
+\else
+  \DocInput{../../../source/latex/fca/latex-fca.dtx}
+\fi
 \end{document}
 \endinput
 %%

@@ -286,7 +286,13 @@ Formal Concept Analysis macros]
   Tobias Schlemmer\thanks{TU Dresden}}
 \date{\fcacurrentversiondate}
 \begin{document}
-\DocInput{latex-fca.dtx}
+\edef\latexfcajobname{\jobname}%
+\edef\latexfcasourcefile{\detokenize{latex-fca}}%
+\ifx\latexfcajobname\latexfcasourcefile
+  \DocInput{latex-fca.dtx}
+\else
+  \DocInput{../../../source/latex/fca/latex-fca.dtx}
+\fi
 \end{document}
 %</driver|notikzdriver>
 % \fi
@@ -626,6 +632,7 @@ Formal Concept Analysis macros]
 % with a small example (for which we have set |\unitlength 1.2mm|):
 % \bigbreak
 %
+% \iffcatikzdoc
 % {\unitlength 1.2mm\relax
 % \begin{dtxexample}*{A TikZ enhanced diagram}
 %   \begin{diagram}[
@@ -696,6 +703,7 @@ Formal Concept Analysis macros]
 % }
 %
 % The same diagram can be typeset using TikZ:
+% \fi
 % {\unitlength 1.2mm\relax
 % \begin{dtxexample}*{A PGF enhanced diagram}
 %   \begin{diagram}[

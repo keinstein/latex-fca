@@ -559,27 +559,22 @@ Formal Concept Analysis macros]
 % needs to be issued inside a |cxt| environment.
 % \medbreak
 %
-% \noindent\begin{minipage}{.45\textwidth}
 % \begin{verbatim}
 % \documentclass{article}
 % \usepackage{fca}
 % \begin{document}
+% ... Text with contexts
+% \end{document}
+% \end{verbatim}
+%
+% Then, the context can be included as in the following example:
+%
+% \begin{dtxexample}{Including Burmeister context files}
 % \begin{cxt}%
 % \cxtName{Formula 1}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
-% \end{document}
-% \end{verbatim}
-% \end{minipage}
-% \hfill
-% \begin{minipage}{.40\textwidth}
-% \begin{cxt}%
-%   \cxtName{Formula 1}%
-%   \cxtinput{formula1.cxt}%
-% \end{cxt}
-% \end{minipage}
-% \bigbreak
-%
+% \end{dtxexample}
 % Unrotated attribute names can be achieved using the following code:
 %
 % \noindent\begin{minipage}{.45\textwidth}
@@ -600,21 +595,17 @@ Formal Concept Analysis macros]
 % \end{verbatim}
 % \end{minipage}
 % \hfill
-% \begin{minipage}{.40\textwidth}
-% \strut\par\strut\par
-% \begin{cxt}%
+% \begin{dtxexample}{Including contexts with rotated attributes}
+% \begin{cxt}[b]%
 % \cxtName{Formula 1}%
 % \renewcommand{\atr}{\att}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
-%
-% \bigskip
-% \begin{cxt}
+% \begin{cxt}[b]
 % \cxtName{Formula 2}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
-% \end{minipage}
-% \bigbreak
+% \end{dtxexample}
 %
 % \section{Environment \texttt{diagram}}
 % The \texttt{diagram} environment helps typesetting diagrams of concept
@@ -1327,6 +1318,7 @@ Formal Concept Analysis macros]
 %
 %
 % \StopEventually{\PrintChanges}
+% \clearpage
 % \section{The Code}
 % \iffalse
 %    \begin{macrocode}

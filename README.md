@@ -37,7 +37,7 @@ Direct usage
 ------------
 
 Download
-https://github.com/keinstein/latex-fca/blob/master/source/latex/fca/latex-fca.dtx
+https://raw.githubusercontent.com/keinstein/latex-fca/master/source/latex/fca/latex-fca.dtx
 and put it into the same folder as your document resides. Then you
 must run
 ```

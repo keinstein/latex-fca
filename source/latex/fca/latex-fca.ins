@@ -23,7 +23,6 @@
 %%    latex-fca.ins
 %% 
 %%  and the derived files
-%%    cxtinput.sty,
 %%    fca.sty,
 %%    formula1.cxt.
 %% 
@@ -64,7 +63,6 @@ http://www.latex-project.org/lppl.txt
    latex-fca.ins
 
  and the derived files
-   cxtinput.sty,
    fca.sty,
    formula1.cxt.
 
@@ -74,14 +72,10 @@ http://www.latex-project.org/lppl.txt
 
 \usedir{tex/latex/fca}
 \generate{%
-        \file{cxtinput.sty}{%
-                \usepreamble\defaultpreamble
-                \usepostamble\defaultpostamble
-                \from{latex-fca.dtx}{cxtinput.sty,package}}
         \file{fca.sty}{%
                 \usepreamble\defaultpreamble
                 \usepostamble\defaultpostamble
-                \from{latex-fca.dtx}{fca.sty,package}}
+                \from{latex-fca.dtx}{fca.sty,cxtinput.sty,package}}
             }
 \usedir{tex/generic/fca}
 \generate{%

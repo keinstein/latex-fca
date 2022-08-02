@@ -4,7 +4,7 @@
 %%
 %% The original source files were:
 %%
-%% latex-fca.dtx  (with options: `fca.sty,package')
+%% latex-fca.dtx  (with options: `fca.sty,cxtinput.sty,package')
 %%  latex-fca.dtx
 %%  Copyright ℂ 2022 Ernst-Schröder-Zentrum
 %%                   für Begriffliche Wissensverarbeitung
@@ -23,7 +23,6 @@
 %%    latex-fca.ins
 %% 
 %%  and the derived files
-%%    cxtinput.sty,
 %%    fca.sty,
 %%    formula1.cxt.
 %% 
@@ -222,6 +221,175 @@ Formal Concept Analysis macros]
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{fca}%
+\newcount\fca@cxt@input@obj
+\newcount\fca@cxt@input@attr
+\newcount\fca@cxt@input@line
+\newtoks\fca@cxt@input@contextlines
+\fca@cxt@input@line0
+\fca@cxt@input@contextlines{}%
+\newcommand\cxtinput[1]{%
+  \fca@cxt@input@contextlines{}%
+  \fca@cxt@input@save@nl@active%
+  \fca@cxt@input@make@nl@active%
+  \fca@cxt@input@input{#1}%
+  \fca@cxt@input@restore@nl%
+  \xdef\fca@cxt@input@tempa{\the\fca@cxt@input@contextlines}%
+  %\aftergroup
+  \fca@cxt@input@tempa%
+}
+\def\fca@cxt@input@newline{}
+\def\fca@cxt@input@head{%
+ \fca@cxt@input@getline\fca@cxt@input@check@B
+}
+\def\fca@cxt@input@check@B#1{%
+  \def\tempa{B}\def\tempb{#1}%
+  \ifx\tempa\tempb
+  \typeout{Burmeister format detected}%
+  \else
+    \fca@cxt@input@error{No Burmeister format detected}{The \string\cxtinput macro can input Burmeister .cxt files only.}%
+  \fi
+  \def\fca@cxt@input@newline{%
+    \fca@cxt@input@getline{\fca@cxt@input@match@mptyline\fca@cxt@input@readobjcount}%
+  }%
+}
+\def\fca@cxt@input@match@mptyline#1#2{%
+  \edef\tempa{#2}%
+  \ifx\tempa\@empty
+ \else
+    \fca@cxt@input@error{Error in Burmeister format.}{At the current position an empty line is expected.}%
+  \fi
+  \def\fca@cxt@input@newline{%
+    \fca@cxt@input@getline{#1}%
+  }%
+}
+\def\fca@cxt@input@readobjcount#1{%
+ \fca@cxt@input@obj=#1\relax
+ \def\fca@cxt@input@newline{%
+   \fca@cxt@input@getline\fca@cxt@input@readattrcount%
+ }%
+}
+\def\fca@cxt@input@readattrcount#1{%
+  \def\fca@cxt@input@newline{%
+    \fca@cxt@input@getline{\fca@cxt@input@match@mptyline\fca@cxt@input@readobjects}%
+  }%
+  \fca@cxt@input@attr=#1\relax
+}
+\def\fca@cxt@input@readobjects{%
+  \ifnum\fca@cxt@input@obj>0\relax
+    \def\fca@cxt@input@newline{%
+      \fca@cxt@input@getline\fca@cxt@input@readobjname
+   }%
+   \@tempcnta=1\relax
+   \let\tempa\fca@cxt@input@readobjname%
+ \else
+    \let\tempa\fca@cxt@input@readattributes%
+  \fi
+ \tempa
+}
+\def\fca@cxt@input@readobjname#1{%
+   \expandafter\def\csname cxt@input@objname@\the\@tempcnta\endcsname{#1}%
+   \ifnum\@tempcnta < \fca@cxt@input@obj
+    \advance\@tempcnta by 1\relax
+ \else
+    \def\fca@cxt@input@newline{%
+      \fca@cxt@input@getline\fca@cxt@input@readattributes%
+    }%
+  \fi
+}
+\def\fca@cxt@input@readattributes{%
+  \ifnum\fca@cxt@input@attr>0\relax
+    \def\fca@cxt@input@newline{%
+      \fca@cxt@input@getline\fca@cxt@input@readattrname
+    }%
+    \@tempcnta=1\relax
+    \def\tempa{\fca@cxt@input@readattrname}%
+  \else
+    \def\tempa{\fca@cxt@input@readcontext}%
+  \fi
+  \tempa
+}
+\def\fca@cxt@input@readattrname#1{%
+  \fca@cxt@input@appendtotok{#1}\atr%
+  \ifnum\@tempcnta < \fca@cxt@input@attr
+    \advance\@tempcnta by 1\relax
+  \else
+    \def\fca@cxt@input@newline{%
+      \fca@cxt@input@getline\fca@cxt@input@readcontext
+    }%
+  \fi
+}
+\def\fca@cxt@input@readcontext{%
+  \ifnum\fca@cxt@input@obj>0\relax
+    \def\fca@cxt@input@newline{%
+      \fca@cxt@input@getline
+      \fca@cxt@input@readcontextline
+    }%
+    \@tempcnta=1\relax
+    \def\tempa{\fca@cxt@input@readcontextline}%
+  \else
+    \def\tempa{}%
+  \fi
+  \tempa
+}
+\def\fca@cxt@input@readcontextline#1{%
+  \expandafter\expandafter\expandafter\fca@cxt@input@appendtotok
+  \expandafter\expandafter\expandafter{%
+    \csname cxt@input@objname@\the\@tempcnta\endcsname}%
+  {\obj{#1}}%
+  \ifnum\@tempcnta < \fca@cxt@input@obj
+    \advance\@tempcnta by 1\relax
+  \else
+    \let\fca@cxt@input@newline\relax
+    \let\fca@cxt@input@endoffile\relax
+  \fi
+}
+\def\fca@cxt@input@appendtotok#1#2{%
+  \expandafter\fca@cxt@input@contextlines\expandafter{%
+    \the\fca@cxt@input@contextlines
+    #2{#1}%
+  }%
+}
+
+\def\fca@cxt@input@error#1#2{%
+  \PackageError{fca}{At line \the\fca@cxt@input@line : #1}{#2}%
+  \def\fca@cxt@input@newline{}%
+}%
+\def\fca@cxt@input@endoffile{%
+  \fca@cxt@input@error{unexpected end of file}{The context file is somehow
+    inconsistent.\MessageBreak The last lines of it seem to be lost.}%
+}
+\def\fca@cxt@input@@endoffile{\fca@cxt@input@endoffile}
+\begingroup%
+\catcode`\^^M\active%
+\gdef\fca@cxt@input@make@nl@active{%
+  \catcode`\^^M\active%
+}%
+
+\gdef\fca@cxt@input@save@nl@active{%
+  \chardef\fca@cxt@input@catcode@nl=\catcode`\^^M%
+}%
+\gdef\fca@cxt@input@restore@nl{%
+  \catcode`\^^M\fca@cxt@input@catcode@nl\relax%
+}%
+
+\fca@cxt@input@make@nl@active%
+\long\gdef\fca@cxt@input@getline #1#2^^M{%
+  \advance\fca@cxt@input@line by 1\relax%
+  \def\tempa{#2}%
+  \ifx\tempa\fca@cxt@input@@endoffile%
+    \tempa%
+  \fi%
+  #1{#2}%
+  \fca@cxt@input@newline%
+}%
+\gdef\fca@cxt@input@input#1{%
+  \expandafter\fca@cxt@input@head\@@input #1 %
+  \fca@cxt@input@endoffile%
+}
+\endgroup%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

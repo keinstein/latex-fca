@@ -6,7 +6,7 @@
 %<*readme>
         |
 -------:| -----------------------------------------------------------------
-    fca:| Typesetting Formal Concep Analysis with LaTeX
+    fca:| Typesetting Formal Concept Analysis with LaTeX
  Author:| Bernhard Ganter
         | Tobias Schlemmer <keinstein@users.sf.net>
  E-mail:| keinstein@users.sf.net
@@ -192,12 +192,12 @@ Formal Concept Analysis macros]
 \makeatother
 \iffcatikzdoc
   \usepackage{tikz}
-  \ifluatex
+  \ifLuaTeX
     \usetikzlibrary{luamath}
   \fi
   \usetikzlibrary{fca}
 \else
-  \ifluatex
+  \ifLuaTeX
     \usepgflibrary{luamath}
   \fi
   \usepackage{fca}
@@ -251,9 +251,9 @@ Formal Concept Analysis macros]
 \makeatother
 
 % \selectlanguage{english}
-% selectlanguage
+%
 \usepackage{iftex}
-\ifluatex
+\ifLuaTeX
 \else
   \usepackage[utf8]{inputenc}
   \usepackage[T1]{fontenc}
@@ -265,7 +265,7 @@ Formal Concept Analysis macros]
 %   colorlinks=false,
 %   allbordercolors={0.9 0.9 0.9},
 %   breaklinks=true,
-%   ]{hyperref} hyperref
+%   ]{hyperref}
 
 \RequirePackage{stmaryrd}
 \usepackage[numbered]{hypdoc}
@@ -321,7 +321,6 @@ Formal Concept Analysis macros]
 % \end{center}
 % \end{abstract}
 %
-%
 % \tableofcontents
 %
 % \section{Loading the package}
@@ -364,6 +363,7 @@ Formal Concept Analysis macros]
 % this (very simple) environment does can be guessed from an example.
 % \begin{dtxexample}{A formal context.}
 %   \begin{cxt}
+% \tracingall
 %     \cxtName{Formula 1}
 %   %
 %     \att{1.}
@@ -386,6 +386,26 @@ Formal Concept Analysis macros]
 % been designed to ignore following spaces. But this cannot be extended
 % to other macros. Therefore, each line that contains individual
 % (non-cxt-code) should be ended with a |%|\ .
+%
+% By default the following characters are predefined for the use in the first argument of \cs{obj}:
+% \begin{description}
+%   \ItemDescribeOther[char]{.} A non-incidence, usually printed as white space.
+%   \ItemDescribeOther[char]{x} A a cross in the cross table.
+%   \ItemDescribeOther[char]{X} A a cross in the cross table (alternate syntax).
+%   \ItemDescribeOther[char]{u} An updarrow for the arrow relation.
+%   \ItemDescribeOther[char]{d} A downarrow of the arrow relation.
+%   \ItemDescribeOther[char]{b} An up- and downarrow of the arrow relation.
+%   \ItemDescribeOther[char]{0} The number $0$ for many-valued contexts
+%   \ItemDescribeOther[char]{1} The number $1$ for many-valued contexts
+%   \ItemDescribeOther[char]{2} The number $2$ for many-valued contexts
+%   \ItemDescribeOther[char]{3} The number $3$ for many-valued contexts
+%   \ItemDescribeOther[char]{4} The number $4$ for many-valued contexts
+%   \ItemDescribeOther[char]{5} The number $5$ for many-valued contexts
+%   \ItemDescribeOther[char]{6} The number $6$ for many-valued contexts
+%   \ItemDescribeOther[char]{7} The number $7$ for many-valued contexts
+%   \ItemDescribeOther[char]{8} The number $8$ for many-valued contexts
+%   \ItemDescribeOther[char]{9} The number $9$ for many-valued contexts
+% \end{description}
 %
 % A short demonstration of the alignment parameter:
 %
@@ -451,8 +471,7 @@ Formal Concept Analysis macros]
 % type \texttt{d} (for ``down''), \texttt{u} (``up''), or \texttt{b} (``both''),
 % as in the following example:\bigbreak
 %
-% \noindent\begin{minipage}{.45\textwidth}
-% \begin{verbatim}
+% \begin{dtxexample}{(Re-)defining context characters.}
 % \begin{cxt}%
 % \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}
 % \cxtName{Formula 1}%
@@ -463,39 +482,24 @@ Formal Concept Analysis macros]
 % \obj{uxb}{Alonso}
 % \obj{bxx}{Massa}
 % \end{cxt}
-% \end{verbatim}
-% \end{minipage}
-% \hfill
-% \begin{minipage}{.40\textwidth}
-% \strut\par\strut\par
-% \begin{cxt}%
-% \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}
-% \cxtName{Formula 1}%
-% \att{1.}%
-% \att{2.}%
-% \atr{disqualified}%
-% \obj{xbd}{Hamilton}
-% \obj{uxb}{Alonso}
-% \obj{bxx}{Massa}
-% \end{cxt}
-% \end{minipage}
-% \bigbreak
+% \end{dtxexample}
 %
 % The default for |\fcaCxtArrowStyle| is |\footnotesize|. In the above
 % example we have changed it using |\renewcommand| in order to make the
 % arrows red. The default colour is black.
 %
-% You can define your own markers using |\cxtMakeChar|. It
+% You can define your own markers using |\fcaNewContextChar|. It
 % works like |\newcommand| but defines a single Character. For
 % single signs use |\cxtrlap| in order to give it an apropriate
 % size as in the following example:
 % \bigbreak
 %
-% \noindent\begin{minipage}{.45\textwidth}
-% \begin{verbatim}
+% \begin{dtxexample}{(Re-)defining context characters.}
 % \begin{cxt}%
-% \cxtMakeChar{v}{\cxtrlap{$\vee$}}%
-% \cxtMakeChar{\wedge}{\cxtrlap{$\wedge$}}%
+% \fcaNewContextChar{v}{\cxtrlap{$\vee$}}%
+% \fcaProvideContextChar{\wedge}{\cxtrlap{$\wedge$}}%
+% \fcaProvideContextChar{.}{ignored}%
+% \fcaRenewContextChar{x}{\cxtrlap{$i$}}%
 % \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}%
 % \cxtName{Formula 1}%
 % \att{1.}%
@@ -505,26 +509,7 @@ Formal Concept Analysis macros]
 % \obj{\wedge xb}{Alonso}
 % \obj{bxx}{Massa}
 % \end{cxt}
-% \end{verbatim}
-% \end{minipage}
-% \hfill
-% \begin{minipage}{.40\textwidth}
-% \strut\par\strut\par\strut\par\strut\par
-% \begin{cxt}%
-% \cxtMakeChar{v}{\rlap{$\vee$}\phantom{$\times$}}%
-% \cxtMakeChar{\wedge}{\rlap{$\wedge$}\phantom{$\times$}}%
-% \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}%
-% \cxtName{Formula 1}%
-% \att{1.}%
-% \att{2.}%
-% \atr{disqualified}%
-% \obj{xbv}{Hamilton}
-% \obj{\wedge xb}{Alonso}
-% \obj{bxx}{Massa}
-% \end{cxt}
-% \end{minipage}
-% \bigbreak
-%
+% \end{dtxexample}
 %
 % For many-valued contexts you have two options. On the one hand you can
 % define a marker with one argument that typesets its argument. On the
@@ -538,7 +523,7 @@ Formal Concept Analysis macros]
 % \noindent\begin{minipage}{.45\textwidth}
 % \begin{verbatim}
 % \begin{cxt}%
-% \cxtMakeChar{w}[1]{#1}%
+% \fcaNewContextChar{w}[1]{#1}%
 % \cxtName{Formula 1}%
 % \att{1.}%
 % \att{2.}%
@@ -553,7 +538,7 @@ Formal Concept Analysis macros]
 % \begin{minipage}{.40\textwidth}
 % \strut\par\strut\par
 % \begin{cxt}%
-% \cxtMakeChar{w}[1]{\cxtrlap{#1}}%
+% \fcaNewContextChar{w}[1]{\cxtrlap{#1}}%
 % \cxtName{Formula 1}%
 % \att{1.}%
 % \att{2.}%
@@ -995,10 +980,11 @@ Formal Concept Analysis macros]
 % offsets will push a |\leftAttbox| even more to the upper left, etc.
 % \fi
 %
-% The text of the label is put in a |\parbox|. It can be broken into
-% several lines using |\\|. The width of the |\parbox| is
-% |\fcaLabelBoxWidth|, with a default value of 40mm. This can be changed using
-% |\renewcommand|.
+% When |text width| is set to a length, the text of the label is put
+% in a |\parbox|. It can be broken into several lines using |\\|. The
+% width of the |\parbox| is the value of the |text width| parameter.
+% It is unset by default, resulting in a one-line box (i.e. hbox) for
+% the label. In this case the width of the box is automatically detected.
 %
 % The label text and the labelled node are connected with a dotted line.
 % Here is an example:
@@ -1560,7 +1546,7 @@ Formal Concept Analysis macros]
 % \end{macro}
 % \begin{macro}{\fca@cxt@att}\marg{name}
 % Implementation for \cs{att}. The corresponding alias is set up
-% during \cs{begin}\env{\{cxt\}}.
+% during \cs{begin}\marg{\env{cxt}}.
 % \begin{macro}{\att}\marg{name}
 %
 % For each attribute the user must provide us a name either with
@@ -1588,7 +1574,7 @@ Formal Concept Analysis macros]
 % \end{macro}
 % \begin{macro}{\fca@cxt@atr}\marg{name}
 % Implementation for \cs{atr}. The corresponding alias is set up
-% during \cs{begin}\env{\{cxt\}}.
+% during \cs{begin}\marg{\env{cxt}}.
 % \begin{macro}{\atr}\marg{name}
 %   The macro \cs{atr} is available only in the \env{cxt} environment.
 %   it calls \cs{att} with its name rotated by 90 degrees, so that the
@@ -1603,7 +1589,7 @@ Formal Concept Analysis macros]
 %
 % \begin{macro}{\fca@cxt@obj}\marg{crosses}\marg{objectname}
 %   Implementation for \cs{obj}. The corresponding alias is set up
-%   during \cs{begin}\env{\{cxt\}}.
+%   during \cs{begin}\marg{\env{cxt}}.
 % \begin{macro}{\obj}\marg{crosses}\marg{objectname}
 %   This macro typesets an object line of a formal context inside the
 %   \env{cxt} environment. The second argument \marg{objectname} is
@@ -1622,7 +1608,7 @@ Formal Concept Analysis macros]
 \newcommand{\fca@cxt@obj}[2]{%
   \fca@cxt@tabdef
   #2\strut
-  \fca@cxt@Zeile{#1}%
+  \fca@cxt@Line{#1}%
   \\
 }%
 %    \end{macrocode}
@@ -1631,7 +1617,7 @@ Formal Concept Analysis macros]
 %
 % \begin{macro}{\fca@cxt@freeobj}\marg{columns}\marg{name}
 %   Implementation for \cs{freeobj}. The corresponding alias is set up
-%   during \cs{begin}\env{\{cxt\}}.
+%   during \cs{begin}\marg{\env{cxt}}.
 % \begin{macro}{\freeobj}\marg{columns}\marg{name}
 %   This macro allows to typeset any material in the incidence area of the
 %   context. The second argument is typeset in the name column of the
@@ -1774,92 +1760,246 @@ Formal Concept Analysis macros]
   \let\cxtName\fcaCxtName
   \let\alignBottom\fcaCxtAlignBottom
   \let\alignCenter\fcaCxtAlignCenter
-  \let\alignTop \fcaCxtAlignTop
+  \let\alignTop   \fcaCxtAlignTop
   \let\att\fca@cxt@att
   \let\atr\fca@cxt@atr
   \let\obj\fca@cxt@obj
   \let\freeobj\fca@cxt@freeobj
+  \let\cxtphantom\fca@cxt@phantom
+  \let\cxtrlap\fca@cxt@rlap
   \def\fca@cxtn@me{}%
   \let\fca@cxt@tabdef\fca@cxt@tabdef@@
 }%
 %    \end{macrocode}
-%
 % \end{macro}
 %
+% \subsection{Cross table contents}
 % \subsubsection{Defining the characters in a context.}
+%
+% Formal contexts usually contain crosses and – when we are looking
+% for irreducible elements – arrows. Many-valued contexts can contain
+% arbitrary content. This section describes the macros that used to
+% typeset a single cell. This incluedes the symbols that can be used
+% in a context line as well as the macros that allow to define them.
+%
+% It is necessary that very symbol in the context lines must be
+% defined with the macros from this sections. Only this ensures that
+% the parser gets restarted whenever a character is executed.
+%
+% \begin{macro}{\fca@cxt@phantom}
 % \begin{macro}{\cxtphantom}
 % This macro creates the horizontal space that would have been taken
 % by a cross in the context. It is used to properly position other
 % signs in the table without modifying the spacing.
 %    \begin{macrocode}
-\def\cxtphantom{\phantom{\fca@cxt@Kreuz}}%
+\def\fca@cxt@phantom{\phantom{\fca@cxt@Kreuz}}%
 %    \end{macrocode}
 % \end{macro}
+% \end{macro}
 %
-% \begin{macro}{\cxtrlap}
-%    This macro is inspired by \cs{rlap}. It creates a box that is as
-%    wide as \cs{cxtphantom} and centers its argument.
+% \begin{macro}{\fca@cxt@rlap}\marg{content}
+% \begin{macro}{\cxtrlap}\marg{content}
+%   The argument \meta{content} will be typeset centered in a cell
+%   that has the same size as an ordinary cross.
+% \cs{cxtrlap} is only available in the \env{cxt} environment.
 %    \begin{macrocode}
-\def\cxtrlap#1{%
+\def\fca@cxt@rlap#1{%
   \settowidth\@tempdima{\cxtphantom}%
   \makebox[\@tempdima][c]{\hss #1\hss}%
 }
 %    \end{macrocode}
 % \end{macro}
+% \end{macro}
+%
+% \changes{2.2}{2022/03/21}{add \cs{fcaNewContextChar},\cs{fcaProvideContextChar} and \cs{fcaRenewContextChar} that define new letters for the context}
+%
 % \begin{macro}{\fca@cxt@M@kechar@newcommand}
-% Bundle \cs{newcommand} and the following star in one token.
+% Put a starred \cs{newcommand*} into one single token. We will use it when we define a single character.
 %    \begin{macrocode}
 \def\fca@cxt@M@kechar@newcommand{%
   \newcommand*%
 }
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\fca@cxt@Makechar@newcommand}\marg{character}\oarg{nargs}\oarg{optargdefault}\marg{defn}
-% Defines a macro named \cs{cxt@char@}\meta{character}.
+% \begin{macro}{\fca@cxt@Makechar@newcommand}\oarg{letter}
+%   Defines a macro for the \meta{letter} to be used as a single token in the \env{cxt} environment. It is equivalent to
+% \cs{newcommand*\{letter\}} and can take all additional arguments that \cs{newcommand} takes.
+%
+% Note: the macro is not restricted to letters. It can also use command names (that are converted to strings)
 %    \begin{macrocode}
 \def\fca@cxt@Makechar@newcommand#1{%
-  \expandafter \fca@cxt@M@kechar@newcommand \csname cxt@char@\string#1
-  \endcsname }
+  \expandafter \fca@cxt@M@kechar@newcommand \csname cxt@char@\string#1 \endcsname
+}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\cxtMakeChar}\marg{character}\oarg{nargs}\oarg{optargdefault}\marg{defn}
-% Define a new character to be used in context. The syntax is the same
-% as with \cs{newcommand*}. See the latex documentation (e.g. type
-% “\cmds{texdoc latex2e}” in the command line) for details.
 %
-% This macro cannot be simply delegated to \cs{newcammand*} as we want
-% to keep the freedom of using arbitrary arguments for the defined
-% characters. Thus, we must add a macro at the end that executes the
-% next character if possible.
 %
-% As we want to pass only the actually given optional arguments to
-% \cs{newcommand*}, we must analyse the structure of the
-% arguments. The involved helper macros describe nodes in the syntax
-% tree. At each possible position of an optional argument,
-% \cs{@ifnextchar} is used to check whether the next token is an
-% opening bracket. Depending on the result one of two branches are
-% taken in the decition tree. At each leave
-% \cs{fca@cxt@Makechar@newcommand} is called with the corresponding
-% sequence of arguments and \cs{fca@cxt@readline} is appended to the
-% macro definition.
+% \begin{macro}{\fcaNewContextChar}\marg{character}\oarg{arguments}\oarg{default}\marg{definition}
+% \begin{macro}{\fcaNewContextChar@}\marg{character}\marg{definition}
+% \begin{macro}{\fcaNewContextChar@@}\marg{character}\oarg{arguments}\oarg{default}\marg{definition}
+% \begin{macro}{\fcaNewContextCh@r}\marg{character}\oarg{arguments}\marg{definition}
+% \begin{macro}{\fcaNewContextCh@r@}\marg{character}\oarg{arguments}\oarg{default}\marg{definition}
+%   The macro \cs{fcaNewContextChar} can be used to define a new
+%   character for usage in the \env{cxt} environment in the \cs{obj}
+%   macro.
+%   Internally it calls \cs{newcommand*} with the given arguments.
+%
+%   The remaining macros \cs{fcaNewContextChar@},
+%   \cs{fcaNewContextChar@@}, \cs{fcaNewContextCh@r} and
+%   \cs{fcaNewContextCh@r@} are used to pass the right arguments to
+%   \cs{newcommand*}.
 %    \begin{macrocode}
-\def\cxtM@keChar#1[#2][#3]#4{%
-  \fca@cxt@Makechar@newcommand{#1}[{#2}][{#3}]{#4\fca@cxt@readline}%
-}
-\def\cxtMakeCh@r#1[#2]#3{%
-  \fca@cxt@Makechar@newcommand{#1}[{#2}]{#3\fca@cxt@readline}%
-}
-\def\cxtMakeChar@@#1[#2]{%
-  \@ifnextchar[{\cxtM@keChar{#1}[{#2}]}{\cxtMakeCh@r{#1}[{#2}]}%]
-}
-\def\cxtMakeChar@#1#2{%
-  \fca@cxt@Makechar@newcommand{#1}{#2\fca@cxt@readline}%
-}
-\def\cxtMakeChar#1{%
-  \@ifnextchar[{\cxtMakeChar@@{#1}}{\cxtMakeChar@{#1}}%]
+\def\fcaNewContextCh@r@#1[#2][#3]#4{%
+  \fca@cxt@Makechar@newcommand{#1}[{#2}][{#3}]{#4\fca@cxt@read@line}%
+}%
+\def\fcaNewContextCh@r#1[#2]#3{%
+  \fca@cxt@Makechar@newcommand{#1}[{#2}]{#3\fca@cxt@read@line}%
+}%
+\def\fcaNewContextChar@@#1[#2]{%
+  \@ifnextchar[{\fcaNewContextCh@r@{#1}[{#2}]}{\fcaNewContextCh@r{#1}[{#2}]}%
+}%
+\def\fcaNewContextChar@#1#2{%
+  \fca@cxt@Makechar@newcommand{#1}{#2\fca@cxt@read@line}%
+}%
+\def\fcaNewContextChar#1{%
+  \@ifundefined{cxt@char@\string#1 }{}{%
+    \PackageError{fca}{The character `\string#1' is already defined.}%
+    \expandafter\let
+    \csname cxt@char@\string#1 \endcsname\@undefined
+  }%
+  \@ifnextchar[{\fcaNewContextChar@@{#1}}{\fcaNewContextChar@{#1}}%
 }
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+%
+% \begin{macro}{\fca@cxt@M@kechar@providecommand}
+% Put a starred \cs{providecommand*} into one single token. We will use it when we define a single character.
+%    \begin{macrocode}
+\def\fca@cxt@M@kechar@providecommand{%
+  \providecommand*%
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\fca@cxt@Makechar@providecommand}\oarg{letter}
+%   Defines a macro for the \meta{letter} to be used as a single token in the \env{cxt} environment. It is equivalent to
+% \cs{providecommand*{letter}} and can take all additional arguments that \cs{providecommand} takes.
+%
+% Note: the macro is not restricted to letters. It can also use command names (that are converted to strings)
+%    \begin{macrocode}
+\def\fca@cxt@Makechar@providecommand#1{%
+  \expandafter \fca@cxt@M@kechar@providecommand \csname cxt@char@\string#1 \endcsname
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+% \begin{macro}{\fcaProvideContextChar}\marg{character}\oarg{arguments}\oarg{default}\marg{definition}
+% \begin{macro}{\fcaProvideContextChar@}\marg{character}\marg{definition}
+% \begin{macro}{\fcaProvideContextChar@@}\marg{character}\oarg{arguments}\oarg{default}\marg{definition}
+% \begin{macro}{\fcaProvideContextCh@r}\marg{character}\oarg{arguments}\marg{definition}
+% \begin{macro}{\fcaProvideContextCh@r@}\marg{character}\oarg{arguments}\oarg{default}\marg{definition}
+%   The macro \cs{fcaProvideContextChar} can be used to define a provide
+%   character for usage in the \env{cxt} environment in the \cs{obj}
+%   macro.
+%   Internally it calls \cs{providecommand*} with the given arguments.
+%
+%   The remaining macros \cs{fcaProvideContextChar@},
+%   \cs{fcaProvideContextChar@@}, \cs{fcaProvideContextCh@r} and
+%   \cs{fcaProvideContextCh@r@} are used to pass the right arguments to
+%   \cs{providecommand*}.
+%    \begin{macrocode}
+\def\fcaProvideContextCh@r@#1[#2][#3]#4{%
+  \fca@cxt@Makechar@providecommand{#1}[{#2}][{#3}]{#4\fca@cxt@read@line}%
+}%
+\def\fcaProvideContextCh@r#1[#2]#3{%
+  \fca@cxt@Makechar@providecommand{#1}[{#2}]{#3\fca@cxt@read@line}%
+}%
+\def\fcaProvideContextChar@@#1[#2]{%
+  \@ifnextchar[{\fcaProvideContextCh@r@{#1}[{#2}]}{\fcaProvideContextCh@r{#1}[{#2}]}%
+}%
+\def\fcaProvideContextChar@#1#2{%
+  \fca@cxt@Makechar@providecommand{#1}{#2\fca@cxt@read@line}%
+}%
+\def\fcaProvideContextChar#1{%
+  \@ifnextchar[{\fcaProvideContextChar@@{#1}}{\fcaProvideContextChar@{#1}}%
+}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+%
+%
+% \begin{macro}{\fca@cxt@M@kechar@renewcommand}
+% Put a starred \cs{renewcommand*} into one single token. We will use it when we define a single character.
+%    \begin{macrocode}
+\def\fca@cxt@M@kechar@renewcommand{%
+  \renewcommand*%
+}
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\fca@cxt@Makechar@renewcommand}\oarg{letter}
+%   Defines a macro for the \meta{letter} to be used as a single token in the \env{cxt} environment. It is equivalent to
+% \cs{renewcommand*{letter}} and can take all additional arguments that \cs{renewcommand} takes.
+%
+% Note: the macro is not restricted to letters. It can also use command names (that are converted to strings)
+%    \begin{macrocode}
+\def\fca@cxt@Makechar@renewcommand#1{%
+  \expandafter \fca@cxt@M@kechar@renewcommand \csname cxt@char@\string#1 \endcsname
+}
+%    \end{macrocode}
+% \end{macro}
+%
+%
+%
+% \begin{macro}{\fcaRenewContextChar}\marg{character}\oarg{arguments}\oarg{default}\marg{definition}
+% \begin{macro}{\fcaRenewContextChar@}\marg{character}\marg{definition}
+% \begin{macro}{\fcaRenewContextChar@@}\marg{character}\oarg{arguments}\oarg{default}\marg{definition}
+% \begin{macro}{\fcaRenewContextCh@r}\marg{character}\oarg{arguments}\marg{definition}
+% \begin{macro}{\fcaRenewContextCh@r@}\marg{character}\oarg{arguments}\oarg{default}\marg{definition}
+%   The macro \cs{fcaRenewContextChar} can be used to define a renew
+%   character for usage in the \env{cxt} environment in the \cs{obj}
+%   macro.
+%   Internally it calls \cs{renewcommand*} with the given arguments.
+%
+%   The remaining macros \cs{fcaRenewContextChar@},
+%   \cs{fcaRenewContextChar@@}, \cs{fcaRenewContextCh@r} and
+%   \cs{fcaRenewContextCh@r@} are used to pass the right arguments to
+%   \cs{renewcommand*}.
+%    \begin{macrocode}
+\def\fcaRenewContextCh@r@#1[#2][#3]#4{%
+  \fca@cxt@Makechar@renewcommand{#1}[{#2}][{#3}]{#4\fca@cxt@read@line}%
+}%
+\def\fcaRenewContextCh@r#1[#2]#3{%
+  \fca@cxt@Makechar@renewcommand{#1}[{#2}]{#3\fca@cxt@read@line}%
+}%
+\def\fcaRenewContextChar@@#1[#2]{%
+  \@ifnextchar[{\fcaRenewContextCh@r@{#1}[{#2}]}{\fcaRenewContextCh@r{#1}[{#2}]}%
+}%
+\def\fcaRenewContextChar@#1#2{%
+  \fca@cxt@Makechar@renewcommand{#1}{#2\fca@cxt@read@line}%
+}%
+\def\fcaRenewContextChar#1{%
+  \@ifundefined{cxt@char@\string#1 }{%
+    \PackageError{fca}{The character `\string#1' is undefined.^^J
+      It must have been defined in order to be redefined.}%
+    \fcaNewContextChar{#1}{}%
+  }{}%
+  \@ifnextchar[{\fcaRenewContextChar@@{#1}}{\fcaRenewContextChar@{#1}}%
+}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 % \end{macro}
 %
 % \subsubsection{Reading context lines}
@@ -1872,10 +2012,11 @@ Formal Concept Analysis macros]
 % \end{macro}
 %
 % \begin{macro}{\fca@cxt@executechar}\marg{character}
-% This macro switches to the next table column and executes
-% \cs{cxt@char@}\meta{character} if that macro exists otherwise it
-% uses the default macro for empty cells.
+%   This macro executes the command sequence associated to the meaning of a character in a context line.
+%   In order to process a whole context line the macro is appended to each context character definition.
+%   This gives the code the meaning of an unfolded \cs{@for} loop.
 %
+%   If the token is \cs{fca@cxt@stop}, the loop ends.
 %    \begin{macrocode}
 \def\fca@cxt@executechar#1{%
   &\@ifundefined{cxt@char@\string#1 }{%
@@ -1887,25 +2028,26 @@ Formal Concept Analysis macros]
   \fca@cxt@tmp }
 %    \end{macrocode}
 % \end{macro}
-%
-%
-% \begin{macro}{\fca@cxt@readline}\marg{firstchar}
-% This macro reads one token and executes the corresponding context
-% character macro. The specital token \cs{fca@cxt@stop} is used to
-% mark the end of the context line.
-%    \begin{macrocode}
-\def\fca@cxt@readline#1{%
-  \ifx#1\fca@cxt@stop
-    \let\fca@cxt@zeile@excecutechar\@gobble
-  \else
-    \let\fca@cxt@zeile@excecutechar\fca@cxt@executechar
-  \fi
+% \begin{macro}{\fca@cxt@read@line}\marg{character}
+%   Start processing a context line. We look only at the first
+%   character. If it is \cs{fca@cxt@stop}, then the line is empty and
+%   nothing is to do.  Otherwise we execute the character macro. The
+%   definition of the character ensures that this starts a loop until
+%   eventually \cs{fca@cxt@stop} is reached.
+% \begin{macrocode}
+\def\fca@cxt@read@line#1{%
+  \ifx#1\fca@cxt@stop \let\fca@cxt@zeile@excecutechar\@gobble \else
+  \let\fca@cxt@zeile@excecutechar\fca@cxt@executechar \fi
   \fca@cxt@zeile@excecutechar{#1}%
 }%
-\def\fca@cxt@Zeile#1{%
-  \fca@cxt@readline#1\fca@cxt@stop }%
-%    \end{macrocode}
+% \end{macro}
 %
+% \begin{macro}{\fca@cxt@Line}\marg{\line}
+%   Process a whole crosstable line. We add \cs{fca@cxt@stop} at the end and start the loop by calling \cs{fca@cxt@read@line}.
+% \begin{macrocode}
+\def\fca@cxt@Line#1{%
+  \fca@cxt@read@line#1\fca@cxt@stop }%
+%    \end{macrocode}
 % \end{macro}
 %
 % \changes{2.2}{2022/03/14}{Remove \cs{cxt@aKreuz}, \cs{cxt@aup},
@@ -1913,11 +2055,11 @@ Formal Concept Analysis macros]
 % calls to \cs{cxtMakeChar}.}
 %
 % \subsubsection{The context characters}
-% Now, it is time to define some characters for the contexts:
+% Finally, we can define the predefined characters that can be used inside a formal context:
 % \begin{description}
 % \ItemDescribeOther[context character]{.} An empty context cell.
-% \ItemDescribeOther[context character]{x} A cross in the contet.
-% \ItemDescribeOther[context character]{X} Alternative singn for a cross.
+% \ItemDescribeOther[context character]{x} A cross in the context.
+% \ItemDescribeOther[context character]{X} Alternative sign for a cross.
 % \ItemDescribeOther[context character]{u} An up-arrow in the context.
 % \ItemDescribeOther[context character]{d} A down-arrow in the context.
 % \ItemDescribeOther[context character]{b} A cell containing both an
@@ -1935,15 +2077,15 @@ Formal Concept Analysis macros]
 % \end{description}
 %
 %    \begin{macrocode}
-\cxtMakeChar .{\cxtphantom}
-\cxtMakeChar x{\fca@cxt@Kreuz}
-\cxtMakeChar X{\fca@cxt@Kreuz}
-\cxtMakeChar u{\cxtrlap{\fca@cxt@up}}
-\cxtMakeChar d{\cxtrlap{\fca@cxt@down}}
-\cxtMakeChar b{\cxtrlap{\fca@cxt@both}}
+\fcaNewContextChar .{\cxtphantom}
+\fcaNewContextChar x{\fca@cxt@Kreuz}
+\fcaNewContextChar X{\fca@cxt@Kreuz}
+\fcaNewContextChar u{\cxtrlap{\fca@cxt@up}}
+\fcaNewContextChar d{\cxtrlap{\fca@cxt@down}}
+\fcaNewContextChar b{\cxtrlap{\fca@cxt@both}}
 \@for\tmp:= 0,1,2,3,4,5,6,7,8,9\do{
   \edef\@tmp{
-    \noexpand\cxtMakeChar\tmp{%
+    \noexpand\fcaNewContextChar\tmp{%
       \noexpand\cxtrlap\tmp
     }%
   }%

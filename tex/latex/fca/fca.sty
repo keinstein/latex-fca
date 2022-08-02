@@ -117,7 +117,7 @@ Formal Concept Analysis macros]
 \newcommand{\fca@cxt@obj}[2]{%
   \fca@cxt@tabdef
   #2\strut
-  \fca@cxt@Zeile{#1}%
+  \fca@cxt@Line{#1}%
   \\
 }%
 \newcommand{\fca@cxt@freeobj}[2]{%acrocod}
@@ -152,16 +152,18 @@ Formal Concept Analysis macros]
   \let\cxtName\fcaCxtName
   \let\alignBottom\fcaCxtAlignBottom
   \let\alignCenter\fcaCxtAlignCenter
-  \let\alignTop \fcaCxtAlignTop
+  \let\alignTop   \fcaCxtAlignTop
   \let\att\fca@cxt@att
   \let\atr\fca@cxt@atr
   \let\obj\fca@cxt@obj
   \let\freeobj\fca@cxt@freeobj
+  \let\cxtphantom\fca@cxt@phantom
+  \let\cxtrlap\fca@cxt@rlap
   \def\fca@cxtn@me{}%
   \let\fca@cxt@tabdef\fca@cxt@tabdef@@
 }%
-\def\cxtphantom{\phantom{\fca@cxt@Kreuz}}%
-\def\cxtrlap#1{%
+\def\fca@cxt@phantom{\phantom{\fca@cxt@Kreuz}}%
+\def\fca@cxt@rlap#1{%
   \settowidth\@tempdima{\cxtphantom}%
   \makebox[\@tempdima][c]{\hss #1\hss}%
 }
@@ -169,22 +171,74 @@ Formal Concept Analysis macros]
   \newcommand*%
 }
 \def\fca@cxt@Makechar@newcommand#1{%
-  \expandafter \fca@cxt@M@kechar@newcommand \csname cxt@char@\string#1
-  \endcsname }
-\def\cxtM@keChar#1[#2][#3]#4{%
-  \fca@cxt@Makechar@newcommand{#1}[{#2}][{#3}]{#4\fca@cxt@readline}%
+  \expandafter \fca@cxt@M@kechar@newcommand \csname cxt@char@\string#1 \endcsname
 }
-\def\cxtMakeCh@r#1[#2]#3{%
-  \fca@cxt@Makechar@newcommand{#1}[{#2}]{#3\fca@cxt@readline}%
+\def\fcaNewContextCh@r@#1[#2][#3]#4{%
+  \fca@cxt@Makechar@newcommand{#1}[{#2}][{#3}]{#4\fca@cxt@read@line}%
+}%
+\def\fcaNewContextCh@r#1[#2]#3{%
+  \fca@cxt@Makechar@newcommand{#1}[{#2}]{#3\fca@cxt@read@line}%
+}%
+\def\fcaNewContextChar@@#1[#2]{%
+  \@ifnextchar[{\fcaNewContextCh@r@{#1}[{#2}]}{\fcaNewContextCh@r{#1}[{#2}]}%
+}%
+\def\fcaNewContextChar@#1#2{%
+  \fca@cxt@Makechar@newcommand{#1}{#2\fca@cxt@read@line}%
+}%
+\def\fcaNewContextChar#1{%
+  \@ifundefined{cxt@char@\string#1 }{}{%
+    \PackageError{fca}{The character `\string#1' is already defined.}%
+    \expandafter\let
+    \csname cxt@char@\string#1 \endcsname\@undefined
+  }%
+  \@ifnextchar[{\fcaNewContextChar@@{#1}}{\fcaNewContextChar@{#1}}%
 }
-\def\cxtMakeChar@@#1[#2]{%
-  \@ifnextchar[{\cxtM@keChar{#1}[{#2}]}{\cxtMakeCh@r{#1}[{#2}]}%]
+\def\fca@cxt@M@kechar@providecommand{%
+  \providecommand*%
 }
-\def\cxtMakeChar@#1#2{%
-  \fca@cxt@Makechar@newcommand{#1}{#2\fca@cxt@readline}%
+\def\fca@cxt@Makechar@providecommand#1{%
+  \expandafter \fca@cxt@M@kechar@providecommand \csname cxt@char@\string#1 \endcsname
 }
-\def\cxtMakeChar#1{%
-  \@ifnextchar[{\cxtMakeChar@@{#1}}{\cxtMakeChar@{#1}}%]
+\def\fcaProvideContextCh@r@#1[#2][#3]#4{%
+  \fca@cxt@Makechar@providecommand{#1}[{#2}][{#3}]{#4\fca@cxt@read@line}%
+}%
+\def\fcaProvideContextCh@r#1[#2]#3{%
+  \fca@cxt@Makechar@providecommand{#1}[{#2}]{#3\fca@cxt@read@line}%
+}%
+\def\fcaProvideContextChar@@#1[#2]{%
+  \@ifnextchar[{\fcaProvideContextCh@r@{#1}[{#2}]}{\fcaProvideContextCh@r{#1}[{#2}]}%
+}%
+\def\fcaProvideContextChar@#1#2{%
+  \fca@cxt@Makechar@providecommand{#1}{#2\fca@cxt@read@line}%
+}%
+\def\fcaProvideContextChar#1{%
+  \@ifnextchar[{\fcaProvideContextChar@@{#1}}{\fcaProvideContextChar@{#1}}%
+}
+\def\fca@cxt@M@kechar@renewcommand{%
+  \renewcommand*%
+}
+\def\fca@cxt@Makechar@renewcommand#1{%
+  \expandafter \fca@cxt@M@kechar@renewcommand \csname cxt@char@\string#1 \endcsname
+}
+\def\fcaRenewContextCh@r@#1[#2][#3]#4{%
+  \fca@cxt@Makechar@renewcommand{#1}[{#2}][{#3}]{#4\fca@cxt@read@line}%
+}%
+\def\fcaRenewContextCh@r#1[#2]#3{%
+  \fca@cxt@Makechar@renewcommand{#1}[{#2}]{#3\fca@cxt@read@line}%
+}%
+\def\fcaRenewContextChar@@#1[#2]{%
+  \@ifnextchar[{\fcaRenewContextCh@r@{#1}[{#2}]}{\fcaRenewContextCh@r{#1}[{#2}]}%
+}%
+\def\fcaRenewContextChar@#1#2{%
+  \fca@cxt@Makechar@renewcommand{#1}{#2\fca@cxt@read@line}%
+}%
+\def\fcaRenewContextChar#1{%
+  \@ifundefined{cxt@char@\string#1 }{%
+    \PackageError{fca}{The character `\string#1' is undefined.^^J
+      It must have been defined in order to be redefined.}%
+    \fcaNewContextChar{#1}{}%
+  }{}%
+  \@ifnextchar[{\fcaRenewContextChar@@{#1}}{\fcaRenewContextChar@{#1}}%
 }
 \def\fca@cxt@stop{}%
 \def\fca@cxt@executechar#1{%
@@ -195,25 +249,22 @@ Formal Concept Analysis macros]
     \expandafter\let\expandafter\fca@cxt@tmp \csname
     cxt@char@\string#1 \endcsname }%
   \fca@cxt@tmp }
-\def\fca@cxt@readline#1{%
-  \ifx#1\fca@cxt@stop
-    \let\fca@cxt@zeile@excecutechar\@gobble
-  \else
-    \let\fca@cxt@zeile@excecutechar\fca@cxt@executechar
-  \fi
+\def\fca@cxt@read@line#1{%
+  \ifx#1\fca@cxt@stop \let\fca@cxt@zeile@excecutechar\@gobble \else
+  \let\fca@cxt@zeile@excecutechar\fca@cxt@executechar \fi
   \fca@cxt@zeile@excecutechar{#1}%
 }%
-\def\fca@cxt@Zeile#1{%
-  \fca@cxt@readline#1\fca@cxt@stop }%
-\cxtMakeChar .{\cxtphantom}
-\cxtMakeChar x{\fca@cxt@Kreuz}
-\cxtMakeChar X{\fca@cxt@Kreuz}
-\cxtMakeChar u{\cxtrlap{\fca@cxt@up}}
-\cxtMakeChar d{\cxtrlap{\fca@cxt@down}}
-\cxtMakeChar b{\cxtrlap{\fca@cxt@both}}
+\def\fca@cxt@Line#1{%
+  \fca@cxt@read@line#1\fca@cxt@stop }%
+\fcaNewContextChar .{\cxtphantom}
+\fcaNewContextChar x{\fca@cxt@Kreuz}
+\fcaNewContextChar X{\fca@cxt@Kreuz}
+\fcaNewContextChar u{\cxtrlap{\fca@cxt@up}}
+\fcaNewContextChar d{\cxtrlap{\fca@cxt@down}}
+\fcaNewContextChar b{\cxtrlap{\fca@cxt@both}}
 \@for\tmp:= 0,1,2,3,4,5,6,7,8,9\do{
   \edef\@tmp{
-    \noexpand\cxtMakeChar\tmp{%
+    \noexpand\fcaNewContextChar\tmp{%
       \noexpand\cxtrlap\tmp
     }%
   }%

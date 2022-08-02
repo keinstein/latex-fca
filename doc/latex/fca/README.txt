@@ -1,6 +1,6 @@
         |
 -------:| -----------------------------------------------------------------
-    fca:| Typesetting Formal Concep Analysis with LaTeX
+    fca:| Typesetting Formal Concept Analysis with LaTeX
  Author:| Bernhard Ganter
         | Tobias Schlemmer <keinstein@users.sf.net>
  E-mail:| keinstein@users.sf.net

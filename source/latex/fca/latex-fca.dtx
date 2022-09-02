@@ -156,7 +156,7 @@ http://www.latex-project.org/lppl.txt
 %<fca.sty>\ProvidesPackage{fca}
 %<tikz>\ProvidesFile{tikzlibraryfca.code.tex}
 %<*package|driver|notikzdriver>
-    [2022/02/26 v2.2
+    [2022/09/02 v2.2
 %</package|driver|notikzdriver>
 %<*fca.sty|driver|notikzdriver>
 Formal Concept Analysis macros]
@@ -173,7 +173,7 @@ Formal Concept Analysis macros]
 %</driver|notikzdriver>
 %<notikzdriver>  \fcatikzdocfalse
 %<*driver>
-% Check whether we should disable TikZ for documentation generation
+% Check whether we should disable \TikZ for documentation generation
 \fcatikzdoctrue
 %</driver>
 %<*driver|notikzdriver>
@@ -184,6 +184,10 @@ Formal Concept Analysis macros]
 \def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
 %\usepackage{a4}
 \usepackage{dtxdescribe}
+% |\tikz| gets overwritten when we load TikZ later. So we have to save
+% it somehow else
+\newcommand\TikZ{}
+\let\TikZ\tikz
 \usepackage{iftex}
 \makeatletter
 \@ifundefined{ifluatex}{
@@ -214,7 +218,7 @@ Formal Concept Analysis macros]
 
 % we hack the cxt environment so that it deactivates the vertical
 % bar. Otherwise it would break vertical column rules in context.
-% Since LaTeX2e from 2020-08-21 we can use hooks for that
+% Since \LaTeXe from 2020-08-21 we can use hooks for that
 %
 %
 \iftrue
@@ -363,7 +367,6 @@ Formal Concept Analysis macros]
 % this (very simple) environment does can be guessed from an example.
 % \begin{dtxexample}{A formal context.}
 %   \begin{cxt}
-% \tracingall
 %     \cxtName{Formula 1}
 %   %
 %     \att{1.}
@@ -614,8 +617,8 @@ Formal Concept Analysis macros]
 % \bigbreak
 %
 % \iffcatikzdoc
-% {\unitlength 1.2mm\relax
-% \begin{dtxexample}*{A TikZ enhanced diagram}
+%   {\unitlength 1.2mm\relax
+% \begin{dtxexample}*{A \protect\TikZ enhanced diagram}
 %   \begin{diagram}[
 %     every attributes/.append style={
 %       label concept/.append style={
@@ -639,7 +642,7 @@ Formal Concept Analysis macros]
 %         solid,
 %         rotate=180
 %       }
-%       }]
+%       }]%
 %     \begin{pgfscope}
 %       \color{red}
 %       \pgftransformshift{\pgfpoint{20\unitlength}{30\unitlength}}%
@@ -679,12 +682,71 @@ Formal Concept Analysis macros]
 %       \pgfsetstrokecolor{green}
 %       \pgfusepath{stroke}
 %     }
-%   \end{diagram}
+%     \end{diagram}
 % \end{dtxexample}
 % }
 %
-% The same diagram can be typeset using TikZ:
+% 
+% \begin{dtxexample}*{A \protect\TikZ diagram}
+%   \begin{tikzpicture}[x=0.1cm, y=0.1cm]
+%    %     x and y should have the same size, here
+%     \node[red,shape=circle,anchor=center,draw=red] (example
+%     text) at (20,30) {\Huge Example};
+%     \begin{diagram}[
+%       every attributes/.append style={
+%         label concept/.append style={
+%           shape=semicircle,
+%           fill=blue,
+%           anchor=south,
+%           minimum height=2\unitlength,%
+%           label/name suffix=attribute concept,
+%           label/at=center,%
+%           solid
+%         }
+%       },
+%       every objects/.append style={%
+%         label concept/.append style={%
+%           shape=semicircle,
+%           fill=black,
+%           anchor=south,
+%           minimum height=2\unitlength,
+%           rotate=180,
+%           label/name suffix=attribute concept,
+%           label/at=center,
+%           solid,
+%         }
+%       },
+%         shift={(0pt,0pt)}]
+%       \Node[/tikz/draw=orange](1)(20,10)
+%       \Node(2)(35,20)
+%       \Node[/tikz/opacity=0.3](3)(5,30)%
+%       \Node(4)(35,40)
+%       \typeout{name prefix=\pgfkeysvalueof{/tikz/name prefix}}%
+%       \Node(5)(20,50)
+%       \Edge(1)(2)
+%       \Edge[/tikz/opacity=0.3](1)(3)
+%       \Edge[/tikz/arrows=<->](2)(4)
+%       \Edge[/tikz/opacity=0.3](3)(5)
+%       \Edge(4)(5)
+%       \leftAttbox[/tikz/opacity=0.3](3){1.}
+%       \rightAttbox(2){disqualified}
+%       \rightAttbox(4){2.}
+%       \leftObjbox[/tikz/opacity=0.3](3){Hamilton}
+%       \rightObjbox(2){Massa}
+%       \rightObjbox(4){Alonso}
+%       \path[draw,red] (\pgfkeysvalueof{/fca/name
+%       prefix}2\pgfkeysvalueof{/fca/name suffix}.west)
+%       -- +(4\unitlength,0pt);
+%       \path[draw,red!50!yellow] (2.west)
+%       -- +(4\unitlength,0pt);
+%       \draw[green] (fca node 5.west)--(fca node 1.north east);
+%     \end{diagram}
+%   \end{tikzpicture}
+% \end{dtxexample}
+%
+% The same diagram can be typeset using PGF:
 % \fi
+%
 % {\unitlength 1.2mm\relax
 % \begin{dtxexample}*{A PGF enhanced diagram}
 %   \begin{diagram}[
@@ -943,7 +1005,7 @@ Formal Concept Analysis macros]
 % declared earlier with a |\Node|--command. For nodes with coordinates
 % |(u,v)| and |(x,y)| the command translates to
 % \begin{center}|\fcadrawline(u,v)(x,y)|.\end{center}
-% |\fcadrawline(u,v)(x,y)| is a pdf\LaTeX--compatible reimplementation of
+% |\fcadrawline(u,v)(x,y)| is a \pdfLaTeX--compatible reimplementation of
 % the |\drawline| command, the latter provided by the \texttt{eepic}
 % package.
 %
@@ -1045,10 +1107,10 @@ Formal Concept Analysis macros]
 % \end{center}
 % generates a single centered object label without dotted line.
 %
-% \subsection{pdf\LaTeX \ compatibility}
-% Version 2 of the \texttt{diagram} environment was designed to be pdf\LaTeX\
+% \subsection{\pdfLaTeX \ compatibility}
+% Version 2 of the \texttt{diagram} environment was designed to be \pdfLaTeX\
 % compatibile. It no longer uses \texttt{eepic.sty}, which is not supported by
-% pdf\LaTeX. Instead it uses \texttt{pict2e} and a |\fcadrawline| command,
+% \pdfLaTeX. Instead it uses \texttt{pict2e} and a |\fcadrawline| command,
 % that replaces \texttt{eepic}'s |\drawline|.
 %
 % \subsection{Problems with colour}
@@ -1169,6 +1231,30 @@ Formal Concept Analysis macros]
 % \end{minipage}
 %
 % \clearpage
+% \subsection{Some warning about future implementations}
+%
+% Currently |\unitlength| is used inside in the \env{diagram}
+% environment. However, since PGF already comes with support for
+% coordinate and canvas transformations, a future version might
+% completely rely on them and abandon the usage of |\unitlength|.
+% Then, |\unitlength| may be used only to initially set up the
+% coordinate system and ignored later. So it is strongly discouraged
+% to change |\unitlength| inside the \env{diagram} diagram
+% environment.
+%
+% Thus, it is recommended to use Euclidian coordinate systems for
+% diagrams. Other coordinate systems should work, too. However, the
+% output may change in that case using future versions of this
+% package. In particular the algorithm for the calculation of the node
+% radius may change, and changes to |\unitlength| inside the
+% environment will have no effect.
+%
+% The newly added option to encapsulate a \env{diagram} environment
+% inside a \env{tikzpicture} or \env{pgfpicture} already goes into
+% that direction. In this usage the |\unitlength| register is set to
+% the sum of the horizontal unit lengths of the x and the y
+% coordinates as provided by the surrounding environment.
+%
 % \section{Some macros}
 % For a short description see Figure~\ref{fig:macros}.
 % \begin{figure}[p]
@@ -1258,12 +1344,6 @@ Formal Concept Analysis macros]
 % \item[]|\Hochpfeil|\quad   Same as |\UpArrow|.
 % \item[]|\DoubleArrow|\quad  The $\Doppelpfeil$ of the arrow relations.
 % \item[]|\Doppelpfeil|\quad   Same as |\DoubleArrow|.
-% \iffalse
-% \item[]|\IDownArrow|\quad Gives $\IRunterpfeil$, which has the same
-%  meaning as $\DownArrow$,  but is drawn in the other direction. This is
-%  needed in the   definition of $\DPfeil$.
-% \item[]|\IRunterpfeil|\quad  Same as |\IDownArrow|.
-% \fi
 % \item[]|\IUpArrow|\quad  Gives $\IHochpfeil$, which is has the same
 %  meaning as $\UpArrow$,  but is drawn in the other direction. This is needed
 %  in the  definition of $\DPfeil$.
@@ -2131,12 +2211,6 @@ Formal Concept Analysis macros]
 % • Make everything configurable                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %
-% We extend the fca package
-%
-%    \begin{macrocode}
-\RequirePackage{fca}%
-%    \end{macrocode}
-%
 % used counters
 %
 %    \begin{macrocode}
@@ -2553,8 +2627,8 @@ Formal Concept Analysis macros]
 %\newcommand*{\fca@node@text}{\fca@node@color}%
 %\newcommand*{\fca@node@text@width}{}%
 %\newcommand*{\fca@node@node@font}{}%
-\newcommand*{\fca@shape}{circle}%
-\newcommand*{\fca@node@radius}{1\unitlength}%
+%\newcommand*{\fca@shape}{\pgfkeysvalueof{/fca/shape}}%
+%\newcommand*{\fca@node@radius}{1\unitlength}%
 %\newcommand*{\fca@node@name@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
 %\newcommand*{\fca@node@name@suffix}{}%
 \newcommand*{\fca@node@number@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
@@ -2569,15 +2643,15 @@ Formal Concept Analysis macros]
 %\newcommand*{\fca@label@node@font}{}%
 %\newcommand*{\fca@label@font}{}%
 \newcommand*{\fca@label@at}{center}% anchor of node
-\newcommand*{\fca@label@anchor}{center}% anchor of label
+%\newcommand*{\fca@label@anchor}{center}% anchor of label
 \newcommand*{\fca@label@shift@x}{0pt}%
 \newcommand*{\fca@label@shift@y}{0pt}%
 \newcommand*{\fca@label@shift@x@sign}{}
 \newcommand*{\fca@label@shift@y@sign}{}
 \newcommand*{\fca@label@type}{attributes}%
 \newcommand*{\fca@label@position}{right}%
-\newcommand*{\fca@label@name@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
-\newcommand*{\fca@label@name@suffix}{\space\fca@label@type\space\fca@label@position\space}%
+%\newcommand*{\fca@label@name@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
+%\newcommand*{\fca@label@name@suffix}{\space\fca@label@type\space\fca@label@position\space}%
 
 \newcommand*\fca@none{none}
 \newcommand*\fca@firstofthree[3]{#1}
@@ -2623,6 +2697,7 @@ Formal Concept Analysis macros]
 }
 \newcommand*{\fca@labelslayer}{\csname fca@\fca@label@type layer\endcsname}
 \newcommand*{\fca@endlabelslayer}{\csname fca@end\fca@label@type layer\endcsname}
+
 \newcommand*{\fcaNewLayer}[2]{%
   \pgfdeclarelayer{#2}%
   \fcaLayer{#1}{#2}%
@@ -2632,12 +2707,14 @@ Formal Concept Analysis macros]
   \fcaNewLayer{attributes}{\pgfkeysvalueof{/fca/namespace} attributes}
   \fcaNewLayer{objects}{\pgfkeysvalueof{/fca/namespace} objects}
   \fcaNewLayer{edges}{\pgfkeysvalueof{/fca/namespace} edges}
+  \fcaNewLayer{connectors}{\pgfkeysvalueof{/fca/namespace} connectors}
   \pgfdeclarelayer{\pgfkeysvalueof{/fca/namespace} above nodes}
   \pgfdeclarelayer{\pgfkeysvalueof{/fca/namespace} below nodes}
 }
 \newcommand*{\fcaSetLayers}{%
   \pgfsetlayers{
     \pgfkeysvalueof{/fca/namespace} edges,
+    \pgfkeysvalueof{/fca/namespace} connectors,
     \pgfkeysvalueof{/fca/namespace} below nodes,
     main,
     \pgfkeysvalueof{/fca/namespace} above nodes,
@@ -2650,6 +2727,7 @@ Formal Concept Analysis macros]
   \fcaLayer{attributes}{main}%
   \fcaLayer{objects}{main}%
   \fcaLayer{edges}{main}%
+  \fcaLayer{connectors}{main}%
 }
 \fcaNoLayers
 \newcommand*{\fcaLayers}{%
@@ -2706,7 +2784,7 @@ Formal Concept Analysis macros]
 % Changing the default values                                                 %
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \subsection{Generate some parameters which may be shared with tikz}
+% \subsection{Generate some parameters which may be shared with \TikZ}
 %    \begin{macrocode}
 \newcommand*\fca@generate@tikz@parameter[3]{%
   \pgfqkeys{/fca/#1}{.initial={#2},.value required}
@@ -2721,8 +2799,8 @@ Formal Concept Analysis macros]
   {text depth}{}{\tikz@text@depth},
   {text action}{}{\tikz@text@action},
   {options}{}{\tikz@options},%\newcommand*{\fca@node@fill}{white}%
-  {name prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}{\pgfkeysvalueof{/tikz/name prefix}},
-  {name suffix}{}{\pgfkeysvalueof{/tikz/name suffix}}
+  {anchor}{}{\tikz@anchor},
+  {shape}{}{\tikz@shape}
   \do {
     \expandafter\fca@generate@tikz@parameter\fca@tmp
   }
@@ -2737,9 +2815,11 @@ Formal Concept Analysis macros]
 \let\fca@tikz@without@library\relax
 \def\fca@generate@tikz@parameter#1#2#3{%
   \pgfkeysdef{/fca/#1}{\pgfkeys{/tikz/#1=##1}}
-  \pgfkeysetvalue{/fca/#1}{#3}%
+  \pgfkeyssetvalue{/fca/#1}{#3}%
 }
+\fca@generate@tikz@parameters
 \@for \@tempa:=%
+shape,
 text ragged,%
 text badly ragged,%
 text ragged left,%
@@ -2753,8 +2833,8 @@ fill opacity,%
 opacity,%
 blend mode,%
 color,%
-solid,%
 rotate,%
+solid,%
 dotted,%
 loosely dotted,%
 densely dotted%
@@ -2766,7 +2846,7 @@ densely dotted%
 }
 \pgfkeysdef{/fca/options}{\tikz@addoption{#1}}
 \pgfkeysdef{/fca/stroke}{%
-  \pgfqkeys{/tikz}{stroke={#1}}%
+  \pgfqkeys{/tikz}{draw={#1}}%
   \fca@testoption{#1}{%
     \fca@append\fca@usepath{stroke,}%
   }{}{%
@@ -2785,9 +2865,189 @@ densely dotted%
 \def\fca@defaultoptions{\tikz@options}%
 \def\fca@transform{\tikz@transform}%
 \@ifundefined{tikz@transform}{\let\tikz@transform\empty}{}
+\let\fca@ifintikz\@secondoftwo
+\tikzaddtikzonlycommandshortcutlet\fca@ifintikz\@firstoftwo
+\fcaset{%
+  attributes left/.append style={
+    align=flush right
+  },
+  attributes center/.append style={
+    align=flush center
+  },
+  attributes right/.append style={
+    align=flush left
+  },
+  objects left/.append style={
+    align=flush right
+  },
+  objects center/.append style={
+    align=flush center
+  },
+  objects right/.append style={
+    align=flush left
+  }
+}
+    
 %    \end{macrocode}
+%
+%    \begin{macrocode}
+\let\fca@notikz@parse@paren@vector\fca@parse@paren@vector
+\newcommand\fca@tikz@parse@paren@vector[3]{%
+  \def\tikz@coordinate@caller{%
+    \fca@notikz@parse@paren@vector{#1}{#2}{#3}%
+  }%
+  \tikz@scan@one@point \tikz@@coordinate@at@math
+}
+
+\newcommand\fca@tikz@oldnode[4]{%
+  \fca@nodeslayer
+  \begin{pgfscope}%
+    \def\fca@tempa{%
+      \path (#3,#4) node[
+      anchor=center,
+      shape=circle,
+      /fca/.cd,
+      /fca/every node/.try,
+      /fca/every concept/.try,
+      #1]
+      (#2) {}%
+    }%
+    \ifthenelse{\boolean{fca@CircledNumbers}}{%
+      \fca@add\fca@tempa{
+        node[
+        shape=circle,
+        anchor=center,
+        /fca/.cd,
+        /fca/every node/.try,
+        /fca/every concept/.try,
+        #1
+        /fca/.cd,
+        /fca/node number,
+        draw=none]%
+        (#2 number)
+        {#2}}}{}%
+    \fca@tempa ;%
+    \fca@endnodeslayer
+  \end{pgfscope}%
+  \ignorespaces  
+}
+\newcommand{\fca@tikz@oldedge}[3]{%
+  \path[draw,/fca/edge/.cd,#1] (#2) -- (#3);%
+  \ignorespaces
+}
+
+\newcommand\fca@tikz@labelBox[1]{%
+  \begin{pgfscope}%
+    \fcaset{every node/.try,every label/.try,#1}%
+    \fca@labelslayer
+      \path[/fca/.cd,every node/.try,every label/.try,#1]
+      (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
+      ++(\fca@label@shift@x,\fca@label@shift@y)
+      node[shape=rectangle] (%
+        \pgfkeysvalueof{/fca/label/name prefix}%
+        \pgfkeysvalueof{/fca/node}%
+        \pgfkeysvalueof{/fca/label/name suffix}%
+      ){%
+        \pgfkeysvalueof{/fca/node contents}%
+      };%
+    \fca@endlabelslayer  
+    \begin{pgfscope}
+      \fca@connectorslayer
+      \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
+      (\pgfkeysvalueof{/fca/pgfnode}) -- 
+      (%
+        \pgfkeysvalueof{/fca/label/name prefix}%
+        \pgfkeysvalueof{/fca/node}%
+        \pgfkeysvalueof{/fca/label/name suffix}%
+        .\pgfkeysvalueof{/fca/anchor}) ;
+      \fca@endconnectorslayer
+    \end{pgfscope}%
+    \begin{pgfscope}
+      \let\fca@options\fca@defaultoptions
+      \pgfsetdash{}{0pt}%
+      \fcaset{shape=coordinate,#1}%
+      \fcaset{%
+        every label concept/.try}%
+      \fcaset{%
+        label concept/.try
+      }%
+      \def\@tempa{coordinate}%
+      \ifx\@tempa\tikz@shape
+      \else
+        \fca@nodeslayer
+        \path
+          (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
+        node[draw,
+          /fca/.cd,
+          shape=coordinate,
+          #1,
+          every label concept/.try,
+          label concept/.try]
+        (\pgfkeysvalueof{/fca/label/name prefix}%
+          \pgfkeysvalueof{/fca/node}%
+          \pgfkeysvalueof{/fca/label/name suffix}%
+          ){};
+        % \pgfsetstrokecolor{\fca@node@color}%
+        %\pgfnode{}{\pgfkeysvalueof{/fca/anchor}}{}{%
+        \fca@endnodeslayer
+      \fi
+    \end{pgfscope}
+  \end{pgfscope}%
+  \ignorespaces
+}
+\newcommand\fca@tikz@diagram[1][]{%
+  \fca@notikz@diagram[{#1}]%
+  \pgfkeysgetvalue{/tikz/name prefix}{\fca@tikz@origprefix}%
+  \pgfkeysgetvalue{/fca/name prefix}{\@tempb}%
+  \let\@tempa\fca@tikz@origprefix
+  \fca@concat\@tempa\@tempb%
+  \pgfqkeys{/tikz}{%
+    name prefix/.expand once=\@tempa
+  }%
+  \pgfkeysgetvalue{/fca/name suffix}{\@tempa}%
+  \pgfkeysgetvalue{/tikz/name suffix}{\@fca@tikz@origsuffix}%
+  \fca@concat\@tempa\@fca@tikz@origsuffix%
+  \pgfqkeys{/tikz}{%
+    name suffix/.expand once=\@tempa
+  }%
+  \pgfkeyssetvalue{/fca/name prefix}{%
+    \pgfkeysvalueof{/tikz/name prefix}%
+  }%
+  \pgfkeyssetvalue{/fca/name suffix}{%
+    \pgfkeysvalueof{/tikz/name suffix}%
+  }%
+}
+\tikzaddtikzonlycommandshortcutlet\fca@oldnode\fca@tikz@oldnode
+\tikzaddtikzonlycommandshortcutlet\fca@oldedge\fca@tikz@oldedge
+\tikzaddtikzonlycommandshortcutlet\fca@@labelBox\fca@tikz@labelBox
+\tikzaddtikzonlycommandshortcutlet\fca@parse@paren@vector\fca@tikz@parse@paren@vector
+\tikzaddtikzonlycommandshortcutlet\fca@notikz@diagram\diagram
+\tikzaddtikzonlycommandshortcutlet\diagram\fca@tikz@diagram
+%    \end{macrocode}
+% \begin{environment}{tikzdiagram}
+% \begin{environment}{tikzdiagram}
+%   This environment places a diagram in a \TikZ{} picture.
+%    \begin{macrocode}
+\newenvironment{tikzdiagram}{%
+  \begin{tikzpicture}%
+    \begin{diagram}%
+    }{%
+    \end{diagram}%
+  \end{tikzpicture}%
+}
+%    \end{macrocode}
+% \end{environment}
+% \end{environment}
 %</tikz>
 %<*fca.sty>
+%
+% \begin{macro}{\fcaset}\marg{key value list}
+%   This macro is similar to \cs{pgfkeys}, except that it
+%   sets \filenm{/fca} as default path.
+%    \begin{macrocode}
+\newcommand*\fcaset{\pgfqkeys{/fca}}
+%    \end{macrocode}
+% \end{macro}
 %
 % \begin{description}
 % \item[kommt noch]
@@ -2797,10 +3057,18 @@ densely dotted%
 \newcommand\fca@append[2]{%
   \expandafter\def\expandafter#1\expandafter{#1#2}%
 }
+\newcommand\fca@concat[2]{%
+  \expandafter\fca@append\expandafter#1\expandafter{#2}%
+}
 
-\pgfqkeys{/fca}{%
+
+\fcaset{%
   namespace/.initial=fca,
   namespace/.value required,
+  name prefix/.initial=\pgfkeysvalueof{/fca/namespace}\space node\space,
+  name prefiv/.value required,
+  name suffix/.initial={},
+  name suffix/.value required,
   every node/.style = {},
   every concept/.style = {
     radius = 2,
@@ -2808,15 +3076,15 @@ densely dotted%
     draw=black
   },
   every attributes/.style = {
-    /fca/font/.append=\itshape
+    font=\small\baselineskip1em\rmfamily\itshape
   },%\newcommand*{\fca@node@fill}{white}%%\newcommand*{\fca@node@fill}{white}%
   every objects/.style = {
-    /fca/font/.append=\upshape
+    font=\small\baselineskip1em\rmfamily\upshape
   },
   every edge/.style = {},
   every label edge/.style = { dotted, draw=black },
-  shape/.store in=\fca@shape,
   font=\small\baselineskip1em\rmfamily,
+  shape/.initial=circle,
   minimum width/.forward to=/pgf/minimum width,
   minimum height/.forward to=/pgf/minimum height,
   minimum size/.forward to=/pgf/minimum size,
@@ -2832,8 +3100,8 @@ densely dotted%
     \edef\@tempa{\noexpand\pgfkeysalso{/pgf/inner sep=\the\@tempdima}}%
     \@tempa
   },
-  anchor/.store in=\fca@label@anchor,
-  anchor/.value required,
+  % anchor/.store in=\fca@label@anchor,
+  % anchor/.value required,
   node number/.style = { node font=\tiny, font=\tiny },
   color/.code={\fca@append\fca@options{#1}},
   stroke/.code={%
@@ -2918,25 +3186,17 @@ densely dotted%
     }%
   }%
 }
-\pgfqkeys{/fca}{%
+\fcaset{%
   every label/.style = {
     text=pgfstrokecolor,
     /pgf/outer sep=0pt,
     /pgf/inner sep=0pt,
-  },
+  }
 }
 
 \pgfqkeys{/fca/node}{%
   thickness/.store in=\fca@node@thickness,
   thickness/.value required,
-%  draw/.store in=\fca@node@color,
-%  draw/.value required,
-%  fill/.store in=\fca@node@fill,
-%  fill/.value required,
-%  text/.store in=\fca@node@text
-%  text/.value required,
-%  font/.store in=\fca@label@font,
-%  font/.value required,
   radius/.style={
     /pgf/inner sep=#1
   },
@@ -2955,18 +3215,16 @@ densely dotted%
 % Dotted: \pgfsetdash{{\pgflinewidth}{2pt}}
 
 \pgfqkeys{/fca/label}{%
-%  draw/.store in=\fca@node@color,
-%  draw/.value required,
-  name prefix/.store in=\fca@label@name@prefix,
-  name suffix/.store in=\fca@label@name@suffix,
+  name prefix/.initial=\pgfkeysvalueof{/fca/namespace}\space node\space,
+  name prefix/.value required,
+  name suffix/.initial=\space\fca@label@type\space\fca@label@position,
+  name suffix/.value required
   fill/.store in=\fca@node@fill,
   fill/.value required,
   text width/.store in=\fca@label@text@width,
   text width/.value required,
   node font/.store in=\fca@label@node@font,
   node font/.value required,
-%  font/.store in=\fca@label@font,
-%  font/.value required,
   edge thickness/.store in=\fca@label@edge@thickness,
   edge thickness/.value required,
   at/.store in=\fca@label@at,
@@ -3040,7 +3298,7 @@ densely dotted%
   }
 }
 
-\pgfqkeys{/fca}{%
+\fcaset{%
 }
 
 \newcommand*\fca@tikz@without@library{%
@@ -3081,13 +3339,6 @@ densely dotted%
   layer/.code=\fcaLayer{edge}%
 }%
 %    \end{macrocode}
-% \begin{macro}{\fcaset}\marg{key value list}
-%   This macro is similar to \cs{pgfkeys}, except that it
-%   sets \filenm{/fca} as default path.
-%    \begin{macrocode}
-\newcommand*\fcaset{\pgfqkeys{/fca}}
-%    \end{macrocode}
-% \end{macro}
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
@@ -3109,7 +3360,8 @@ densely dotted%
 }
 \newcommand\fca@typeset@node@content[1]{%
   \pgfkeysgetvalue{/fca/text width}\@tempa
-  \expandafter\fca@testoption\expandafter{\@tempa}{%
+  \edef\@tempb{\@tempa}%
+  \expandafter\fca@testoption\expandafter{\@tempb}{%
     \def\fca@node@end@content{\end{minipage}}%
     \fca@parselength\@tempdima{\fca@tempa}\fca@xunitlength
     \begin{minipage}{\@tempdima}%
@@ -3127,9 +3379,10 @@ densely dotted%
 }
 \newcommand\fca@oldnode[4]{%
   \begin{pgfscope}%
-    \pgfqkeys{/fca}{every node/.try}%
-    \pgfqkeys{/fca}{every concept/.try}%
-    \pgfqkeys{/fca}{#1}%
+    \fcaset{shape=circle}%
+    \fcaset{every node/.try}%
+    \fcaset{every concept/.try}%
+    \fcaset{#1}%
     \fca@nodeslayer
     \pgfkeysvalueof{/fca/node font}%
     \fca@parselength\@tempdima{#3}\unitlength
@@ -3137,14 +3390,14 @@ densely dotted%
     \pgftransformshift{\pgfpoint{\@tempdima}{\@tempdimb}}%
     \fca@options
     % \pgfsetstrokecolor{\fca@node@color}%
-    \pgfnode{\fca@shape}{center}{}{%
+    \pgfnode{\pgfkeysvalueof{/fca/shape}}{center}{}{%
       \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name suffix}%
     }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
     \ifthenelse{\boolean{fca@CircledNumbers}}{%
       \def\fca@usepath{}%
-      \pgfqkeys{/fca}{node number}%
+      \fcaset{node number}%
       \fca@options
-      \pgfnode{\fca@shape}{center}{%
+      \pgfnode{\pgfkeysvalueof{/fca/shape}}{center}{%
         \fca@typeset@node@content
         {%
           \centering
@@ -3170,188 +3423,6 @@ densely dotted%
     \expandafter\fca@tempb\fca@tempa
   }\@tempdima\@tempdimb
 }
-\iffalse
-\def\Node#1#2#3{\fca@adjNode{#1}\ifcase#1%
-  \def\fca@xaa{#2}\def\fca@yaa{#3}\or%
-  \def\fca@xab{#2}\def\fca@yab{#3}\or%
-  \def\fca@xac{#2}\def\fca@yac{#3}\or%
-  \def\fca@xad{#2}\def\fca@yad{#3}\or%
-  \def\fca@xae{#2}\def\fca@yae{#3}\or%
-  \def\fca@xaf{#2}\def\fca@yaf{#3}\or%
-  \def\fca@xag{#2}\def\fca@yag{#3}\or%
-  \def\fca@xah{#2}\def\fca@yah{#3}\or%
-  \def\fca@xai{#2}\def\fca@yai{#3}\or%
-  \def\fca@xaj{#2}\def\fca@yaj{#3}\or%
-  \def\fca@xak{#2}\def\fca@yak{#3}\or%
-  \def\fca@xal{#2}\def\fca@yal{#3}\or%
-  \def\fca@xam{#2}\def\fca@yam{#3}\or%
-  \def\fca@xan{#2}\def\fca@yan{#3}\or%
-  \def\fca@xao{#2}\def\fca@yao{#3}\or%
-  \def\fca@xap{#2}\def\fca@yap{#3}\or%
-  \def\fca@xaq{#2}\def\fca@yaq{#3}\or%
-  \def\fca@xar{#2}\def\fca@yar{#3}\or%
-  \def\fca@xas{#2}\def\fca@yas{#3}\or%
-  \def\fca@xat{#2}\def\fca@yat{#3}\or%
-  \def\fca@xau{#2}\def\fca@yau{#3}\or%
-  \def\fca@xav{#2}\def\fca@yav{#3}\or%
-  \def\fca@xaw{#2}\def\fca@yaw{#3}\or%
-  \def\fca@xax{#2}\def\fca@yax{#3}\or%
-  \def\fca@xay{#2}\def\fca@yay{#3}\or%
-  \def\fca@xaz{#2}\def\fca@yaz{#3}\or%
-  \def\fca@xba{#2}\def\fca@yba{#3}\or%
-  \def\fca@xbb{#2}\def\fca@ybb{#3}\or%
-  \def\fca@xbc{#2}\def\fca@ybc{#3}\or%
-  \def\fca@xbd{#2}\def\fca@ybd{#3}\or%
-  \def\fca@xbe{#2}\def\fca@ybe{#3}\or%
-  \def\fca@xbf{#2}\def\fca@ybf{#3}\or%
-  \def\fca@xbg{#2}\def\fca@ybg{#3}\or%
-  \def\fca@xbh{#2}\def\fca@ybh{#3}\or%
-  \def\fca@xbi{#2}\def\fca@ybi{#3}\or%
-  \def\fca@xbj{#2}\def\fca@ybj{#3}\or%
-  \def\fca@xbk{#2}\def\fca@ybk{#3}\or%
-  \def\fca@xbl{#2}\def\fca@ybl{#3}\or%
-  \def\fca@xbm{#2}\def\fca@ybm{#3}\or%
-  \def\fca@xbn{#2}\def\fca@ybn{#3}\or%
-  \def\fca@xbo{#2}\def\fca@ybo{#3}\or%
-  \def\fca@xbp{#2}\def\fca@ybp{#3}\or%
-  \def\fca@xbq{#2}\def\fca@ybq{#3}\or%
-  \def\fca@xbr{#2}\def\fca@ybr{#3}\or%
-  \def\fca@xbs{#2}\def\fca@ybs{#3}\or%
-  \def\fca@xbt{#2}\def\fca@ybt{#3}\or%
-  \def\fca@xbu{#2}\def\fca@ybu{#3}\or%
-  \def\fca@xbv{#2}\def\fca@ybv{#3}\or%
-  \def\fca@xbw{#2}\def\fca@ybw{#3}\or%
-  \def\fca@xbx{#2}\def\fca@ybx{#3}\or%
-  \def\fca@xby{#2}\def\fca@yby{#3}\or%
-  \def\fca@xbz{#2}\def\fca@ybz{#3}\fi}%
-\def\fca@getNode#1{%
-  \ifcase#1%
-  \def\fca@x{\fca@xaa}\or\def\fca@x{\fca@xab}\or\def\fca@x{\fca@xac}\or%
-  \def\fca@x{\fca@xad}\or\def\fca@x{\fca@xae}\or\def\fca@x{\fca@xaf}\or%
-  \def\fca@x{\fca@xag}\or\def\fca@x{\fca@xah}\or\def\fca@x{\fca@xai}\or%
-  \def\fca@x{\fca@xaj}\or\def\fca@x{\fca@xak}\or\def\fca@x{\fca@xal}\or%
-  \def\fca@x{\fca@xam}\or\def\fca@x{\fca@xan}\or\def\fca@x{\fca@xao}\or%
-  \def\fca@x{\fca@xap}\or\def\fca@x{\fca@xaq}\or\def\fca@x{\fca@xar}\or%
-  \def\fca@x{\fca@xas}\or\def\fca@x{\fca@xat}\or\def\fca@x{\fca@xau}\or%
-  \def\fca@x{\fca@xav}\or\def\fca@x{\fca@xaw}\or\def\fca@x{\fca@xax}\or%
-  \def\fca@x{\fca@xay}\or\def\fca@x{\fca@xaz}\or%
-  \def\fca@x{\fca@xba}\or\def\fca@x{\fca@xbb}\or\def\fca@x{\fca@xbc}\or%
-  \def\fca@x{\fca@xbd}\or\def\fca@x{\fca@xbe}\or\def\fca@x{\fca@xbf}\or%
-  \def\fca@x{\fca@xbg}\or\def\fca@x{\fca@xbh}\or\def\fca@x{\fca@xbi}\or%
-  \def\fca@x{\fca@xbj}\or\def\fca@x{\fca@xbk}\or\def\fca@x{\fca@xbl}\or%
-  \def\fca@x{\fca@xbm}\or\def\fca@x{\fca@xbn}\or\def\fca@x{\fca@xbo}\or%
-  \def\fca@x{\fca@xbp}\or\def\fca@x{\fca@xbq}\or\def\fca@x{\fca@xbr}\or%
-  \def\fca@x{\fca@xbs}\or\def\fca@x{\fca@xbt}\or\def\fca@x{\fca@xbu}\or%
-  \def\fca@x{\fca@xbv}\or\def\fca@x{\fca@xbw}\or\def\fca@x{\fca@xbx}\or%
-  \def\fca@x{\fca@xby}\or\def\fca@x{\fca@xbz}\fi%
-  \ifcase#1%
-  \def\fca@y{\fca@yaa}\or\def\fca@y{\fca@yab}\or\def\fca@y{\fca@yac}\or%
-  \def\fca@y{\fca@yad}\or\def\fca@y{\fca@yae}\or\def\fca@y{\fca@yaf}\or%
-  \def\fca@y{\fca@yag}\or\def\fca@y{\fca@yah}\or\def\fca@y{\fca@yai}\or%
-  \def\fca@y{\fca@yaj}\or\def\fca@y{\fca@yak}\or\def\fca@y{\fca@yal}\or%
-  \def\fca@y{\fca@yam}\or\def\fca@y{\fca@yan}\or\def\fca@y{\fca@yao}\or%
-  \def\fca@y{\fca@yap}\or\def\fca@y{\fca@yaq}\or\def\fca@y{\fca@yar}\or%
-  \def\fca@y{\fca@yas}\or\def\fca@y{\fca@yat}\or\def\fca@y{\fca@yau}\or%
-  \def\fca@y{\fca@yav}\or\def\fca@y{\fca@yaw}\or\def\fca@y{\fca@yax}\or%
-  \def\fca@y{\fca@yay}\or\def\fca@y{\fca@yaz}\or%
-  \def\fca@y{\fca@yba}\or\def\fca@y{\fca@ybb}\or\def\fca@y{\fca@ybc}\or%
-  \def\fca@y{\fca@ybd}\or\def\fca@y{\fca@ybe}\or\def\fca@y{\fca@ybf}\or%
-  \def\fca@y{\fca@ybg}\or\def\fca@y{\fca@ybh}\or\def\fca@y{\fca@ybi}\or%
-  \def\fca@y{\fca@ybj}\or\def\fca@y{\fca@ybk}\or\def\fca@y{\fca@ybl}\or%
-  \def\fca@y{\fca@ybm}\or\def\fca@y{\fca@ybn}\or\def\fca@y{\fca@ybo}\or%
-  \def\fca@y{\fca@ybp}\or\def\fca@y{\fca@ybq}\or\def\fca@y{\fca@ybr}\or%
-  \def\fca@y{\fca@ybs}\or\def\fca@y{\fca@ybt}\or\def\fca@y{\fca@ybu}\or%
-  \def\fca@y{\fca@ybv}\or\def\fca@y{\fca@ybw}\or\def\fca@y{\fca@ybx}\or%
-  \def\fca@y{\fca@yby}\or\def\fca@y{\fca@ybz}\fi}%
-\def\fca@getNodeb#1{\ifcase#1%
-  \def\fca@u{\fca@xaa}\or\def\fca@u{\fca@xab}\or\def\fca@u{\fca@xac}\or%
-  \def\fca@u{\fca@xad}\or\def\fca@u{\fca@xae}\or\def\fca@u{\fca@xaf}\or%
-  \def\fca@u{\fca@xag}\or\def\fca@u{\fca@xah}\or\def\fca@u{\fca@xai}\or%
-  \def\fca@u{\fca@xaj}\or\def\fca@u{\fca@xak}\or\def\fca@u{\fca@xal}\or%
-  \def\fca@u{\fca@xam}\or\def\fca@u{\fca@xan}\or\def\fca@u{\fca@xao}\or%
-  \def\fca@u{\fca@xap}\or\def\fca@u{\fca@xaq}\or\def\fca@u{\fca@xar}\or%
-  \def\fca@u{\fca@xas}\or\def\fca@u{\fca@xat}\or\def\fca@u{\fca@xau}\or%
-  \def\fca@u{\fca@xav}\or\def\fca@u{\fca@xaw}\or\def\fca@u{\fca@xax}\or%
-  \def\fca@u{\fca@xay}\or\def\fca@u{\fca@xaz}\or%
-  \def\fca@u{\fca@xba}\or\def\fca@u{\fca@xbb}\or\def\fca@u{\fca@xbc}\or%
-  \def\fca@u{\fca@xbd}\or\def\fca@u{\fca@xbe}\or\def\fca@u{\fca@xbf}\or%
-  \def\fca@u{\fca@xbg}\or\def\fca@u{\fca@xbh}\or\def\fca@u{\fca@xbi}\or%
-  \def\fca@u{\fca@xbj}\or\def\fca@u{\fca@xbk}\or\def\fca@u{\fca@xbl}\or%
-  \def\fca@u{\fca@xbm}\or\def\fca@u{\fca@xbn}\or\def\fca@u{\fca@xbo}\or%
-  \def\fca@u{\fca@xbp}\or\def\fca@u{\fca@xbq}\or\def\fca@u{\fca@xbr}\or%
-  \def\fca@u{\fca@xbs}\or\def\fca@u{\fca@xbt}\or\def\fca@u{\fca@xbu}\or%
-  \def\fca@u{\fca@xbv}\or\def\fca@u{\fca@xbw}\or\def\fca@u{\fca@xbx}\or%
-  \def\fca@u{\fca@xby}\or\def\fca@u{\fca@xbz}\fi%
-  \ifcase#1%
-  \def\fca@v{\fca@yaa}\or\def\fca@v{\fca@yab}\or\def\fca@v{\fca@yac}\or%
-  \def\fca@v{\fca@yad}\or\def\fca@v{\fca@yae}\or\def\fca@v{\fca@yaf}\or%
-  \def\fca@v{\fca@yag}\or\def\fca@v{\fca@yah}\or\def\fca@v{\fca@yai}\or%
-  \def\fca@v{\fca@yaj}\or\def\fca@v{\fca@yak}\or\def\fca@v{\fca@yal}\or%
-  \def\fca@v{\fca@yam}\or\def\fca@v{\fca@yan}\or\def\fca@v{\fca@yao}\or%
-  \def\fca@v{\fca@yap}\or\def\fca@v{\fca@yaq}\or\def\fca@v{\fca@yar}\or%
-  \def\fca@v{\fca@yas}\or\def\fca@v{\fca@yat}\or\def\fca@v{\fca@yau}\or%
-  \def\fca@v{\fca@yav}\or\def\fca@v{\fca@yaw}\or\def\fca@v{\fca@yax}\or%
-  \def\fca@v{\fca@yay}\or\def\fca@v{\fca@yaz}\or%
-  \def\fca@v{\fca@yba}\or\def\fca@v{\fca@ybb}\or\def\fca@v{\fca@ybc}\or%
-  \def\fca@v{\fca@ybd}\or\def\fca@v{\fca@ybe}\or\def\fca@v{\fca@ybf}\or%
-  \def\fca@v{\fca@ybg}\or\def\fca@v{\fca@ybh}\or\def\fca@v{\fca@ybi}\or%
-  \def\fca@v{\fca@ybj}\or\def\fca@v{\fca@ybk}\or\def\fca@v{\fca@ybl}\or%
-  \def\fca@v{\fca@ybm}\or\def\fca@v{\fca@ybn}\or\def\fca@v{\fca@ybo}\or%
-  \def\fca@v{\fca@ybp}\or\def\fca@v{\fca@ybq}\or\def\fca@v{\fca@ybr}\or%
-  \def\fca@v{\fca@ybs}\or\def\fca@v{\fca@ybt}\or\def\fca@v{\fca@ybu}\or%
-  \def\fca@v{\fca@ybv}\or\def\fca@v{\fca@ybw}\or\def\fca@v{\fca@ybx}\or%
-  \def\fca@v{\fca@yby}\or\def\fca@v{\fca@ybz}\fi}%
-%
-\newcommand{\Edge}[2]{\fca@getNode{#1}\fca@getNodeb{#2}%
-  {\linethickness{\fca@edge@thickness}%
-    \fcadrawline(\fca@x,\fca@y)(\fca@u,\fca@v)}}%
-\def\leftAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
-    \begin{picture}(#2,#3)(#2,0)%
-      \put(0,#3){\makebox(0,0)[rb]{\begin{minipage}{\LabelBoxWidth}%
-            \raggedleft\AttributeLabelStyle#4\end{minipage}}}%
-      \fca@changebValue{#3}{-1}{\fca@u}%
-      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,\fca@u)(#2,0)}}{}%
-    \end{picture}}}%
-%
-\def\centerAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
-    \begin{picture}(#2,#3)(0,0)%
-      \put(#2,#3){\makebox(0,0)[cb]{\begin{minipage}{\LabelBoxWidth}%
-            \centering\AttributeLabelStyle#4\end{minipage}}}%
-      \fca@changeaValue{#2}{0}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
-      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(\fca@u,\fca@v)(0,0)}}{}%
-    \end{picture}}}%
-%
-\def\rightAttbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
-    \begin{picture}(#2,#3)(0,0)%
-      \put(#2,#3){\makebox(0,0)[lb]{\begin{minipage}{\LabelBoxWidth}%
-            \raggedright\AttributeLabelStylenn#4\end{minipage}}}%
-      \fca@changeaValue{#2}{-1}{\fca@u}\fca@changebValue{#3}{-1}{\fca@v}%
-      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,0)(\fca@u,\fca@v)}}{}%
-    \end{picture}}}%
-%
-\def\leftObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
-    \begin{picture}(#2,#3)(#2,#3)%
-      \put(0,0){\makebox(0,0)[rt]{\begin{minipage}{\LabelBoxWidth}%
-            \raggedleft\fcaObjectLabelStyle#4\end{minipage}}}%
-      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(1,1)(#2,#3)}}{}%
-    \end{picture}}}%
-%
-\def\centerObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y){%
-    \begin{picture}(#2,#3)(0,#3)%
-      \put(#2,0){\makebox(0,0)[ct]{\begin{minipage}{\LabelBoxWidth}%
-            \centering\fcaObjectLabelStyle#4\end{minipage}}}%
-      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(#2,1)}}{}%
-    \end{picture}}}%
-%
-\def\rightObjbox#1#2#3#4{\fca@getNode{#1}\put(\fca@x,\fca@y ){%
-    \begin{picture}(#2,#3)(0,#3)%
-      \put(#2,0){\makebox(0,0)[lt]{\begin{minipage}{\LabelBoxWidth}%
-            \raggedright\fcaObjectLabelStyle#4\end{minipage}}}%
-      \fca@changeaValue{#2}{-1}{\fca@u}%
-      \ifthenelse{\boolean{fca@dots}}{{\thinlines\dottedline(0,#3)(\fca@u,1)}}{}%
-    \end{picture}}}%
-%
-\fi
 \newcommand{\fca@edge}[1][]{%
   \@ifnextchar\bgroup{\fca@oldedge{#1}}{\fca@newedge{#1}}%
 % \egroup
@@ -3484,12 +3555,8 @@ densely dotted%
     \@ifnextchar({%)
       \fca@parse@vector{%
         \def\fca@tempa{outer sep=1pt,#1,node=#2,shift=}%
-        \edef\fca@tempb{(\the\@tempdima,\the\@tempdimb)}
-        \expandafter\fca@append\expandafter\fca@tempa\expandafter{%
-          \expandafter{%
-            \fca@tempb%
-          }%
-        }%
+        \edef\fca@tempb{{(\the\@tempdima,\the\@tempdimb)}}%
+        \fca@concat\fca@tempa\fca@tempb%
         \@ifnextchar\bgroup{%
           \expandafter\fca@l@b@lBox\expandafter{\fca@tempa}%
         }{%
@@ -3544,14 +3611,50 @@ densely dotted%
     node contents={#4}%
   }%
 }
-
+%    \end{macrocode}
+% \begin{macro}{\fca@prepare@node}\marg{point}\marg{direction}\marg{prefix}\marg{suffix}\marg{node}
+%
+% This macro is used to find the correct anchor point and the point a
+% vector from another node will likely point to. This follows the
+% following logic: If \marg{node} is not passed in braces and contains
+% a dot (|.|), then \marg{point} will contain a macro that crates a
+% point pointing to some other |\pgfpoint| on the border of
+% \marg{prefix}\marg{node}\marg{suffix}. And \marg{direction} will be
+% the \marg{default anchor} of that node. Otherwise we assume that an
+% anchor is given and we should draw lines directly from that
+% anchor. So both macros \marg{point} and \marg{direction} will be
+% defined to return the same point
+% |\pgfpointanchor{|\marg{prefix}\marg{node
+% name}\marg{suffix}|}{|\marg{node anchor}|}|.
+%    \begin{macrocode}
 \newcommand\fca@prepare@node[5]{%
   \def\@tempa{\fca@split@node@{#1}{#2}{#3}{#4}}%
   \edef\@tempb{#5.center.}%
-  \expandafter\fca@append\expandafter\@tempa\expandafter{%
-    \@tempb\fca@split@node@}
+  \fca@concat\@tempa{\@tempb\fca@split@node@}%
   \@tempa
 }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\fca@split@node@}\marg{point}\marg{direction}\marg{prefix}\marg{suffix}\marg{node}|.|\marg{default
+%   anchor}|.\fca@split@node@|
+%
+% This macro is called by \cs{fca@prepare@node}. It should not be
+% called directly.
+%
+% This macro is used to find the correct anchor point and the point a
+% vector from another node will likely point to. This follows the
+% following logic: If \marg{node} is not passed in braces and contains
+% a dot (|.|), then \marg{point} will contain a macro that crates a
+% point pointing to some other |\pgfpoint| on the border of
+% \marg{prefix}\marg{node}\marg{suffix}. And \marg{direction} will be
+% the \marg{default anchor} of that node. Otherwise we assume that an
+% anchor is given and we should draw lines directly from that
+% anchor. So both macros \marg{point} and \marg{direction} will be
+% defined to return the same point
+% |\pgfpointanchor{|\marg{prefix}\marg{node
+% name}\marg{suffix}|}{|\marg{node anchor}|}|.
+% 
+%    \begin{macrocode}
 \def\fca@split@node@#1#2#3#4#5.#6.#7\fca@split@node@{%
   \def\@tempa{#7}%
   \ifx\@tempa\empty\relax
@@ -3561,18 +3664,37 @@ densely dotted%
   \fi
   \def#2{%
     \pgfpointanchor{#3#5#4}{#6}%
-  }
+  }%
 }
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
 \def\fca@def@expanded@node#1#2#3#4{%
   \edef\@tempa{\noexpand\def\noexpand#1\noexpand\fca@node@full@node{#2}{#3}#4..\fca@node@fullnode}%
   \@tempa
 }
+%    \end{macrocode}
+% \begin{macro}{\fca@node@anchor}\marg{node}|.|\marg{anchor}|\fca@node@anchor|
+%   Create a pgfpoint from a string of the form |node.anchor| as in
+%   \TikZ. The anchor must be given, no default can be defined.
+%    \begin{macrocode}
 \def\fca@node@anchor#1.#2\fca@node@anchor{%
   \pgfpointanchor{#1}{#2}%
 }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\fca@node@border}\marg{node1}|,|\marg{node2}|.|\marg{anchor2}|.|\marg{garbage}|\fca@node@border|
+% This macro finds the |\pgfpoint| on the border of \marg{node1} that
+% goes towards \marg{node2}|.|\marg{anchor2}. The argument
+% \marg{garbage} is thrown away. This allows to select a default
+% anchor in case no anchor is given for the \marg{node2}.
+%    \begin{macrocode}
 \def\fca@node@border#1,#2.#3.#4\fca@node@border{%
   \pgfpointshapeborder{#1}{\pgfpointanchor{#2}{#3}}%
 }
+%    \end{macrocode}
+% \end{macro}
+%    \begin{macrocode}
 \newcommand\fca@calculate@edgepoint[3]{%
   \edef\@tempa{\noexpand\pfgutil@in@{.}{#2}}%
   \@tempa
@@ -3586,9 +3708,11 @@ densely dotted%
     }%
   \fi
 }
+%    \end{macrocode}
+%    \begin{macrocode}
 \newcommand\fca@@labelBox[1]{%
   \begin{pgfscope}%
-    \pgfqkeys{/fca}{every node/.try,every label/.try,#1}%
+    \fcaset{every node/.try,every label/.try,#1}%
     \fca@labelslayer
     \pgfkeysvalueof{/fca/node font}%
     \fca@options
@@ -3601,43 +3725,47 @@ densely dotted%
     \fca@parselength\@tempdimb{\fca@label@shift@y}\unitlength
     \pgftransformshift{\pgfpoint{\@tempdima}{\@tempdimb}}%
     \fca@transform
-    \pgfnode{rectangle}{\fca@label@anchor}{%
+    \pgfnode{rectangle}{\pgfkeysvalueof{/fca/anchor}}{%
       \fca@typeset@node@content
       {%
         \pgfkeysvalueof{/fca/node contents}%
       }%
     }{%
-      \fca@label@name@prefix\pgfkeysvalueof{/fca/node}%
-      \fca@label@name@suffix
+      \pgfkeysvalueof{/fca/label/name prefix}%
+      \pgfkeysvalueof{/fca/node}%
+      \pgfkeysvalueof{/fca/label/name suffix}%
     }{%
       \expandafter\pgfusepath\expandafter{\fca@usepath}%
     }%
     \fca@endlabelslayer
     % pin edge
+    \fca@connectorslayer
     \pgftransformreset
     \let\fca@options\fca@defaultoptions
-    \pgfqkeys{/fca}{#1}%
-    \pgfqkeys{/fca}{every label edge/.try}%
+    \fcaset{every label edge/.try}%
+    \fcaset{#1}%
     \fca@options
     \fca@transform
     \pgfsetlinewidth{\fca@edge@thickness}%
     \fca@prepare@node\fca@temp@start@point\fca@temp@start@point@{}{}{\pgfkeysvalueof{/fca/pgfnode}}%
     \fca@prepare@node\fca@temp@end@point\fca@temp@end@point@
-    \fca@label@name@prefix\fca@label@name@suffix
-    {\pgfkeysvalueof{/fca/node}.\fca@label@anchor}%
+    {\pgfkeysvalueof{/fca/label/name prefix}}%
+    {\pgfkeysvalueof{/fca/label/name suffix}}%
+    {\pgfkeysvalueof{/fca/node}.\pgfkeysvalueof{/fca/anchor}}%
     \pgfpathmoveto{\fca@temp@start@point\fca@temp@end@point@}%
     \pgfpathlineto{\fca@temp@end@point\fca@temp@start@point@}%
     \pgfusepath{stroke}%
+    \fca@endconnectorslayer
     % overlay concept
     \pgftransformreset
     \let\fca@options\fca@defaultoptions
-    \pgfsetdash{}{0pt}
-    \let\fca@shape\pgfkeysnovalue
-    \pgfqkeys{/fca}{#1}%
-    \pgfqkeys{/fca}{every label concept/.try}%
-    \pgfqkeys{/fca}{label concept/.try}%
-    \ifx\fca@shape\pgfkeysnovalue
+    \pgfsetdash{}{0pt}%
+    \fcaset{shape=coordinate,#1}%
+    \fcaset{every label concept/.try}%
+    \fcaset{label concept/.try}%
+    \ifx\pgfkeysvalueof{/fca/shape}\pgfkeysnovalue
     \else
+      \fca@nodeslayer
       \pgftransformshift{%
         \pgfpointanchor{%
           \pgfkeysvalueof{/fca/pgfnode}%
@@ -3647,10 +3775,12 @@ densely dotted%
       \fca@transform
       \fca@options
       % \pgfsetstrokecolor{\fca@node@color}%
-      \pgfnode{\fca@shape}{\fca@label@anchor}{}{%
-        \fca@label@name@prefix\pgfkeysvalueof{/fca/node}%
-        \fca@label@name@suffix
+      \pgfnode{\pgfkeysvalueof{/fca/shape}}{\pgfkeysvalueof{/fca/anchor}}{}{%
+        \pgfkeysvalueof{/fca/label/name prefix}%
+        \pgfkeysvalueof{/fca/node}%
+        \pgfkeysvalueof{/fca/label/name suffix}%
       }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
+      \fca@endnodeslayer
     \fi
   \end{pgfscope}%
 }
@@ -3758,6 +3888,7 @@ densely dotted%
       \begin{pgfscope}%
         \fcaset{#1}%
         \def\fca@enddiagram{\end{pgfscope}}%
+      \unitlength=\dimexpr\pgf@xx+\pgf@yx\relax
     }%
   \else
     \def\fca@begindiagram{%

@@ -49,9 +49,11 @@
 \let\fca@tikz@without@library\relax
 \def\fca@generate@tikz@parameter#1#2#3{%
   \pgfkeysdef{/fca/#1}{\pgfkeys{/tikz/#1=##1}}
-  \pgfkeysetvalue{/fca/#1}{#3}%
+  \pgfkeyssetvalue{/fca/#1}{#3}%
 }
+\fca@generate@tikz@parameters
 \@for \@tempa:=%
+shape,
 text ragged,%
 text badly ragged,%
 text ragged left,%
@@ -65,8 +67,8 @@ fill opacity,%
 opacity,%
 blend mode,%
 color,%
-solid,%
 rotate,%
+solid,%
 dotted,%
 loosely dotted,%
 densely dotted%
@@ -78,7 +80,7 @@ densely dotted%
 }
 \pgfkeysdef{/fca/options}{\tikz@addoption{#1}}
 \pgfkeysdef{/fca/stroke}{%
-  \pgfqkeys{/tikz}{stroke={#1}}%
+  \pgfqkeys{/tikz}{draw={#1}}%
   \fca@testoption{#1}{%
     \fca@append\fca@usepath{stroke,}%
   }{}{%
@@ -97,6 +99,168 @@ densely dotted%
 \def\fca@defaultoptions{\tikz@options}%
 \def\fca@transform{\tikz@transform}%
 \@ifundefined{tikz@transform}{\let\tikz@transform\empty}{}
+\let\fca@ifintikz\@secondoftwo
+\tikzaddtikzonlycommandshortcutlet\fca@ifintikz\@firstoftwo
+\fcaset{%
+  attributes left/.append style={
+    align=flush right
+  },
+  attributes center/.append style={
+    align=flush center
+  },
+  attributes right/.append style={
+    align=flush left
+  },
+  objects left/.append style={
+    align=flush right
+  },
+  objects center/.append style={
+    align=flush center
+  },
+  objects right/.append style={
+    align=flush left
+  }
+}
+
+\let\fca@notikz@parse@paren@vector\fca@parse@paren@vector
+\newcommand\fca@tikz@parse@paren@vector[3]{%
+  \def\tikz@coordinate@caller{%
+    \fca@notikz@parse@paren@vector{#1}{#2}{#3}%
+  }%
+  \tikz@scan@one@point \tikz@@coordinate@at@math
+}
+
+\newcommand\fca@tikz@oldnode[4]{%
+  \fca@nodeslayer
+  \begin{pgfscope}%
+    \def\fca@tempa{%
+      \path (#3,#4) node[
+      anchor=center,
+      shape=circle,
+      /fca/.cd,
+      /fca/every node/.try,
+      /fca/every concept/.try,
+      #1]
+      (#2) {}%
+    }%
+    \ifthenelse{\boolean{fca@CircledNumbers}}{%
+      \fca@add\fca@tempa{
+        node[
+        shape=circle,
+        anchor=center,
+        /fca/.cd,
+        /fca/every node/.try,
+        /fca/every concept/.try,
+        #1
+        /fca/.cd,
+        /fca/node number,
+        draw=none]%
+        (#2 number)
+        {#2}}}{}%
+    \fca@tempa ;%
+    \fca@endnodeslayer
+  \end{pgfscope}%
+  \ignorespaces
+}
+\newcommand{\fca@tikz@oldedge}[3]{%
+  \path[draw,/fca/edge/.cd,#1] (#2) -- (#3);%
+  \ignorespaces
+}
+
+\newcommand\fca@tikz@labelBox[1]{%
+  \begin{pgfscope}%
+    \fcaset{every node/.try,every label/.try,#1}%
+    \fca@labelslayer
+      \path[/fca/.cd,every node/.try,every label/.try,#1]
+      (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
+      ++(\fca@label@shift@x,\fca@label@shift@y)
+      node[shape=rectangle] (%
+        \pgfkeysvalueof{/fca/label/name prefix}%
+        \pgfkeysvalueof{/fca/node}%
+        \pgfkeysvalueof{/fca/label/name suffix}%
+      ){%
+        \pgfkeysvalueof{/fca/node contents}%
+      };%
+    \fca@endlabelslayer
+    \begin{pgfscope}
+      \fca@connectorslayer
+      \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
+      (\pgfkeysvalueof{/fca/pgfnode}) --
+      (%
+        \pgfkeysvalueof{/fca/label/name prefix}%
+        \pgfkeysvalueof{/fca/node}%
+        \pgfkeysvalueof{/fca/label/name suffix}%
+        .\pgfkeysvalueof{/fca/anchor}) ;
+      \fca@endconnectorslayer
+    \end{pgfscope}%
+    \begin{pgfscope}
+      \let\fca@options\fca@defaultoptions
+      \pgfsetdash{}{0pt}%
+      \fcaset{shape=coordinate,#1}%
+      \fcaset{%
+        every label concept/.try}%
+      \fcaset{%
+        label concept/.try
+      }%
+      \def\@tempa{coordinate}%
+      \ifx\@tempa\tikz@shape
+      \else
+        \fca@nodeslayer
+        \path
+          (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
+        node[draw,
+          /fca/.cd,
+          shape=coordinate,
+          #1,
+          every label concept/.try,
+          label concept/.try]
+        (\pgfkeysvalueof{/fca/label/name prefix}%
+          \pgfkeysvalueof{/fca/node}%
+          \pgfkeysvalueof{/fca/label/name suffix}%
+          ){};
+        % \pgfsetstrokecolor{\fca@node@color}%
+        %\pgfnode{}{\pgfkeysvalueof{/fca/anchor}}{}{%
+        \fca@endnodeslayer
+      \fi
+    \end{pgfscope}
+  \end{pgfscope}%
+  \ignorespaces
+}
+\newcommand\fca@tikz@diagram[1][]{%
+  \fca@notikz@diagram[{#1}]%
+  \pgfkeysgetvalue{/tikz/name prefix}{\fca@tikz@origprefix}%
+  \pgfkeysgetvalue{/fca/name prefix}{\@tempb}%
+  \let\@tempa\fca@tikz@origprefix
+  \fca@concat\@tempa\@tempb%
+  \pgfqkeys{/tikz}{%
+    name prefix/.expand once=\@tempa
+  }%
+  \pgfkeysgetvalue{/fca/name suffix}{\@tempa}%
+  \pgfkeysgetvalue{/tikz/name suffix}{\@fca@tikz@origsuffix}%
+  \fca@concat\@tempa\@fca@tikz@origsuffix%
+  \pgfqkeys{/tikz}{%
+    name suffix/.expand once=\@tempa
+  }%
+  \pgfkeyssetvalue{/fca/name prefix}{%
+    \pgfkeysvalueof{/tikz/name prefix}%
+  }%
+  \pgfkeyssetvalue{/fca/name suffix}{%
+    \pgfkeysvalueof{/tikz/name suffix}%
+  }%
+}
+\tikzaddtikzonlycommandshortcutlet\fca@oldnode\fca@tikz@oldnode
+\tikzaddtikzonlycommandshortcutlet\fca@oldedge\fca@tikz@oldedge
+\tikzaddtikzonlycommandshortcutlet\fca@@labelBox\fca@tikz@labelBox
+\tikzaddtikzonlycommandshortcutlet\fca@parse@paren@vector\fca@tikz@parse@paren@vector
+\tikzaddtikzonlycommandshortcutlet\fca@notikz@diagram\diagram
+\tikzaddtikzonlycommandshortcutlet\diagram\fca@tikz@diagram
+\newenvironment{tikzdiagram}{%
+  \begin{tikzpicture}%
+    \begin{diagram}%
+    }{%
+    \end{diagram}%
+  \end{tikzpicture}%
+}
 \endinput
 %%
 %% End of file `tikzlibraryfca.code.tex'.

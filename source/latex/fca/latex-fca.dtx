@@ -295,6 +295,7 @@ Formal Concept Analysis macros]
   Tobias Schlemmer\thanks{TU Dresden}}
 \date{\fcacurrentversiondate}
 \begin{document}
+\errorcontextlines=1000\relax
 \edef\latexfcajobname{\jobname}%
 \edef\latexfcasourcefile{\detokenize{latex-fca}}%
 \ifx\latexfcajobname\latexfcasourcefile
@@ -574,7 +575,6 @@ Formal Concept Analysis macros]
 %
 % \begin{dtxexample}{Including Burmeister context files}
 % \begin{cxt}%
-% \cxtName{Formula 1}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
 % \end{dtxexample}
@@ -586,21 +586,21 @@ Formal Concept Analysis macros]
 % \usepackage{fca}
 % \begin{document}
 % \begin{cxt}%
-% \cxtName{Formula 1}%
+% \cxtName{Formula 2}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
 %
 % \begin{cxt}%
-% \cxtName{Formula 2}%
+% \cxtName{Formula 3}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
 % \end{document}
 % \end{verbatim}
 % \end{minipage}
 % \hfill
-% \begin{dtxexample}{Including contexts with rotated attributes}
+% \begin{dtxexample}{Including contexts with rotated attributes and
+% changing the context name}
 % \begin{cxt}[b]%
-% \cxtName{Formula 1}%
 % \renewcommand{\atr}{\att}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
@@ -2262,7 +2262,7 @@ Formal Concept Analysis macros]
     \fca@cxt@input@error{No Burmeister format detected}{The \string\cxtinput macro can input Burmeister .cxt files only.}%
   \fi
   \def\fca@cxt@input@newline{%
-    \fca@cxt@input@getline{\fca@cxt@input@match@mptyline\fca@cxt@input@readobjcount}%
+    \fca@cxt@input@getline{\fca@cxt@input@read@cxtname}%
   }%
 }
 %    \end{macrocode}
@@ -2273,11 +2273,25 @@ Formal Concept Analysis macros]
 \def\fca@cxt@input@match@mptyline#1#2{%
   \edef\tempa{#2}%
   \ifx\tempa\@empty
- \else
+  \else
     \fca@cxt@input@error{Error in Burmeister format.}{At the current position an empty line is expected.}%
   \fi
   \def\fca@cxt@input@newline{%
     \fca@cxt@input@getline{#1}%
+  }%
+}
+%    \end{macrocode}
+%
+%  Read the context name
+%
+%    \begin{macrocode}
+\def\fca@cxt@input@read@cxtname#1{%
+  \ifx\fca@cxtn@name\@empty
+  \else
+    \fcaCxtName{#1}%
+  \fi
+  \def\fca@cxt@input@newline{%
+    \fca@cxt@input@getline{\fca@cxt@input@readobjcount}%
   }%
 }
 %    \end{macrocode}
@@ -4018,7 +4032,7 @@ densely dotted%
 % in the documentation folder.
 %    \begin{macrocode}
 B
-
+Formula 1
 3
 3
 

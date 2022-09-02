@@ -43,7 +43,7 @@
 %%   Right brace   \}     Tilde         \~}
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesPackage{fca}
-    [2022/02/26 v2.2
+    [2022/09/02 v2.2
 Formal Concept Analysis macros]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -302,17 +302,26 @@ Formal Concept Analysis macros]
     \fca@cxt@input@error{No Burmeister format detected}{The \string\cxtinput macro can input Burmeister .cxt files only.}%
   \fi
   \def\fca@cxt@input@newline{%
-    \fca@cxt@input@getline{\fca@cxt@input@match@mptyline\fca@cxt@input@readobjcount}%
+    \fca@cxt@input@getline{\fca@cxt@input@read@cxtname}%
   }%
 }
 \def\fca@cxt@input@match@mptyline#1#2{%
   \edef\tempa{#2}%
   \ifx\tempa\@empty
- \else
+  \else
     \fca@cxt@input@error{Error in Burmeister format.}{At the current position an empty line is expected.}%
   \fi
   \def\fca@cxt@input@newline{%
     \fca@cxt@input@getline{#1}%
+  }%
+}
+\def\fca@cxt@input@read@cxtname#1{%
+  \ifx\fca@cxtn@name\@empty
+  \else
+    \fcaCxtName{#1}%
+  \fi
+  \def\fca@cxt@input@newline{%
+    \fca@cxt@input@getline{\fca@cxt@input@readobjcount}%
   }%
 }
 \def\fca@cxt@input@readobjcount#1{%

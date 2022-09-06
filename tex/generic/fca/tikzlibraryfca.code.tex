@@ -131,20 +131,20 @@ densely dotted%
 }
 
 \newcommand\fca@tikz@oldnode[4]{%
-  \fca@nodeslayer
   \begin{pgfscope}%
-    \def\fca@tempa{%
-      \path (#3,#4) node[
+    \fca@nodeslayer
+    \path (#3,#4) node[
       anchor=center,
       shape=circle,
       /fca/.cd,
       /fca/every node/.try,
       /fca/every concept/.try,
       #1]
-      (#2) {}%
-    }%
+      (#2) {} ;%
+    \fca@endnodeslayer
     \ifthenelse{\boolean{fca@CircledNumbers}}{%
-      \fca@add\fca@tempa{
+      \fca@nodenumberslayer
+      \path (#2)
         node[
         shape=circle,
         anchor=center,
@@ -156,19 +156,21 @@ densely dotted%
         /fca/node number,
         draw=none]%
         (#2 number)
-        {#2}}}{}%
-    \fca@tempa ;%
-    \fca@endnodeslayer
+        {#2};%
+      \fca@endnodenumberslayer
+    }{}%
   \end{pgfscope}%
   \ignorespaces
 }
 \newcommand{\fca@tikz@oldedge}[3]{%
-  \path[draw,/fca/edge/.cd,#1] (#2) -- (#3);%
+  \fca@edgeslayer
+  \path[draw,/fca/.cd,#1] (#2) -- (#3);%
+  \fca@endedgeslayer
   \ignorespaces
 }
 
 \newcommand\fca@tikz@labelBox[1]{%
-  \begin{pgfscope}%
+  \begin{scope}%
     \fcaset{every node/.try,every label/.try,#1}%
     \fca@labelslayer
       \path[/fca/.cd,every node/.try,every label/.try,#1]
@@ -182,7 +184,7 @@ densely dotted%
         \pgfkeysvalueof{/fca/node contents}%
       };%
     \fca@endlabelslayer
-    \begin{pgfscope}
+    \begin{scope}
       \fca@connectorslayer
       \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
       (\pgfkeysvalueof{/fca/pgfnode}) --
@@ -192,10 +194,8 @@ densely dotted%
         \pgfkeysvalueof{/fca/label/name suffix}%
         .\pgfkeysvalueof{/fca/anchor}) ;
       \fca@endconnectorslayer
-    \end{pgfscope}%
-    \begin{pgfscope}
-      \let\fca@options\fca@defaultoptions
-      \pgfsetdash{}{0pt}%
+    \end{scope}%
+    \begin{scope}
       \fcaset{shape=coordinate,#1}%
       \fcaset{%
         every label concept/.try}%
@@ -205,9 +205,9 @@ densely dotted%
       \def\@tempa{coordinate}%
       \ifx\@tempa\tikz@shape
       \else
-        \fca@nodeslayer
+        \fca@labelconceptslayer
         \path
-          (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
+        (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
         node[draw,
           /fca/.cd,
           shape=coordinate,
@@ -220,14 +220,18 @@ densely dotted%
           ){};
         % \pgfsetstrokecolor{\fca@node@color}%
         %\pgfnode{}{\pgfkeysvalueof{/fca/anchor}}{}{%
-        \fca@endnodeslayer
+        \fca@endlabelconceptslayer
       \fi
-    \end{pgfscope}
-  \end{pgfscope}%
+    \end{scope}
+  \end{scope}%
   \ignorespaces
 }
-\newcommand\fca@tikz@diagram[1][]{%
-  \fca@notikz@diagram[{#1}]%
+\newcommand\fca@tikz@startdiagram[1][]{%
+  \fca@notikz@startdiagram%
+  \fca@tikz@diagram@
+}
+\newcommand\fca@tikz@Defaults{
+  \fca@notikz@Defaults
   \pgfkeysgetvalue{/tikz/name prefix}{\fca@tikz@origprefix}%
   \pgfkeysgetvalue{/fca/name prefix}{\@tempb}%
   \let\@tempa\fca@tikz@origprefix
@@ -252,13 +256,18 @@ densely dotted%
 \tikzaddtikzonlycommandshortcutlet\fca@oldedge\fca@tikz@oldedge
 \tikzaddtikzonlycommandshortcutlet\fca@@labelBox\fca@tikz@labelBox
 \tikzaddtikzonlycommandshortcutlet\fca@parse@paren@vector\fca@tikz@parse@paren@vector
-\tikzaddtikzonlycommandshortcutlet\fca@notikz@diagram\diagram
-\tikzaddtikzonlycommandshortcutlet\diagram\fca@tikz@diagram
-\newenvironment{tikzdiagram}{%
-  \begin{tikzpicture}%
-    \begin{diagram}%
-    }{%
-    \end{diagram}%
+\tikzaddtikzonlycommandshortcutlet\fca@notikz@Defaults\fca@Defaults
+\tikzaddtikzonlycommandshortcutlet\fca@Defaults\fca@tikz@Defaults
+\newenvironment{tikzdiagram}[1][]{%
+  \def\fca@begindiagram{%
+    \begin{tikzpicture}%
+      \fcaset{#1}%
+      \unitlength=\dimexpr\pgf@xx+\pgf@yx\relax
+    }%
+    \noindent
+    \@ifnextchar\bgroup\fca@olddiagram\fca@diagram% This line must be
+    % executed before \begin{pgfpicture}
+  }{%
   \end{tikzpicture}%
 }
 \endinput

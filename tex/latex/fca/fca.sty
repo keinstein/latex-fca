@@ -529,7 +529,6 @@ Formal Concept Analysis macros]
   \fi
   \fca@tempb
 }
-
 \newcommand*\fcaLayer[2]{%
   \def\@tempa{main}%
   \edef\@tempb{#2}%
@@ -541,7 +540,7 @@ Formal Concept Analysis macros]
     \def\@tempa{%
       \begin{pgfonlayer}{#2}%
       }
-      \def\@temb{%
+    \def\@tempb{%
       \end{pgfonlayer}%
     }
   \fi
@@ -550,35 +549,47 @@ Formal Concept Analysis macros]
 }
 \newcommand*{\fca@labelslayer}{\csname fca@\fca@label@type layer\endcsname}
 \newcommand*{\fca@endlabelslayer}{\csname fca@end\fca@label@type layer\endcsname}
-
+\newcommand*{\fca@labelconceptslayer}{\csname fca@\fca@label@type conceptlayer\endcsname}
+\newcommand*{\fca@endlabelconceptslayer}{\csname fca@end\fca@label@type conceptlayer\endcsname}
 \newcommand*{\fcaNewLayer}[2]{%
   \pgfdeclarelayer{#2}%
   \fcaLayer{#1}{#2}%
 }
 \newcommand*{\fcaDeclareLayers}{%
   \fcaLayer{nodes}{main}
+  \fcaNewLayer{nodenumbers}{\pgfkeysvalueof{/fca/namespace} node numbers}
   \fcaNewLayer{attributes}{\pgfkeysvalueof{/fca/namespace} attributes}
   \fcaNewLayer{objects}{\pgfkeysvalueof{/fca/namespace} objects}
+  \fcaNewLayer{attributesconcept}{%
+    \pgfkeysvalueof{/fca/namespace} attribute concepts}
+  \fcaNewLayer{objectsconcept}{%
+    \pgfkeysvalueof{/fca/namespace} object concepts}
   \fcaNewLayer{edges}{\pgfkeysvalueof{/fca/namespace} edges}
   \fcaNewLayer{connectors}{\pgfkeysvalueof{/fca/namespace} connectors}
   \pgfdeclarelayer{\pgfkeysvalueof{/fca/namespace} above nodes}
   \pgfdeclarelayer{\pgfkeysvalueof{/fca/namespace} below nodes}
 }
 \newcommand*{\fcaSetLayers}{%
-  \pgfsetlayers{
-    \pgfkeysvalueof{/fca/namespace} edges,
-    \pgfkeysvalueof{/fca/namespace} connectors,
-    \pgfkeysvalueof{/fca/namespace} below nodes,
-    main,
-    \pgfkeysvalueof{/fca/namespace} above nodes,
-    \pgfkeysvalueof{/fca/namespace} attributes
-    \pgfkeysvalueof{/fca/namespace} objects,
+  \pgfsetlayers{%
+    \pgfkeysvalueof{/fca/namespace} edges,%
+    \pgfkeysvalueof{/fca/namespace} connectors,%
+    \pgfkeysvalueof{/fca/namespace} below nodes,%
+    main,%
+    \pgfkeysvalueof{/fca/namespace} above nodes,%
+    \pgfkeysvalueof{/fca/namespace} node numbers,%
+    \pgfkeysvalueof{/fca/namespace} attribute concepts,%
+    \pgfkeysvalueof{/fca/namespace} object concepts,%
+    \pgfkeysvalueof{/fca/namespace} attributes,%
+    \pgfkeysvalueof{/fca/namespace} objects%
   }%
 }
 \newcommand*\fcaNoLayers{%
   \fcaLayer{nodes}{main}%
+  \fcaLayer{nodenumbers}{main}%
   \fcaLayer{attributes}{main}%
   \fcaLayer{objects}{main}%
+  \fcaLayer{attributesconcept}{main}%
+  \fcaLayer{objectsconcept}{main}%
   \fcaLayer{edges}{main}%
   \fcaLayer{connectors}{main}%
 }
@@ -982,7 +993,9 @@ Formal Concept Analysis macros]
     \pgfnode{\pgfkeysvalueof{/fca/shape}}{center}{}{%
       \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name suffix}%
     }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
+    \fca@endnodeslayer
     \ifthenelse{\boolean{fca@CircledNumbers}}{%
+      \fca@nodenumberslayer
       \def\fca@usepath{}%
       \fcaset{node number}%
       \fca@options
@@ -997,8 +1010,8 @@ Formal Concept Analysis macros]
         \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name
           suffix} number%
       }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
+      \fca@endnodenumberslayer
     }{}%
-    \fca@endnodeslayer
   \end{pgfscope}%
   \ignorespaces
 }
@@ -1023,7 +1036,8 @@ Formal Concept Analysis macros]
 }
 \newcommand{\fca@oldedge}[3]{%
   \begin{pgfscope}%
-    \pgfqkeys{/fca/edge}{#1}%
+    \fca@edgeslayer
+    \fcaset{#1}%
     \fca@options
     \fca@transform
     \pgfsetlinewidth{\fca@edge@thickness}%
@@ -1046,6 +1060,7 @@ Formal Concept Analysis macros]
       }%
     }%
     \pgfusepath{stroke}%
+    \fca@endedgeslayer
   \end{pgfscope}%
   \ignorespaces
 }
@@ -1246,7 +1261,7 @@ Formal Concept Analysis macros]
     \fcaset{label concept/.try}%
     \ifx\pgfkeysvalueof{/fca/shape}\pgfkeysnovalue
     \else
-      \fca@nodeslayer
+      \fca@labelconceptslayer
       \pgftransformshift{%
         \pgfpointanchor{%
           \pgfkeysvalueof{/fca/pgfnode}%
@@ -1261,7 +1276,7 @@ Formal Concept Analysis macros]
         \pgfkeysvalueof{/fca/node}%
         \pgfkeysvalueof{/fca/label/name suffix}%
       }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
-      \fca@endnodeslayer
+      \fca@endlabelconceptslayer
     \fi
   \end{pgfscope}%
 }
@@ -1346,8 +1361,10 @@ Formal Concept Analysis macros]
     \def\fca@begindiagram{%
       \begin{pgfscope}%
         \fcaset{#1}%
-        \def\fca@enddiagram{\end{pgfscope}}%
-      \unitlength=\dimexpr\pgf@xx+\pgf@yx\relax
+        \unitlength=\dimexpr\pgf@xx+\pgf@yx\relax
+        \def\fca@enddiagram{%
+          \end{pgfscope}%
+        }%
     }%
   \else
     \def\fca@begindiagram{%
@@ -1364,9 +1381,6 @@ Formal Concept Analysis macros]
   %\fca@DrawCircles
   \fca@enddiagram%
 }%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \providecommand{\GMI}{(G,M,\relI)}
 \newcommand{\context}[1][K]{\ensuremath{\mathbb{#1}}}
 \providecommand{\'}{\ensuremath{\sp\prime}}% derivation operator

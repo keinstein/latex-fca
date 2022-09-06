@@ -722,7 +722,6 @@ Formal Concept Analysis macros]
 %       \Node(2)(35,20)
 %       \Node[/tikz/opacity=0.3](3)(5,30)%
 %       \Node(4)(35,40)
-%       \typeout{name prefix=\pgfkeysvalueof{/tikz/name prefix}}%
 %       \Node(5)(20,50)
 %       \Edge(1)(2)
 %       \Edge[/tikz/opacity=0.3](1)(3)
@@ -946,7 +945,6 @@ Formal Concept Analysis macros]
 %     \Edge{2}{4}
 %     \Edge{3}{5}
 %     \Edge{4}{5}
-%     \typeout{1}
 %     \leftAttbox{3}{2}{2}{1.}
 %     \rightAttbox{2}{2}{2}{disqualified}
 %     \rightAttbox{4}{2.}%
@@ -2690,8 +2688,39 @@ Formal Concept Analysis macros]
   \fi
   \fca@tempb
 }
-
-
+%    \end{macrocode}
+%
+% Sometimes (e.g. for large contexts) it is not possible to arrange
+% all nodes in such a way that the edges do not cross any nodes. In
+% such case its often worse not to print any lattice than to live with
+% some compromises. I such situations we must divide the lattice into
+% several layers. Fortunately, \PGF{} and \TikZ{} support to assign
+% certain graphical objects into layers. This allows us, to keep the
+% order of defining nodes before the edges, while the nodes are drawn
+% on top of the edges (see below).
+%
+% Please, do not confuse implementation layers (\TikZ, \PGF{} Basic
+% Layer and drivers) with graphical layers. Graphical layers can be
+% thought of slide overlays stacked on top of each other. You can draw
+% on one layer, use the positions in another layer for drawing objects
+% and return to the original layer to add further content.
+%
+% The formal definition and documentation of layers can be found in
+% the \TikZ{} and \PGF{} manual at \url{https://tikz.dev} or in your
+% local tex installation calling either texdoctk or -- on the command
+% line using the command “|texdoc pgfmanual|” in the section
+% \href{https://tikz.dev/base-layers}{“IX The Basic Layer”
+% $\rightarrow$ “Layered Graphics”}.
+%
+% \begin{macro}{\fcaLayer}\marg{fca entity}\marg{layer}
+%
+%   This macro assigns an entity to an existing PGF layer. The layer
+%   can be accessed in two ways: Ether by using the environment
+%   \env{pgfonlayer} with the argument \meta{layer} or by putting the
+%   material between the two macros |\fca@|\meta{entity}|layer| and
+%   |\fca@end|\meta{entity}|layer|. As the at sign shows, the latter
+%   form is intended for internal use in \LaTeX{} packages.
+%    \begin{macrocode}
 \newcommand*\fcaLayer[2]{%
   \def\@tempa{main}%
   \edef\@tempb{#2}%
@@ -2703,52 +2732,223 @@ Formal Concept Analysis macros]
     \def\@tempa{%
       \begin{pgfonlayer}{#2}%
       }
-      \def\@temb{%
+    \def\@tempb{%
       \end{pgfonlayer}%
     }
   \fi
   \expandafter\let\csname fca@#1layer\endcsname\@tempa
   \expandafter\let\csname fca@end#1layer\endcsname\@tempb
 }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\fca@labelslayer}
+% \begin{macro}{\fca@endlabelslayer}
+% \begin{macro}{\fca@labelconceptslayer}
+% \begin{macro}{\fca@endlabelconceptslayer}
+%
+% Since objects and attributes can be collected on two different
+% layers, and the same is true for the object and attribute overlays
+% of concepts, we use two meta layers to select the correct layer
+% depending on the type of the current label. However, help lines (so
+% called connectors) are always on the same layer for both object
+% labels and attribute labels.
+%    \begin{macrocode}
 \newcommand*{\fca@labelslayer}{\csname fca@\fca@label@type layer\endcsname}
 \newcommand*{\fca@endlabelslayer}{\csname fca@end\fca@label@type layer\endcsname}
-
+\newcommand*{\fca@labelconceptslayer}{\csname fca@\fca@label@type conceptlayer\endcsname}
+\newcommand*{\fca@endlabelconceptslayer}{\csname fca@end\fca@label@type conceptlayer\endcsname}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \end{macro}
+% \begin{macro}{\fcaNewLayer}\marg{fca entity}\marg{layer}
+%
+% This macro is similar to \cs{fcaLayer}, but it creates the PGF
+% layer \meta{layer} before assinging it to the macros.
+%    \begin{macrocode}
 \newcommand*{\fcaNewLayer}[2]{%
   \pgfdeclarelayer{#2}%
   \fcaLayer{#1}{#2}%
 }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\fcaDeclareLayers} creates a standard set of
+%   layers. The layers are assigned and used in the following way:
+%   \begin{description}
+%  \item[{nodes}]{main}
+%  \item[{nodenumbers}]{\pgfkeysvalueof{/fca/namespace} node numbers}
+%  \item[{attributes}]{\pgfkeysvalueof{/fca/namespace} attributes}
+%  \item[{objects}]{\pgfkeysvalueof{/fca/namespace} objects}
+%  \item[{attributesconcept}]{%
+%    \pgfkeysvalueof{/fca/namespace} attribute concepts}
+%  \item[{objectsconcept}]{%
+%    \pgfkeysvalueof{/fca/namespace} object concepts}
+%  \item[{edges}]{\pgfkeysvalueof{/fca/namespace} edges}
+%  \item[{connectors}]{\pgfkeysvalueof{/fca/namespace} connectors}
+%  \item[{}]{\pgfkeysvalueof{/fca/namespace} above nodes}
+%  \item[{}]{\pgfkeysvalueof{/fca/namespace} below nodes}
+%   \end{description}
+%    \begin{macrocode}
 \newcommand*{\fcaDeclareLayers}{%
   \fcaLayer{nodes}{main}
+  \fcaNewLayer{nodenumbers}{\pgfkeysvalueof{/fca/namespace} node numbers}
   \fcaNewLayer{attributes}{\pgfkeysvalueof{/fca/namespace} attributes}
   \fcaNewLayer{objects}{\pgfkeysvalueof{/fca/namespace} objects}
+  \fcaNewLayer{attributesconcept}{%
+    \pgfkeysvalueof{/fca/namespace} attribute concepts}
+  \fcaNewLayer{objectsconcept}{%
+    \pgfkeysvalueof{/fca/namespace} object concepts}
   \fcaNewLayer{edges}{\pgfkeysvalueof{/fca/namespace} edges}
   \fcaNewLayer{connectors}{\pgfkeysvalueof{/fca/namespace} connectors}
   \pgfdeclarelayer{\pgfkeysvalueof{/fca/namespace} above nodes}
   \pgfdeclarelayer{\pgfkeysvalueof{/fca/namespace} below nodes}
 }
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\fcaSetLayers} defines the order of the layers used in
+%   a diagram. The order can changed using \cs{pgfsetlayers}, if
+%   necessary. Note: All used layers should occur in this
+%   list. Otherwise they will be ignored by PGF.
+%    \begin{macrocode}
 \newcommand*{\fcaSetLayers}{%
-  \pgfsetlayers{
-    \pgfkeysvalueof{/fca/namespace} edges,
-    \pgfkeysvalueof{/fca/namespace} connectors,
-    \pgfkeysvalueof{/fca/namespace} below nodes,
-    main,
-    \pgfkeysvalueof{/fca/namespace} above nodes,
-    \pgfkeysvalueof{/fca/namespace} attributes
-    \pgfkeysvalueof{/fca/namespace} objects,
+  \pgfsetlayers{%
+    \pgfkeysvalueof{/fca/namespace} edges,%
+    \pgfkeysvalueof{/fca/namespace} connectors,%
+    \pgfkeysvalueof{/fca/namespace} below nodes,%
+    main,%
+    \pgfkeysvalueof{/fca/namespace} above nodes,%
+    \pgfkeysvalueof{/fca/namespace} node numbers,%
+    \pgfkeysvalueof{/fca/namespace} attribute concepts,%
+    \pgfkeysvalueof{/fca/namespace} object concepts,%
+    \pgfkeysvalueof{/fca/namespace} attributes,%
+    \pgfkeysvalueof{/fca/namespace} objects%
   }%
 }
+%    \end{macrocode}
+% \end{macro}
+%
+%
+% \begin{macro}{\fcaNoLayers} assigns all layers to the current
+% layer. This means the graphic objects are drawn one on top of the
+% other in the order they appear in the source code. This is the
+% default behaviour of the |fca| packages.
+%    \begin{macrocode}
 \newcommand*\fcaNoLayers{%
   \fcaLayer{nodes}{main}%
+  \fcaLayer{nodenumbers}{main}%
   \fcaLayer{attributes}{main}%
   \fcaLayer{objects}{main}%
+  \fcaLayer{attributesconcept}{main}%
+  \fcaLayer{objectsconcept}{main}%
   \fcaLayer{edges}{main}%
   \fcaLayer{connectors}{main}%
 }
 \fcaNoLayers
+%    \end{macrocode}
+%
+% \end{macro}{\fcaLayers} instructs a diagram to collect the different
+% parts of a diagram into layers. By default later parts are drawn
+% above prior parts. So edges are drawn above nodes. In simple
+% lattices this is not a problem, but for more complex lattice
+% diagrams it may not be completely possible to draw all edges between
+% nodes and labels.
+%    \begin{macrocode}
 \newcommand*{\fcaLayers}{%
   \fcaDeclareLayers
   \fcaSetLayers
 }
+%    \end{macrocode}
+%
+%
+%   Now, two tests (one for PGF and \TikZ):
+% \begin{dtxexample}*{A diagram with layers (left) and flat (right) }
+%   \begin{diagram}
+%     \fcaLayers
+%     \Node(1)(20,10)
+%     \Node(2)(35,20)
+%     \Node(3)(20,30)
+%     \Node(4)(35,40)
+%     \Node(5)(20,50)
+%     \Edge(1)(2)
+%     \Edge(1)(5)
+%     \Edge(2)(4)
+%     \Edge(4)(5)
+%     \leftAttbox(3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox(3){Hamilton}
+%     \rightObjbox(2){Massa}
+%     \rightObjbox(4){Alonso}
+%     \end{diagram}
+%   \begin{diagram}
+%     \Node(1)(20,10)
+%     \Node(2)(35,20)
+%     \Node(3)(20,30)
+%     \Node(4)(35,40)
+%     \Node(5)(20,50)
+%     \Edge(1)(2)
+%     \Edge(1)(5)
+%     \Edge(2)(4)
+%     \Edge(4)(5)
+%     \leftAttbox(3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox(3){Hamilton}
+%     \rightObjbox(2){Massa}
+%     \rightObjbox(4){Alonso}
+%     \end{diagram}
+% \end{dtxexample}
+%
+% \iffcatikzdoc
+% \begin{dtxexample}*{A \protect\TikZ{} diagram (left: with layers,
+% right: without layers)}
+%   \begin{tikzdiagram}[/tikz/x=.1cm,/tikz/y=.1cm]%
+%     \fcaLayers
+%     \Node(1)(20,10)
+%     \Node(2)(35,20)
+%     \Node[/tikz/opacity=0.8](3)(20,30)
+%     \Node(4)(35,40)
+%     \Node(5)(20,50)
+%     \Edge(1)(2)
+%     \Edge[draw=black,/tikz/opacity=0.3](1)(5)
+%     \Edge[/tikz/arrows=<->](2)(4)
+%     \Edge[/tikz/opacity=0.3](3)(5)
+%     \Edge(4)(5)
+%     \leftAttbox[/tikz/opacity=0.3](3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox[/tikz/opacity=0.3](3){Hamilton}
+%     \rightObjbox(2){Massa}
+%     \rightObjbox(4){Alonso}
+%     \draw (1.center) -- (4.center);
+%     \begin{pgfonlayer}{fca below nodes}
+%       \draw (5.center)--(2.center);
+%     \end{pgfonlayer}
+%   \end{tikzdiagram}
+%   \begin{tikzdiagram}[/tikz/x=.1cm,/tikz/y=.1cm]%
+%     \Node(1)(20,10)
+%     \Node(2)(35,20)
+%     \Node[/tikz/opacity=0.3](3)(20,30)
+%     \Node(4)(35,40)
+%     \Node(5)(20,50)
+%     \Edge(1)(2)
+%     \Edge[/tikz/draw=black,/tikz/opacity=0.3](1)(5)
+%     \Edge[/tikz/arrows=<->](2)(4)
+%     \Edge(4)(5)
+%     \leftAttbox[/tikz/opacity=0.3](3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox[/tikz/opacity=0.3](3){Hamilton}
+%     \rightObjbox(2){Massa}
+%     \rightObjbox(4){Alonso}
+%     \draw (1.center) -- (4.center);
+%     \draw (5.center)--(2.center);
+%   \end{tikzdiagram}
+% \end{dtxexample}
+% \fi
+%
+%    \begin{macrocode}
 % We allow to select the label type and positioning independently.
 % This function executes the right positioning settings.
 \newcommand\fca@dolabelposition{%
@@ -2822,8 +3022,11 @@ Formal Concept Analysis macros]
 }
 \fca@generate@tikz@parameters
 %    \end{macrocode}
+% \iffalse
 %</fca.sty>
 %<*tikz>
+% \fi
+%
 % \subsection{set up what we need from tikz}
 %    \begin{macrocode}
 \RequirePackage{fca}
@@ -2915,20 +3118,20 @@ densely dotted%
 }
 
 \newcommand\fca@tikz@oldnode[4]{%
-  \fca@nodeslayer
   \begin{pgfscope}%
-    \def\fca@tempa{%
-      \path (#3,#4) node[
+    \fca@nodeslayer
+    \path (#3,#4) node[
       anchor=center,
       shape=circle,
       /fca/.cd,
       /fca/every node/.try,
       /fca/every concept/.try,
       #1]
-      (#2) {}%
-    }%
+      (#2) {} ;%
+    \fca@endnodeslayer
     \ifthenelse{\boolean{fca@CircledNumbers}}{%
-      \fca@add\fca@tempa{
+      \fca@nodenumberslayer
+      \path (#2)
         node[
         shape=circle,
         anchor=center,
@@ -2940,19 +3143,21 @@ densely dotted%
         /fca/node number,
         draw=none]%
         (#2 number)
-        {#2}}}{}%
-    \fca@tempa ;%
-    \fca@endnodeslayer
+        {#2};%
+      \fca@endnodenumberslayer
+    }{}%
   \end{pgfscope}%
-  \ignorespaces  
+  \ignorespaces
 }
 \newcommand{\fca@tikz@oldedge}[3]{%
-  \path[draw,/fca/edge/.cd,#1] (#2) -- (#3);%
+  \fca@edgeslayer
+  \path[draw,/fca/.cd,#1] (#2) -- (#3);%
+  \fca@endedgeslayer
   \ignorespaces
 }
 
 \newcommand\fca@tikz@labelBox[1]{%
-  \begin{pgfscope}%
+  \begin{scope}%
     \fcaset{every node/.try,every label/.try,#1}%
     \fca@labelslayer
       \path[/fca/.cd,every node/.try,every label/.try,#1]
@@ -2965,21 +3170,19 @@ densely dotted%
       ){%
         \pgfkeysvalueof{/fca/node contents}%
       };%
-    \fca@endlabelslayer  
-    \begin{pgfscope}
+    \fca@endlabelslayer
+    \begin{scope}
       \fca@connectorslayer
       \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
-      (\pgfkeysvalueof{/fca/pgfnode}) -- 
+      (\pgfkeysvalueof{/fca/pgfnode}) --
       (%
         \pgfkeysvalueof{/fca/label/name prefix}%
         \pgfkeysvalueof{/fca/node}%
         \pgfkeysvalueof{/fca/label/name suffix}%
         .\pgfkeysvalueof{/fca/anchor}) ;
       \fca@endconnectorslayer
-    \end{pgfscope}%
-    \begin{pgfscope}
-      \let\fca@options\fca@defaultoptions
-      \pgfsetdash{}{0pt}%
+    \end{scope}%
+    \begin{scope}
       \fcaset{shape=coordinate,#1}%
       \fcaset{%
         every label concept/.try}%
@@ -2989,9 +3192,9 @@ densely dotted%
       \def\@tempa{coordinate}%
       \ifx\@tempa\tikz@shape
       \else
-        \fca@nodeslayer
+        \fca@labelconceptslayer
         \path
-          (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
+        (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
         node[draw,
           /fca/.cd,
           shape=coordinate,
@@ -3004,14 +3207,18 @@ densely dotted%
           ){};
         % \pgfsetstrokecolor{\fca@node@color}%
         %\pgfnode{}{\pgfkeysvalueof{/fca/anchor}}{}{%
-        \fca@endnodeslayer
+        \fca@endlabelconceptslayer
       \fi
-    \end{pgfscope}
-  \end{pgfscope}%
+    \end{scope}
+  \end{scope}%
   \ignorespaces
 }
-\newcommand\fca@tikz@diagram[1][]{%
-  \fca@notikz@diagram[{#1}]%
+\newcommand\fca@tikz@startdiagram[1][]{%
+  \fca@notikz@startdiagram%
+  \fca@tikz@diagram@
+}
+\newcommand\fca@tikz@Defaults{
+  \fca@notikz@Defaults
   \pgfkeysgetvalue{/tikz/name prefix}{\fca@tikz@origprefix}%
   \pgfkeysgetvalue{/fca/name prefix}{\@tempb}%
   \let\@tempa\fca@tikz@origprefix
@@ -3036,25 +3243,13 @@ densely dotted%
 \tikzaddtikzonlycommandshortcutlet\fca@oldedge\fca@tikz@oldedge
 \tikzaddtikzonlycommandshortcutlet\fca@@labelBox\fca@tikz@labelBox
 \tikzaddtikzonlycommandshortcutlet\fca@parse@paren@vector\fca@tikz@parse@paren@vector
-\tikzaddtikzonlycommandshortcutlet\fca@notikz@diagram\diagram
-\tikzaddtikzonlycommandshortcutlet\diagram\fca@tikz@diagram
+\tikzaddtikzonlycommandshortcutlet\fca@notikz@Defaults\fca@Defaults
+\tikzaddtikzonlycommandshortcutlet\fca@Defaults\fca@tikz@Defaults
 %    \end{macrocode}
-% \begin{environment}{tikzdiagram}
-% \begin{environment}{tikzdiagram}
-%   This environment places a diagram in a \TikZ{} picture.
-%    \begin{macrocode}
-\newenvironment{tikzdiagram}{%
-  \begin{tikzpicture}%
-    \begin{diagram}%
-    }{%
-    \end{diagram}%
-  \end{tikzpicture}%
-}
-%    \end{macrocode}
-% \end{environment}
-% \end{environment}
+% \iffalse
 %</tikz>
 %<*fca.sty>
+% \fi
 %
 % \begin{macro}{\fcaset}\marg{key value list}
 %   This macro is similar to \cs{pgfkeys}, except that it
@@ -3408,7 +3603,9 @@ densely dotted%
     \pgfnode{\pgfkeysvalueof{/fca/shape}}{center}{}{%
       \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name suffix}%
     }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
+    \fca@endnodeslayer
     \ifthenelse{\boolean{fca@CircledNumbers}}{%
+      \fca@nodenumberslayer
       \def\fca@usepath{}%
       \fcaset{node number}%
       \fca@options
@@ -3423,8 +3620,8 @@ densely dotted%
         \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name
           suffix} number%
       }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
+      \fca@endnodenumberslayer
     }{}%
-    \fca@endnodeslayer
   \end{pgfscope}%
   \ignorespaces
 }
@@ -3450,7 +3647,8 @@ densely dotted%
 }
 \newcommand{\fca@oldedge}[3]{%
   \begin{pgfscope}%
-    \pgfqkeys{/fca/edge}{#1}%
+    \fca@edgeslayer
+    \fcaset{#1}%
     \fca@options
     \fca@transform
     \pgfsetlinewidth{\fca@edge@thickness}%
@@ -3473,6 +3671,7 @@ densely dotted%
       }%
     }%
     \pgfusepath{stroke}%
+    \fca@endedgeslayer
   \end{pgfscope}%
   \ignorespaces
 }
@@ -3668,7 +3867,7 @@ densely dotted%
 % defined to return the same point
 % |\pgfpointanchor{|\marg{prefix}\marg{node
 % name}\marg{suffix}|}{|\marg{node anchor}|}|.
-% 
+%
 %    \begin{macrocode}
 \def\fca@split@node@#1#2#3#4#5.#6.#7\fca@split@node@{%
   \def\@tempa{#7}%
@@ -3780,7 +3979,7 @@ densely dotted%
     \fcaset{label concept/.try}%
     \ifx\pgfkeysvalueof{/fca/shape}\pgfkeysnovalue
     \else
-      \fca@nodeslayer
+      \fca@labelconceptslayer
       \pgftransformshift{%
         \pgfpointanchor{%
           \pgfkeysvalueof{/fca/pgfnode}%
@@ -3795,7 +3994,7 @@ densely dotted%
         \pgfkeysvalueof{/fca/node}%
         \pgfkeysvalueof{/fca/label/name suffix}%
       }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
-      \fca@endnodeslayer
+      \fca@endlabelconceptslayer
     \fi
   \end{pgfscope}%
 }
@@ -3902,8 +4101,10 @@ densely dotted%
     \def\fca@begindiagram{%
       \begin{pgfscope}%
         \fcaset{#1}%
-        \def\fca@enddiagram{\end{pgfscope}}%
-      \unitlength=\dimexpr\pgf@xx+\pgf@yx\relax
+        \unitlength=\dimexpr\pgf@xx+\pgf@yx\relax
+        \def\fca@enddiagram{%
+          \end{pgfscope}%
+        }%
     }%
   \else
     \def\fca@begindiagram{%
@@ -3923,15 +4124,40 @@ densely dotted%
 %    \end{macrocode}
 % \changes{2.2}{2022/05/06}{Rename \cs{EdgeThickness} to
 % \cs{fcaEdgeThickness} and \cs{NodeThickness} to \cs{fcaNodeThickness}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
+%
+% \iffalse
+%</fca.sty>
+%<*tikz>
+% \fi
+%
+% \begin{environment}{tikzdiagram}
+%   This environment places a diagram in a \TikZ{} picture.
+%    \begin{macrocode}
+\newenvironment{tikzdiagram}[1][]{%
+  \def\fca@begindiagram{%
+    \begin{tikzpicture}%
+      \fcaset{#1}%
+      \unitlength=\dimexpr\pgf@xx+\pgf@yx\relax
+    }%
+    \noindent
+    \@ifnextchar\bgroup\fca@olddiagram\fca@diagram% This line must be
+    % executed before \begin{pgfpicture}
+  }{%
+  \end{tikzpicture}%
+}
+%    \end{macrocode}
+% \end{environment}
+% \iffalse
+%</tikz>
+%<*fca.sty>
+% \fi
 % End of diagram environment definition.                                      %
-%                                                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                                             %
-% Some simple macros for FCA texts.                                           %
-%                                                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%
+% \subsection{Some simple macros for FCA texts}
+%
+%
 %    \begin{macrocode}
 \providecommand{\GMI}{(G,M,\relI)}
 \newcommand{\context}[1][K]{\ensuremath{\mathbb{#1}}}

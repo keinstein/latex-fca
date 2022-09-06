@@ -186,8 +186,9 @@ Formal Concept Analysis macros]
 \usepackage{dtxdescribe}
 % |\tikz| gets overwritten when we load TikZ later. So we have to save
 % it somehow else
-\newcommand\TikZ{}
-\let\TikZ\tikz
+\newcommand\TikZ{Ti\emph{k}Z}
+%\let\TikZ\tikz
+\newcommand\PGF{\acro{PGF}}
 \usepackage{iftex}
 \makeatletter
 \@ifundefined{ifluatex}{

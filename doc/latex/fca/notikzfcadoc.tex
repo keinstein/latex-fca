@@ -24,10 +24,11 @@
 %% 
 %%  and the derived files
 %%    fca.sty,
+%%    formula0.cxt,
 %%    formula1.cxt.
 %% 
 \ProvidesFile{notikzfcadoc.tex}
-    [2022/09/02 v2.2
+    [2022/09/12 v3.0
 Formal Concept Analysis macros]
 \expandafter\newif\csname iffcatikzdoc\endcsname
   \fcatikzdocfalse
@@ -111,7 +112,7 @@ Formal Concept Analysis macros]
    pdfkeywords = {FCA LaTeX sytle diagrame context},
    pdftitle = {fca.sty – LaTeX macros for Formal Concept Analysis},
    pdfsubject = {LaTeX style file for typesetting formal contexts and
-     concept latticees}
+     concept lattices}
 }
 \EnableCrossrefs
 \CodelineIndex
@@ -120,11 +121,12 @@ Formal Concept Analysis macros]
 \fcaparseversion{\jobname.tex}
 \title{\fcastyle\protect\\\LaTeX--macros for Formal Concept Analysis\protect\\
   \fcacurrentversionversion}
-\author{Bernhard Ganter\thanks{TU Dresden\protect\\Ernst-Schröder-Zentrum
+\author{Bernhard Ganter\thanks{TU Dresden, Ernst-Schröder-Zentrum
     f\"ur Begriffliche Wissensverarbeitung}\protect\\
   Tobias Schlemmer\thanks{TU Dresden}}
 \date{\fcacurrentversiondate}
 \begin{document}
+\errorcontextlines=1000\relax
 \edef\latexfcajobname{\jobname}%
 \edef\latexfcasourcefile{\detokenize{latex-fca}}%
 \ifx\latexfcajobname\latexfcasourcefile

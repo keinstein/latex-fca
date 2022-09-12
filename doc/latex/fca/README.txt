@@ -9,15 +9,16 @@ License:| Released under the LaTeX Project Public License v1
 
 Short description:
 
-  Formal Concept Analysis (FCA) is a mathematical field based on the
-  theory of lattices and ordered sets, with applications in data
-  analysis and knowledge processing. To simplify typesetting of
-  FCA-related text, \fcastyle provides two environments and some
-  simple macros, just for convenience. \fcastyle offers nothing that
-  you could not do without. The two environments are
+Formal Concept Analysis (FCA) is a field of mathematics based on the
+theory of ordered sets and complete lattices, with applications to
+data analysis and knowledge processing. To simplify typesetting of
+FCA-related text, \fcastyle  provides two environments and some simple
+macros. The two environments are
 
   - cxt     : for typesetting small formal contexts as cross-tables, and
   - diagram : for making line diagrams of concept lattices.
               This environment may be of some interest for other
               surposes as well, since it can also be used for
               arbitrary ordered sets and graphs.
+
+A list of macros is given in an extra section.

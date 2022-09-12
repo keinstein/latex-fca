@@ -24,6 +24,7 @@
 %% 
 %%  and the derived files
 %%    fca.sty,
+%%    formula0.cxt,
 %%    formula1.cxt.
 %% 
 \input docstrip
@@ -64,6 +65,7 @@ http://www.latex-project.org/lppl.txt
 
  and the derived files
    fca.sty,
+   formula0.cxt,
    formula1.cxt.
 
 \endpreamble
@@ -86,6 +88,9 @@ http://www.latex-project.org/lppl.txt
             }
 \usedir{doc/latex/fca}
 \generate{%
+  \file{formula0.cxt}{
+    \nopreamble\nopostamble
+    \from{latex-fca.dtx}{formula0.cxt}}
   \file{formula1.cxt}{
     \nopreamble\nopostamble
     \from{latex-fca.dtx}{formula1.cxt}}

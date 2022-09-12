@@ -16,18 +16,19 @@ License:| Released under the LaTeX Project Public License v1
 
 Short description:
 
-  Formal Concept Analysis (FCA) is a mathematical field based on the
-  theory of lattices and ordered sets, with applications in data
-  analysis and knowledge processing. To simplify typesetting of
-  FCA-related text, \fcastyle provides two environments and some
-  simple macros, just for convenience. \fcastyle offers nothing that
-  you could not do without. The two environments are
+Formal Concept Analysis (FCA) is a field of mathematics based on the
+theory of ordered sets and complete lattices, with applications to
+data analysis and knowledge processing. To simplify typesetting of
+FCA-related text, \fcastyle  provides two environments and some simple
+macros. The two environments are
 
   - cxt     : for typesetting small formal contexts as cross-tables, and
   - diagram : for making line diagrams of concept lattices.
               This environment may be of some interest for other
               surposes as well, since it can also be used for
               arbitrary ordered sets and graphs.
+
+A list of macros is given in an extra section.
 %</readme>
 %<*internal>
 \fi
@@ -75,6 +76,7 @@ http://www.latex-project.org/lppl.txt
 
  and the derived files
    fca.sty,
+   formula0.cxt,
    formula1.cxt.
 
 \endpreamble
@@ -97,6 +99,9 @@ http://www.latex-project.org/lppl.txt
             }
 \usedir{doc/latex/fca}
 \generate{%
+  \file{formula0.cxt}{
+    \nopreamble\nopostamble
+    \from{latex-fca.dtx}{formula0.cxt}}
   \file{formula1.cxt}{
     \nopreamble\nopostamble
     \from{latex-fca.dtx}{formula1.cxt}}
@@ -156,7 +161,7 @@ http://www.latex-project.org/lppl.txt
 %<fca.sty>\ProvidesPackage{fca}
 %<tikz>\ProvidesFile{tikzlibraryfca.code.tex}
 %<*package|driver|notikzdriver>
-    [2022/09/02 v2.2
+    [2022/09/12 v3.0
 %</package|driver|notikzdriver>
 %<*fca.sty|driver|notikzdriver>
 Formal Concept Analysis macros]
@@ -279,7 +284,7 @@ Formal Concept Analysis macros]
    pdfkeywords = {FCA LaTeX sytle diagrame context},
    pdftitle = {fca.sty – LaTeX macros for Formal Concept Analysis},
    pdfsubject = {LaTeX style file for typesetting formal contexts and
-     concept latticees}
+     concept lattices}
 }
 \EnableCrossrefs
 \CodelineIndex
@@ -291,7 +296,7 @@ Formal Concept Analysis macros]
 %<notikzdriver>\fcaparseversion{\jobname.tex}
 \title{\fcastyle\protect\\\LaTeX--macros for Formal Concept Analysis\protect\\
   \fcacurrentversionversion}
-\author{Bernhard Ganter\thanks{TU Dresden\protect\\Ernst-Schröder-Zentrum
+\author{Bernhard Ganter\thanks{TU Dresden, Ernst-Schröder-Zentrum
     f\"ur Begriffliche Wissensverarbeitung}\protect\\
   Tobias Schlemmer\thanks{TU Dresden}}
 \date{\fcacurrentversiondate}
@@ -306,21 +311,22 @@ Formal Concept Analysis macros]
 \fi
 \end{document}
 %</driver|notikzdriver>
+%<*fcadoc>
 % \fi
 % \maketitle
 % \begin{abstract}
-%   \FCA (FCA) is a mathematical field based on the theory of lattices
-%   and ordered sets, with applications in data analysis and knowledge
-%   processing.  To simplify typesetting of FCA-related text,
-%   \fcastyle provides two environments and some simple macros, just
-%   for convenience. \fcastyle offers nothing that you could not do
-%   without. The two environments are
+% \FCA is a field of mathematics based on the theory of ordered sets and complete lattices, with applications to data analysis and knowledge processing.
+% To simplify typesetting of FCA-related text, \fcastyle  provides two
+% environments and some simple macros. The two environments are
 % \begin{description}
 % \item[cxt] for typesetting small formal contexts as cross-tables, and
-% \item [diagram] for making line diagrams of concept lattices. This environment
-%  may be of some interest for other purposes as well, since it can also be
-%  used for ordered sets and graphs.
+% \item[diagram] for making line diagrams of concept lattices. This environment
+%   may be of some interest for other purposes as well, since it can also be
+%   used for ordered sets and graphs.
 % \end{description}
+% A list of \textbf{macros} is given in Section~\ref{sec:macros}
+% below.
+% \medbreak\par\noindent
 % A recent version of \texttt{fca.sty} should be available from
 % \begin{center}
 %  \url{https://github.com/keinstein/latex-fca}
@@ -332,16 +338,324 @@ Formal Concept Analysis macros]
 % \section{Loading the package}
 %
 % The package |fca| is loaded by adding
+% \begin{verbatim}\usepackage{fca}\end{verbatim}
+% to the preamble.
 %
+% There is a package option, \texttt{compat}, to be used for files
+% which were written for older versions up to Version 2.1 of \texttt{fca.sty}.
+%
+% The \texttt{newdrawline.sty} package is no longer needed.
+%
+% \section{Typesetting formal contexts}
+% Formal contexts can be typeset using the |cxt| environment. What
+% this (very simple) environment does can be guessed from an example.
+% \begin{dtxexample}{A formal context.}
+%   \begin{cxt}
+%     \cxtName{Formula 1}
+%   %
+%     \att{1.}
+%     \att{2.}
+%     \atr{disqualified}
+%   %
+%     \obj{x..}{Verstappen}
+%     \obj{.x.}{Hamilton}
+%     \obj{.xx}{Leclerc}
+%   \end{cxt}
+% \end{dtxexample}
+% \subsection{Basic usage of the \env{cxt} environment}
+% The commands within a \env{cxt} environment are
+%
+% \begin{description}
+% \item[]|\cxtName{}|\quad Define the text for the upper left cell of the
+%  table. Optional. The default is no text.
+% \item[]|\att{}|\quad Give an attribute name. These names are processed
+%  in the order in which they are given. Attribute names given after an
+%  |\obj|  command are ignored.
+% \item[]|\atr{}|\quad Same as |\att{}|, but with rotated text.
+% \item[]|\obj{}{}|\quad Give an object's name and its incidence vector,
+%  consisting of dots and `x'es. The incidences come first, for better
+%  alignment. The length of each incidence vector must be the number of
+%  attributes.
+%
+% Each  instance of |\obj| is directly translated to a row of the
+% |tabular|-environment. It is therefore possible to mix  |\obj|
+% commands with usual  |tabular|-commands.
+% \end{description}
+% \texttt{cxt} can handle an arbitrary number of attributes.
+%
+% \subsection{Other predefined entries}
+% An incidence vector for an object consists of dots and crosses
+% (``\texttt{x}'' of ``\texttt{X}'').
+% The arrow relations may also be noted. Instead of \texttt{x} and \texttt{.},
+% type \texttt{d} (for ``down''), \texttt{u} (``up''), or \texttt{b} (``both'').
+% In the following example, we also change the colour of these symbols:
+%
+% \begin{dtxexample}{Some predefined context characters, colour changed.}
+% \begin{cxt}%
+% \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}%
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{xbd}{Verstappen}
+% \obj{uxb}{Hamilton}
+% \obj{bxx}{Leclerc}
+% \end{cxt}
+% \end{dtxexample}
+%
+% The default for |\fcaCxtArrowStyle| is |\footnotesize|. In the above
+% example we have changed it using |\renewcommand| in order to make the
+% arrows red. The default colour is black.
+%
+% The digits 0 to 9 may be used as well.
+% \subsection{Defining context characters}
+%
+% You can define your own markers using |\fcaNewContextChar|. It
+% works like |\newcommand| but defines a single character. For
+% single signs use |\cxtrlap| in order to give it an apropriate
+% size as in the following example:
+% \bigbreak
+%
+% \begin{dtxexample}{(Re-)defining context characters.}
+% \begin{cxt}%
+% \fcaNewContextChar{v}{\cxtrlap{$\vee$}}%
+% \fcaProvideContextChar{\wedge}{\cxtrlap{$\wedge$}}%
+% \fcaProvideContextChar{.}{ignored}%
+% \fcaRenewContextChar{x}{\cxtrlap{$i$}}%
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{xuv}{Verstappen}
+% \obj{\wedge xb}{Hamilton}
+% \obj{dx.}{Leclerc}
+% \end{cxt}
+% \end{dtxexample}
+%
+% There are other possibilities. You may define a marker with a single
+% argument that typesets its argument. There also is a macro
+% |\freeobj| that takes a tabular row  as argument instead of the
+% usual markers.  The following example illustrates these:
+%
+% \noindent\begin{minipage}[t]{.45\textwidth}
+% \textit{\footnotesize \ Code:}
 % \begin{verbatim}
-% \usepackage{fca}
+% \begin{cxt}%
+% \fcaNewContextChar{w}[1]{#1}%
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{5bw1}{Verstappen}
+% \obj{w2xw{77}}{Hamilton}
+% \freeobj{1&2&3}{Leclerc}
+% \end{cxt}
 % \end{verbatim}
+% \end{minipage}
+% \hfill
+% \begin{minipage}[t]{.40\textwidth}
+% \textit{\footnotesize \ Result:}\par\noindent
+% \begin{cxt}%
+% \fcaNewContextChar{w}[1]{\cxtrlap{#1}}%
+% \cxtName{Formula 1}%
+% \att{1.}%
+% \att{2.}%
+% \atr{disqualified}%
+% \obj{5bw1}{Verstappen}
+% \obj{w2xw{77}}{Hamilton}
+% \freeobj{\cxtrlap{1}&2&3}{Leclerc}
+% \end{cxt}
+% \end{minipage}
 %
-% \subsection{Package options of fca.sty}
 %
-% Currently the package supports two options:
+% \subsection{\env{cxt} alignment}
 %
-% \DescribeOption{compat}
+% |cxt| takes an optional alignment parameter, which can be one of
+% \texttt{t, c} or \texttt{b}. It is passed to the tabular
+% environment (see there for further documentation).
+%
+% \begin{dtxexample}{Alignment parameter for a \env{cxt}-environment}
+%   \makebox{%
+%   \begin{cxt}[t]
+%     \cxtName{Formula t}
+%     %
+%     \att{1.}
+%     \att{2.}
+%     \atr{disqualified}
+%     %
+%     \obj{x..}{Verstappen}
+%     \obj{.x.}{Hamilton}
+%     \obj{.xx}{Leclerc}
+%   \end{cxt}\quad%
+%   \begin{cxt}[c]
+%     \cxtName{Formula c}
+%     %
+%     \att{1.}
+%     \att{2.}
+%     \atr{disqualified}
+%     %
+%     \obj{x..}{Verstappen}
+%     \obj{.x.}{Hamilton}
+%     \obj{.xx}{Leclerc}
+%   \end{cxt}\quad%
+%   \begin{cxt}[b]
+%     \cxtName{Formula b}
+%     %
+%     \att{1.}
+%     \att{2.}
+%     \atr{disqualified}
+%     %
+%     \obj{x..}{Verstappen}
+%     \obj{.x.}{Hamilton}
+%     \obj{.xx}{Leclerc}
+%   \end{cxt}
+%   }
+% \end{dtxexample}
+%
+%
+%
+% \subsection{Including Burmeister context files}
+%
+% The package |fca| allows to use context files in Burmeister format
+% (which usually have the \texttt{.cxt} file name extension) to be
+% included directly in a \LaTeX{} document. It's usage is as simple as
+% possible.
+%
+% \begin{dtxexample}{Including Burmeister context files}
+% \begin{cxt}%
+% \cxtinput{formula1.cxt}%
+% \end{cxt}
+% \end{dtxexample}
+%
+% The name of the context can be overwritten by using |\cxtName|
+% inside the \env{cxt} environment.
+%
+% \begin{cxt}{Overwriting the title in the context file}
+% \cxtName{Formula 2}%
+% \cxtinput{formula1.cxt}%
+% \end{cxt}
+%
+% To get non-rotated attribute names, redefine the \texttt{atr} command
+% as in the following example:
+% \begin{dtxexample}{Including contexts with unrotated attributes}
+% \begin{cxt}[b]%
+% \renewcommand{\atr}{\att}%
+% \cxtinput{formula0.cxt}%
+% \end{cxt}\quad
+% \begin{cxt}[b]
+% \cxtName{Formula 2}%
+% \cxtinput{formula0.cxt}%
+% \end{cxt}
+% \end{dtxexample}
+%
+% \section{Environment \env{diagram}}
+% The \texttt{diagram} environment helps typesetting diagrams of concept
+% lattices, but can be used for ordered sets and graphs as well. Again we start
+% with a small example (for which we set |\unitlength 1.2mm|):
+%
+% \begin{dtxexample}{A lattice diagram}
+% {\unitlength 1.2mm
+% \begin{diagram}
+%   \Node(1)(20,10)
+%   \Node(2)(35,20)
+%   \Node(3)(5,30)
+%   \Node(4)(35,40)
+%   \Node(5)(20,50)
+%   \Edge(1)(2)
+%   \Edge{1}{3}
+%   \Edge{2}{4}
+%   \Edge{3}{5}
+%   \Edge{4}{5}
+%   \leftAttbox(3){1.}
+%   \rightAttbox(2){disqualified}
+%   \rightAttbox(4){2.}
+%   \leftObjbox(3){Verstappen}
+%   \rightObjbox(2){Leclerc}
+%   \rightObjbox(4){Hamilton}
+% \end{diagram}}
+% \end{dtxexample}
+%
+% \subsection{Basic usage of the \env{diagram} environment}
+% \DescribeEnv{diagram}
+%
+% \DescribeMacro{\begin\{diagram\}} begins a PGF-picture.
+% Unlike the previous versions, the width and height of the diagram no
+% longer need to be specified. The old syntax
+%
+% |\begin{diagram}{width}{height}|
+%
+% is still supported and determines the bounding box, which is                %
+% otherwise calculated automatically.
+%
+% A major advantage of using PGF-pictures is that we can use the many
+% possibilities offered by PGF, even without knowing much about PGF.
+% The |diagram| environment and its macros allow  optional parameters,
+% e.g. for color, line thickness, etc. These will be described in
+% Section~\ref{subsec:diagram-adv}.
+%
+% The commands within a \env{diagram} environment (in their basic form) are
+%
+% \DescribeMacro{\Node}\parg{nodenumber}\parg{xpos,ypos}
+% Puts a circle at position \texttt{(xpos,ypos)} of the picture.
+% These circles are drawn when |\end{diagram}| is invoked. The default
+% diameter of the circles is 4 (times |\unitlength|). It can be changed
+% (for all circles) with |\fcaCircleSize{}|. The argument must be an integer.
+% The node numbers must be different, consecutive between 0 and 51, but need not
+% necessarily be given in ascending order.
+%
+% The old syntax |\Node{nodenumber}{xpos}{ypos}| is also supported.
+%
+% The |\Node| macro allows some options, see \ref{subsec:}.
+% For example,
+%
+% |\Node[fill=blue](4)(20,10)|
+%
+% defines a \emph{blue} node with node
+% number 4 at  position (20,10).
+%
+% \DescribeMacro{\Edge}\marg{nodenumber1}\marg{nodenumber2}
+% Puts a line between the two nodes with the given numbers. These must
+% have been declared earlier with a |\Node|--command.
+% The |\Edge|--command is executed immediately.
+%
+% \DescribeMacro{\leftAttbox}\parg{nodenumber}\marg{text}\\
+% \DescribeMacro{\centerAttbox}\parg{nodenumber}\marg{text}\\
+% \DescribeMacro{\rightAttbox}\parg{nodenumber}\marg{text}\\
+% \DescribeMacro{\leftObjbox}\parg{nodenumber}\marg{text}\\
+% \DescribeMacro{\centerObjbox}\parg{nodenumber}\marg{text}\\
+% \DescribeMacro{\rightObjbox}\parg{nodenumber}\marg{text}
+%
+% These are used to put
+% text to diagram nodes. The |Attbox|--commands place the text above the
+% corresponding node, the |Objbox| below. Similarly, the text can be placed
+% to the left, be centered, or be placed to the right of the labelled node.
+%
+% For a better positioning of the label text an optional shift can be
+% specified. For example,
+%
+% |\rightObjbox(4)(3,5){Hamilton}|
+%
+% moves the object label ``Hamilton'' at node number 4 by
+% 3~|\unitlegth| in x-direction and by 5~|\unitlength| in y-direction.
+%
+% The old syntax |\rightObjbox{nodenumber}{xoffset}{yoffset}{labeltext}|
+% is also supported.
+%
+%
+% \subsection{Advanced usage of the \env{diagram} environment}
+% \label{subsec:diagram-adv}
+%
+% \textcolor{red}{\bf Bernhards Arbeitsende}
+
+% \section{Zeugs, auf dem ich besthe (inhaltlich)}
+% \subsection{compat / nocompat}
+%
+% \begin{itemize}
+% \item Die Versionsnummer ist wichtig (falls später mal
+% inkonsistenzen auftauchen
+% \item \optn{compat} / \optn{nocompat} müssen \textbf{beide}
+% dokumentiert werden.
+% \end{itemize}
 %
 % In order to reduce incompatibilities with other packages,
 % since version 2.2 |fca.sty| nearly all macros of |fca.sty|
@@ -362,24 +676,13 @@ Formal Concept Analysis macros]
 %
 % This option reverts the effect of |compat|.
 %
-% \section{Typesetting formal contexts}
-%
-%
-% Formal contexts can be typeset using the |cxt| environment. What
-% this (very simple) environment does can be guessed from an example.
-% \begin{dtxexample}{A formal context.}
-%   \begin{cxt}
-%     \cxtName{Formula 1}
-%   %
-%     \att{1.}
-%     \att{2.}
-%     \atr{disqualified}
-%   %
-%     \obj{x..}{Hamilton}
-%     \obj{.x.}{Alonso}
-%     \obj{.xx}{Massa}
-%   \end{cxt}
-% \end{dtxexample}
+% \subsection{Definition der Symbole im Kontext}
+% Die Makros sind im Abschnitt \textbf{The Code} \ref{sec:the-code}
+% für Entwickler dokumentiert. Ein sinnvolles Vorgehen für Endnutzer
+% muss spätestens im Abchnitt advanced usage für die
+% \env{cxt}-Umgebung kommen. Dauzu gehört auch der hier aufgeführt
+% Inhalt, insbesondere die tabellarische Form ist fürs schnelle
+% Nachschlagen wichtig.
 %
 % \DescribeEnv{cxt}\oarg{alignment}
 %
@@ -453,169 +756,52 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 % The commands within a \env{cxt} environment are
 %
-% \begin{description}
-% \item[]|\cxtName{}|\quad Define the text for the upper left cell of the
-%  table. Optional. The default is no text.
-% \item[]|\att{}|\quad Give an attribute name. These names are processed
-%  in the order in which they are given. Attribute names given after an
-%  |\obj|  command are ignored.
-% \item[]|\atr{}|\quad Same as |\att{}|, but with rotated text.
-% \item[]|\obj{}{}|\quad Give an object's name and its incidence vector,
-%  consisting of dots and `x'es. The incidences come first, for better
-%  alignment. The length of each incidence vector must be the number of
-%  attributes.
 %
-% Each  instance of |\obj| is directly translated to a row of the
-% |tabular|-environment. It is therefore possible to mix  |\obj|
-% commands with usual  |tabular|-commands.
-% \end{description}
-% \texttt{cxt} can handle an arbitrary number of attributes.
-% \bigbreak
+% \section {weiter im normalen Text}
 %
-% The arrow relations may also be used. Instead of \texttt{x} and \texttt{.},
-% type \texttt{d} (for ``down''), \texttt{u} (``up''), or \texttt{b} (``both''),
-% as in the following example:\bigbreak
+% \textcolor{red}{All this can be modified with the |shift| option.}
 %
-% \begin{dtxexample}{(Re-)defining context characters.}
-% \begin{cxt}%
-% \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}
-% \cxtName{Formula 1}%
-% \att{1.}%
-% \att{2.}%
-% \atr{disqualified}%
-% \obj{xbd}{Hamilton}
-% \obj{uxb}{Alonso}
-% \obj{bxx}{Massa}
-% \end{cxt}
+% \iffalse
+% The offsets increase the placement effect. A |\rightObjbox|, which is
+% placed to the lower right of the corresponding node, will be moved even
+% further to the lower right if the offsets are positive. Similarly, positive
+% offsets will push a |\leftAttbox| even more to the upper left, etc.
+% \fi
+%
+% When |text width| is set to a length, the text of the label is put
+% in a |\parbox|. It can be broken into several lines using |\\|. The
+% width of the |\parbox| is the value of the |text width| parameter.
+% It is unset by default, resulting in a one-line box (i.e. hbox) for
+% the label. In this case the width of the box is automatically detected.
+%
+% \DescribeMacro{\end\{diagram\}} This concludes the diagram. The circles
+%  representing the nodes are drawn and filled with white, unless
+%  specified otherwise.
+%
+% A helpful command when fine tuning a diagram is
+%
+% \DescribeMacro{\Numbers} Puts numbers inside circles.  While working on a
+%  diagram it can be helpful to have a picture with numbered nodes.
+%
+% \begin{dtxexample}{Plotting numbers inside of nodes}
+%   \fbox{\unitlength .7mm
+%   \begin{diagram}{40}{55}
+%     \Numbers
+%     \Node{5}{20}{10}
+%     \Node{6}{35}{20}
+%     \Node{4}{5}{30}
+%     \Node{8}{35}{40}
+%     \Node{7}{20}{50}
+%   \end{diagram}}
 % \end{dtxexample}
 %
-% The default for |\fcaCxtArrowStyle| is |\footnotesize|. In the above
-% example we have changed it using |\renewcommand| in order to make the
-% arrows red. The default colour is black.
+% We recommend to remove the |\Numbers|--command when the diagram is
+% ready. In most cases it is not a good idea to put text inside the
+% nodes of a diagram.
+%                                                                   %
+% \DescribeMacro{\NoNumbers} can be used to exclude individual circles
+% from the numbering.
 %
-% You can define your own markers using |\fcaNewContextChar|. It
-% works like |\newcommand| but defines a single Character. For
-% single signs use |\cxtrlap| in order to give it an apropriate
-% size as in the following example:
-% \bigbreak
-%
-% \begin{dtxexample}{(Re-)defining context characters.}
-% \begin{cxt}%
-% \fcaNewContextChar{v}{\cxtrlap{$\vee$}}%
-% \fcaProvideContextChar{\wedge}{\cxtrlap{$\wedge$}}%
-% \fcaProvideContextChar{.}{ignored}%
-% \fcaRenewContextChar{x}{\cxtrlap{$i$}}%
-% \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}%
-% \cxtName{Formula 1}%
-% \att{1.}%
-% \att{2.}%
-% \atr{disqualified}%
-% \obj{xbv}{Hamilton}
-% \obj{\wedge xb}{Alonso}
-% \obj{bxx}{Massa}
-% \end{cxt}
-% \end{dtxexample}
-%
-% For many-valued contexts you have two options. On the one hand you can
-% define a marker with one argument that typesets its argument. On the
-% other hand there is a macro |\freeobj| that takes a tabular row
-% as argument instead of the usual markers. Single character nubers are
-% predefined to work as themselves. The following examples
-% illustrates such a setting:
-%
-% \bigbreak
-%
-% \noindent\begin{minipage}{.45\textwidth}
-% \begin{verbatim}
-% \begin{cxt}%
-% \fcaNewContextChar{w}[1]{#1}%
-% \cxtName{Formula 1}%
-% \att{1.}%
-% \att{2.}%
-% \atr{disqualified}%
-% \obj{5bw1}{Hamilton}
-% \obj{w2xw{77}}{Alonso}
-% \freeobj{1&2&3}{Massa}
-% \end{cxt}
-% \end{verbatim}
-% \end{minipage}
-% \hfill
-% \begin{minipage}{.40\textwidth}
-% \strut\par\strut\par
-% \begin{cxt}%
-% \fcaNewContextChar{w}[1]{\cxtrlap{#1}}%
-% \cxtName{Formula 1}%
-% \att{1.}%
-% \att{2.}%
-% \atr{disqualified}%
-% \obj{5bw1}{Hamilton}
-% \obj{w2xw{77}}{Alonso}
-% \freeobj{\cxtrlap{1}&2&3}{Massa}
-% \end{cxt}
-% \end{minipage}
-% \bigbreak
-%
-%
-% \section{Including Burmeister context files}
-%
-% The package |fca| allows to use context files in Burmeister
-% format to be included directly in a \LaTeX{} document. It's usage is
-% as simple as possible. In order to allow for certain customizations it
-% needs to be issued inside a |cxt| environment.
-% \medbreak
-%
-% \begin{verbatim}
-% \documentclass{article}
-% \usepackage{fca}
-% \begin{document}
-% ... Text with contexts
-% \end{document}
-% \end{verbatim}
-%
-% Then, the context can be included as in the following example:
-%
-% \begin{dtxexample}{Including Burmeister context files}
-% \begin{cxt}%
-% \cxtinput{formula1.cxt}%
-% \end{cxt}
-% \end{dtxexample}
-% Unrotated attribute names can be achieved using the following code:
-%
-% \noindent\begin{minipage}{.45\textwidth}
-% \begin{verbatim}
-% \documentclass{article}
-% \usepackage{fca}
-% \begin{document}
-% \begin{cxt}%
-% \cxtName{Formula 2}%
-% \cxtinput{formula1.cxt}%
-% \end{cxt}
-%
-% \begin{cxt}%
-% \cxtName{Formula 3}%
-% \cxtinput{formula1.cxt}%
-% \end{cxt}
-% \end{document}
-% \end{verbatim}
-% \end{minipage}
-% \hfill
-% \begin{dtxexample}{Including contexts with rotated attributes and
-% changing the context name}
-% \begin{cxt}[b]%
-% \renewcommand{\atr}{\att}%
-% \cxtinput{formula1.cxt}%
-% \end{cxt}
-% \begin{cxt}[b]
-% \cxtName{Formula 2}%
-% \cxtinput{formula1.cxt}%
-% \end{cxt}
-% \end{dtxexample}
-%
-% \section{Environment \texttt{diagram}}
-% The \texttt{diagram} environment helps typesetting diagrams of concept
-% lattices, but can be used for ordered sets and graphs as well. Again we start
-% with a small example (for which we have set |\unitlength 1.2mm|):
-% \bigbreak
 %
 % \iffcatikzdoc
 %   {\unitlength 1.2mm\relax
@@ -663,9 +849,9 @@ Formal Concept Analysis macros]
 %     \leftAttbox[/tikz/opacity=0.3](3){1.}
 %     \rightAttbox(2){disqualified}
 %     \rightAttbox(4){2.}
-%     \leftObjbox[/tikz/opacity=0.3](3){Hamilton}
-%     \rightObjbox(2){Massa}
-%     \rightObjbox(4){Alonso}
+%     \leftObjbox[/tikz/opacity=0.3](3){Verstappen}
+%     \rightObjbox(2){Leclerc}
+%     \rightObjbox(4){Hamilton}
 %     \begin{pgfscope}%
 %       \edef\tempa{%
 %       \noexpand\pgftransformshift{%
@@ -687,7 +873,7 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 % }
 %
-% 
+%
 % \begin{dtxexample}*{A \protect\TikZ diagram}
 %   \begin{tikzpicture}[x=0.1cm, y=0.1cm]
 %    %     x and y should have the same size, here
@@ -812,10 +998,10 @@ Formal Concept Analysis macros]
 %     \begin{pgfscope}
 %       \pgfsetstrokeopacity{0.3}
 %       \pgfsetfillopacity{0.3}
-%       \leftObjbox(3){Hamilton}
+%       \leftObjbox(3){Verstappen}
 %    \end{pgfscope}
-%     \rightObjbox(2){Massa}
-%     \rightObjbox(4){Alonso}
+%     \rightObjbox(2){Leclerc}
+%     \rightObjbox(4){Hamilton}
 %     \begin{pgfscope}%
 %       \edef\tempa{%
 %       \noexpand\pgftransformshift{%
@@ -878,9 +1064,9 @@ Formal Concept Analysis macros]
 %     \leftAttbox{3}{2}{2}{1.}
 %     \rightAttbox{2}{2}{2}{disqualified}
 %     \rightAttbox{4}{2}{2}{2.}
-%     \leftObjbox{3}{2}{2}{Hamilton}
-%     \rightObjbox{2}{2}{2}{Massa}
-%     \rightObjbox{4}{2}{2}{Alonso}
+%     \leftObjbox{3}{2}{2}{Verstappen}
+%     \rightObjbox{2}{2}{2}{Leclerc}
+%     \rightObjbox{4}{2}{2}{Hamilton}
 %     \begin{pgfscope}%
 %       \edef\tempa{%
 %       \noexpand\pgftransformshift{%
@@ -899,9 +1085,7 @@ Formal Concept Analysis macros]
 % Here are the commands of the \texttt{diagram}--environment:
 %   \DescribeEnv{diagram}\parg{width,height}
 % Starts a PGF picture and sets its bounding box.
-%
-% The offsets are zero by default. They can be modified using
-% |\renewcommand|. Note that the diagram dimensions do not take the lables
+% Note that the diagram dimensions do not take the labels
 % into account, these may overlap. Putting an |\fbox| around the above
 % diagram yields (with |\unitlength .7mm|)
 %
@@ -923,9 +1107,9 @@ Formal Concept Analysis macros]
 %       \leftAttbox{3}{2}{2}{1.}
 %       \rightAttbox{2}{2}{2}{disqualified}
 %       \rightAttbox{4}{2}{2}{2.}
-%       \leftObjbox{3}{2}{2}{Hamilton}
-%       \rightObjbox{2}{2}{2}{Massa}
-%       \rightObjbox{4}{2}{2}{Alonso}
+%       \leftObjbox{3}{2}{2}{Verstappen}
+%       \rightObjbox{2}{2}{2}{Leclerc}
+%       \rightObjbox{4}{2}{2}{Hamilton}
 %     \end{diagram}}
 % \end{dtxexample}
 % \DescribeEnv{diagram}
@@ -948,9 +1132,9 @@ Formal Concept Analysis macros]
 %     \leftAttbox{3}{2}{2}{1.}
 %     \rightAttbox{2}{2}{2}{disqualified}
 %     \rightAttbox{4}{2.}%
-%     \leftObjbox{3}{Hamilton}
-%     \rightObjbox{2}{2}{2}{Massa}
-%     \rightObjbox{4}{2}{2}{Alonso}
+%     \leftObjbox{3}{Verstappen}
+%     \rightObjbox{2}{2}{2}{Leclerc}
+%     \rightObjbox{4}{2}{2}{Hamilton}
 %   \end{diagram}}
 % \end{dtxexample}
 % \DescribeMacro{\Node}\parg{nodenumber}\parg{xpos,ypos}
@@ -1160,7 +1344,25 @@ Formal Concept Analysis macros]
 % {\color{blue}\Edge{1}{2}}%
 % {\color{red}\Edge{1}{2}}%
 % \color{blue}\Edge{1}{2}}%
-% \end{diagram}
+% \end{diagram}% In order to reduce incompatibilities with other packages,
+% since version 2.2 |fca.sty| nearly all macros of |fca.sty|
+% belong to a so called namespace. That means most of
+% them start with the |\fca...|. Only in the environments |cxt| and
+% |diagram| this rule is relaxed.
+%
+% The option |compat| also defines the old names that have been used
+% before version 2.2.
+%
+% \watchout The current implementation can be only used to typeset
+% unmodified Documents that were written before version 2.2. It maps
+% the new macros to use the old ones. As soon as the new macros are
+% redefined, the old ones are ignored. So, make shure you replace all
+% occurrances of the old macros by the corresponding new ones at once.
+%
+% \DescribeOption{nocompat}
+%
+% This option reverts the effect of |compat|.
+
 % \end{verbatim}
 % \end{minipage}\hfill
 % \begin{minipage}{.3\textwidth}
@@ -1181,7 +1383,25 @@ Formal Concept Analysis macros]
 %
 % The nodes can be coloured by using the \texttt{draw=} and
 % \texttt{fill=} parameter. These can be set either by using
-% \cs{fcaset} or in any other way, that allows to set styles.
+% \cs{fcaset} or in any other way, that allows to set styles.% In order to reduce incompatibilities with other packages,
+% since version 2.2 |fca.sty| nearly all macros of |fca.sty|
+% belong to a so called namespace. That means most of
+% them start with the |\fca...|. Only in the environments |cxt| and
+% |diagram| this rule is relaxed.
+%
+% The option |compat| also defines the old names that have been used
+% before version 2.2.
+%
+% \watchout The current implementation can be only used to typeset
+% unmodified Documents that were written before version 2.2. It maps
+% the new macros to use the old ones. As soon as the new macros are
+% redefined, the old ones are ignored. So, make shure you replace all
+% occurrances of the old macros by the corresponding new ones at once.
+%
+% \DescribeOption{nocompat}
+%
+% This option reverts the effect of |compat|.
+
 % So you can also add a fill parameter to the node:
 %
 % \begin{dtxexample}{Colouring individual nodes}
@@ -1417,9 +1637,10 @@ Formal Concept Analysis macros]
 %
 % \StopEventually{\PrintChanges}
 % \clearpage
-% \section{The Code}
+% \section{The Code}\label{sec:the-code}
 % \iffalse
 %    \begin{macrocode}
+%</fcadoc>
 %<*fca.sty>
 %    \end{macrocode}
 % \fi
@@ -1807,9 +2028,9 @@ Formal Concept Analysis macros]
 %   \begin{cxt}
 %     \cxtName{Formula 1}
 %   %
+%     \obj{}{Verstappen}
 %     \obj{}{Hamilton}
-%     \obj{}{Alonso}
-%     \obj{}{Massa}
+%     \obj{}{Leclerc}
 %   \end{cxt}
 % \end{dtxexample}
 %
@@ -2568,7 +2789,7 @@ Formal Concept Analysis macros]
 %   \leftAttbox{3}{2}{2}{1.}
 %   \rightAttbox{2}{2}{2}{disqualified}
 %   \rightAttbox{4}{2}{2}{2.}
-%   \leftObjbox{3}{2}{2}{Alonso}
+%   \leftObjbox{3}{2}{2}{Hamilton}
 %   \rightObjbox{2}{2}{2}{Montoya}
 %   \rightObjbox{4}{2}{2}{Schumacher}
 % \end{diagram}}
@@ -4248,11 +4469,6 @@ densely dotted%
 %</fca.sty>
 %    \end{macrocode}
 % \fi
-% \iffalse
-%    \begin{macrocode}
-%<*formula1.cxt>
-%    \end{macrocode}
-% \fi
 % \section{The PGF Coordinate system}
 % \begin{pgfpicture}%
 %   \pgfmoveto{\pgfpoint{0}{0}}%
@@ -4267,7 +4483,12 @@ densely dotted%
 %   \pgfnode{rectangle}{south}{(0,1)}{y}{\pgfusepath{stroke}}%
 % }%
 % \end{pgfpicture}
-% \section{A formal context for demonstrating \cs{cxtinput}}
+% \iffalse
+%    \begin{macrocode}
+%<*formula1.cxt>
+%    \end{macrocode}
+% \fi
+% \section{Formal contexts for demonstrating \cs{cxtinput}}
 % The following formal context file is saved as \filenm{formula1.dtx}
 % in the documentation folder.
 %    \begin{macrocode}
@@ -4276,9 +4497,9 @@ Formula 1
 3
 3
 
+Verstappen
 Hamilton
-Alonso
-Massa
+Leclerc
 1.
 2.
 disqualified
@@ -4289,6 +4510,28 @@ X..
 % \iffalse
 %    \begin{macrocode}
 %</formula1.cxt>
+%<*formula0.cxt>
+%    \end{macrocode}
+% \fi
+%    \begin{macrocode}
+B
+
+3
+3
+
+Verstappen
+Hamilton
+Leclerc
+1.
+2.
+disqualified
+X..
+.X.
+.XX
+%    \end{macrocode}
+% \iffalse
+%    \begin{macrocode}
+%</formula0.cxt>
 %    \end{macrocode}
 % \fi
 % \Finale

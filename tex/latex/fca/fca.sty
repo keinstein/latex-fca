@@ -470,6 +470,7 @@ Formal Concept Analysis macros]
     \let\Numbers\fcaNumbers
     \let\noNumbers\fcaNoNumbers
     \let\NodeColor\fcaNodeColor
+    \let\ColorNode\fcaColorNode
   \fi
   \let\leftAttbox\fca@leftAttbox
   \let\centerAttbox\fca@centerAttbox
@@ -1309,7 +1310,10 @@ Formal Concept Analysis macros]
   \setcounter{fca@CircleDiameter}{4}%
   \setboolean{fca@CircledNumbers}{false}%
   \fca@Defaults}%
-\def\ColorNode#1{{%
+\def\fcaColorNode#1{{%
+    \PackageWarning{fca}{The \string\ColorNode\space macro is
+      deprecated.^^J
+      Use `\string\Node[fill=#1]` instead}
     \linethickness{\fca@node@thickness}%
     \color{#1}{\circle*{\value{fca@CircleDiameter}}}%
     \color{black}{\circle{\value{fca@CircleDiameter}}}}}%

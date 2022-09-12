@@ -1091,7 +1091,7 @@ Formal Concept Analysis macros]
 % \cs{fcaNodeThickness} inside a \env{diagram} environment
 % \ItemDescribeMacro {\EdgeThickness}\marg{thickness} an alias to
 % \cs{fcaEdgeThickness} inside a \env{diagram} environment
-% \ItemDescribeMacro {\NoDots}
+% \ItemDescribeMacro {\fcaNoDots}
 % \ItemDescribeMacro {\fcaObjectLabelStyle} can be redefined to set the
 % style of object labels,
 % \ItemDescribeMacro {\fcaAttributeLabelStyle} can be redefined to set
@@ -1102,7 +1102,7 @@ Formal Concept Analysis macros]
 % Except for the first three, these commands can be focussed to single instances,
 % using braces. For example,
 % \begin{center}
-% |{\NoDots\centerObjbox{nodenumber}{xoffset}{yoffset}{labeltext}}|
+% |{\fcaNoDots\centerObjbox{nodenumber}{xoffset}{yoffset}{labeltext}}|
 % \end{center}
 % generates a single centered object label without dotted line.
 %
@@ -2617,7 +2617,7 @@ Formal Concept Analysis macros]
   \let\centerObjbox\fca@centerObjbox
   \let\rightObjbox\fca@rightObjbox
 }% %
-\newboolean{fca@dots}\setboolean{fca@dots}{true}% %
+\newboolean{fca@connectors}\setboolean{fca@connectors}{true}% %
 \iffca@compat@macros
   \newcommand{\diagramXoffset}{0}% %
   \newcommand{\diagramYoffset}{0}% %
@@ -3171,17 +3171,19 @@ densely dotted%
         \pgfkeysvalueof{/fca/node contents}%
       };%
     \fca@endlabelslayer
-    \begin{scope}
-      \fca@connectorslayer
-      \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
-      (\pgfkeysvalueof{/fca/pgfnode}) --
-      (%
+    \iffca@connectors
+      \begin{scope}
+        \fca@connectorslayer
+        \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
+        (\pgfkeysvalueof{/fca/pgfnode}) --
+        (%
         \pgfkeysvalueof{/fca/label/name prefix}%
         \pgfkeysvalueof{/fca/node}%
         \pgfkeysvalueof{/fca/label/name suffix}%
         .\pgfkeysvalueof{/fca/anchor}) ;
-      \fca@endconnectorslayer
-    \end{scope}%
+        \fca@endconnectorslayer
+      \end{scope}%
+    \fi
     \begin{scope}
       \fcaset{shape=coordinate,#1}%
       \fcaset{%
@@ -3273,6 +3275,7 @@ densely dotted%
 
 
 \fcaset{%
+  connector/.is if=fca@connectors,
   namespace/.initial=fca,
   namespace/.value required,
   name prefix/.initial=\pgfkeysvalueof{/fca/namespace}\space node\space,
@@ -3543,6 +3546,8 @@ densely dotted%
   \def\Numbers{\fcaNumbers}%
   \def\noNumbers{\fcaNoNumbers}
   \def\CircleSize{\fcaCircleSize}%
+  \def\NoDots{\fcaNoDots}
+  \def\Dots{\fcaDots}
 \fi
 \pgfqkeys{/fca/edge}{%
   thickness/.code=\fcaEdgeThickness
@@ -3680,7 +3685,8 @@ densely dotted%
   \addtocounter{fca@AuxCounter}{#2}\def#3{\value{fca@AuxCounter}}}%
 \def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
   \addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
-\newcommand{\NoDots}{\setboolean{fca@dots}{false}}
+\newcommand{\fcaNoDots}{\setboolean{fca@connectors}{false}}
+\newcommand{\fcaDots}{\setboolean{fca@connectors}{true}}
 %    \end{macrocode}
 %    \begin{macrocode}
 \def\fca@parse@parenlabel#1(#2){#1{#2}}
@@ -3748,6 +3754,9 @@ densely dotted%
 %     \Edge{2}{4}
 %     \Edge{3}{5}
 %     \Edge{4}{5}
+%     \fcaNoDots
+%     \leftAttbox(1)(-5,4){also not connected}
+%     \fcaDots
 %     \rightAttbox[node=2,node contents={first}]
 %     \rightAttbox[node contents=second]{4}
 %     \leftObjbox{3}{third}
@@ -3755,6 +3764,7 @@ densely dotted%
 %     \rightObjbox{4}(2,2){fifth}
 %     \leftAttbox(5){sixth}
 %     \rightAttbox(5)(3,3){sevenths}
+%     \rightAttbox[connector=false](1)(10,2){not connected}
 %   \end{diagram}
 % }
 % \end{dtxexample}
@@ -3953,23 +3963,25 @@ densely dotted%
     }%
     \fca@endlabelslayer
     % pin edge
-    \fca@connectorslayer
-    \pgftransformreset
-    \let\fca@options\fca@defaultoptions
-    \fcaset{every label edge/.try}%
-    \fcaset{#1}%
-    \fca@options
-    \fca@transform
-    \pgfsetlinewidth{\fca@edge@thickness}%
-    \fca@prepare@node\fca@temp@start@point\fca@temp@start@point@{}{}{\pgfkeysvalueof{/fca/pgfnode}}%
-    \fca@prepare@node\fca@temp@end@point\fca@temp@end@point@
-    {\pgfkeysvalueof{/fca/label/name prefix}}%
-    {\pgfkeysvalueof{/fca/label/name suffix}}%
-    {\pgfkeysvalueof{/fca/node}.\pgfkeysvalueof{/fca/anchor}}%
-    \pgfpathmoveto{\fca@temp@start@point\fca@temp@end@point@}%
-    \pgfpathlineto{\fca@temp@end@point\fca@temp@start@point@}%
-    \pgfusepath{stroke}%
-    \fca@endconnectorslayer
+    \iffca@connectors
+      \fca@connectorslayer
+      \pgftransformreset
+      \let\fca@options\fca@defaultoptions
+      \fcaset{every label edge/.try}%
+      \fcaset{#1}%
+      \fca@options
+      \fca@transform
+      \pgfsetlinewidth{\fca@edge@thickness}%
+      \fca@prepare@node\fca@temp@start@point\fca@temp@start@point@{}{}{\pgfkeysvalueof{/fca/pgfnode}}%
+      \fca@prepare@node\fca@temp@end@point\fca@temp@end@point@
+      {\pgfkeysvalueof{/fca/label/name prefix}}%
+      {\pgfkeysvalueof{/fca/label/name suffix}}%
+      {\pgfkeysvalueof{/fca/node}.\pgfkeysvalueof{/fca/anchor}}%
+      \pgfpathmoveto{\fca@temp@start@point\fca@temp@end@point@}%
+      \pgfpathlineto{\fca@temp@end@point\fca@temp@start@point@}%
+      \pgfusepath{stroke}%
+      \fca@endconnectorslayer
+    \fi
     % overlay concept
     \pgftransformreset
     \let\fca@options\fca@defaultoptions

@@ -184,17 +184,19 @@ densely dotted%
         \pgfkeysvalueof{/fca/node contents}%
       };%
     \fca@endlabelslayer
-    \begin{scope}
-      \fca@connectorslayer
-      \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
-      (\pgfkeysvalueof{/fca/pgfnode}) --
-      (%
+    \iffca@connectors
+      \begin{scope}
+        \fca@connectorslayer
+        \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
+        (\pgfkeysvalueof{/fca/pgfnode}) --
+        (%
         \pgfkeysvalueof{/fca/label/name prefix}%
         \pgfkeysvalueof{/fca/node}%
         \pgfkeysvalueof{/fca/label/name suffix}%
         .\pgfkeysvalueof{/fca/anchor}) ;
-      \fca@endconnectorslayer
-    \end{scope}%
+        \fca@endconnectorslayer
+      \end{scope}%
+    \fi
     \begin{scope}
       \fcaset{shape=coordinate,#1}%
       \fcaset{%

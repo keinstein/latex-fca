@@ -478,7 +478,7 @@ Formal Concept Analysis macros]
   \let\centerObjbox\fca@centerObjbox
   \let\rightObjbox\fca@rightObjbox
 }% %
-\newboolean{fca@dots}\setboolean{fca@dots}{true}% %
+\newboolean{fca@connectors}\setboolean{fca@connectors}{true}% %
 \iffca@compat@macros
   \newcommand{\diagramXoffset}{0}% %
   \newcommand{\diagramYoffset}{0}% %
@@ -672,6 +672,7 @@ Formal Concept Analysis macros]
 }
 
 \fcaset{%
+  connector/.is if=fca@connectors,
   namespace/.initial=fca,
   namespace/.value required,
   name prefix/.initial=\pgfkeysvalueof{/fca/namespace}\space node\space,
@@ -937,6 +938,8 @@ Formal Concept Analysis macros]
   \def\Numbers{\fcaNumbers}%
   \def\noNumbers{\fcaNoNumbers}
   \def\CircleSize{\fcaCircleSize}%
+  \def\NoDots{\fcaNoDots}
+  \def\Dots{\fcaDots}
 \fi
 \pgfqkeys{/fca/edge}{%
   thickness/.code=\fcaEdgeThickness
@@ -1068,7 +1071,8 @@ Formal Concept Analysis macros]
   \addtocounter{fca@AuxCounter}{#2}\def#3{\value{fca@AuxCounter}}}%
 \def\fca@changebValue#1#2#3{\setcounter{fca@BuxCounter}{#1}%
   \addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
-\newcommand{\NoDots}{\setboolean{fca@dots}{false}}
+\newcommand{\fcaNoDots}{\setboolean{fca@connectors}{false}}
+\newcommand{\fcaDots}{\setboolean{fca@connectors}{true}}
 \def\fca@parse@parenlabel#1(#2){#1{#2}}
 \def\fca@parse@paren@vector#1#2#3(#4,#5){%
   \fca@parse@brace@vector{#1}{#2}{#3}{#4}{#5}%
@@ -1235,23 +1239,25 @@ Formal Concept Analysis macros]
     }%
     \fca@endlabelslayer
     % pin edge
-    \fca@connectorslayer
-    \pgftransformreset
-    \let\fca@options\fca@defaultoptions
-    \fcaset{every label edge/.try}%
-    \fcaset{#1}%
-    \fca@options
-    \fca@transform
-    \pgfsetlinewidth{\fca@edge@thickness}%
-    \fca@prepare@node\fca@temp@start@point\fca@temp@start@point@{}{}{\pgfkeysvalueof{/fca/pgfnode}}%
-    \fca@prepare@node\fca@temp@end@point\fca@temp@end@point@
-    {\pgfkeysvalueof{/fca/label/name prefix}}%
-    {\pgfkeysvalueof{/fca/label/name suffix}}%
-    {\pgfkeysvalueof{/fca/node}.\pgfkeysvalueof{/fca/anchor}}%
-    \pgfpathmoveto{\fca@temp@start@point\fca@temp@end@point@}%
-    \pgfpathlineto{\fca@temp@end@point\fca@temp@start@point@}%
-    \pgfusepath{stroke}%
-    \fca@endconnectorslayer
+    \iffca@connectors
+      \fca@connectorslayer
+      \pgftransformreset
+      \let\fca@options\fca@defaultoptions
+      \fcaset{every label edge/.try}%
+      \fcaset{#1}%
+      \fca@options
+      \fca@transform
+      \pgfsetlinewidth{\fca@edge@thickness}%
+      \fca@prepare@node\fca@temp@start@point\fca@temp@start@point@{}{}{\pgfkeysvalueof{/fca/pgfnode}}%
+      \fca@prepare@node\fca@temp@end@point\fca@temp@end@point@
+      {\pgfkeysvalueof{/fca/label/name prefix}}%
+      {\pgfkeysvalueof{/fca/label/name suffix}}%
+      {\pgfkeysvalueof{/fca/node}.\pgfkeysvalueof{/fca/anchor}}%
+      \pgfpathmoveto{\fca@temp@start@point\fca@temp@end@point@}%
+      \pgfpathlineto{\fca@temp@end@point\fca@temp@start@point@}%
+      \pgfusepath{stroke}%
+      \fca@endconnectorslayer
+    \fi
     % overlay concept
     \pgftransformreset
     \let\fca@options\fca@defaultoptions

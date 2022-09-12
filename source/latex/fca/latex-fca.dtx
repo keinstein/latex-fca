@@ -2655,36 +2655,16 @@ Formal Concept Analysis macros]
 \newcommand*{\fca@options}{}%
 \newcommand*{\fca@defaultoptions}{}%
 \newcommand*{\fca@usepath}{}%
-%\newcommand*{\fca@node@fill}{white}%
-%\newcommand*{\fca@node@color}{black}%
-%\newcommand*{\fca@node@text}{\fca@node@color}%
-%\newcommand*{\fca@node@text@width}{}%
-%\newcommand*{\fca@node@node@font}{}%
-%\newcommand*{\fca@shape}{\pgfkeysvalueof{/fca/shape}}%
-%\newcommand*{\fca@node@radius}{1\unitlength}%
-%\newcommand*{\fca@node@name@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
-%\newcommand*{\fca@node@name@suffix}{}%
 \newcommand*{\fca@node@number@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
 \newcommand*{\fca@node@number@suffix}{\space number}%
-%\newcommand*{\fca@label@node}{}%
 \newcommand*{\fca@label@edge@thickness}{\@wholewidth}%
-%\newcommand*{\fca@label@node@contents}{}%
-%\newcommand*{\fca@label@fill}{white}%
-%\newcommand*{\fca@label@draw}{black}%
-%\newcommand*{\fca@label@text}{\fca@label@draw}%
-%\newcommand*{\fca@label@text@width}{}%
-%\newcommand*{\fca@label@node@font}{}%
-%\newcommand*{\fca@label@font}{}%
 \newcommand*{\fca@label@at}{center}% anchor of node
-%\newcommand*{\fca@label@anchor}{center}% anchor of label
 \newcommand*{\fca@label@shift@x}{0pt}%
 \newcommand*{\fca@label@shift@y}{0pt}%
 \newcommand*{\fca@label@shift@x@sign}{}
 \newcommand*{\fca@label@shift@y@sign}{}
 \newcommand*{\fca@label@type}{attributes}%
 \newcommand*{\fca@label@position}{right}%
-%\newcommand*{\fca@label@name@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
-%\newcommand*{\fca@label@name@suffix}{\space\fca@label@type\space\fca@label@position\space}%
 
 \newcommand*\fca@none{none}
 \newcommand*\fca@firstofthree[3]{#1}
@@ -3125,7 +3105,7 @@ densely dotted%
     align=flush left
   }
 }
-    
+
 %    \end{macrocode}
 %
 %    \begin{macrocode}
@@ -3529,9 +3509,6 @@ densely dotted%
     /fca/shift/y/signv2.1=-,
     /fca/font/.append=\raggedright
   }
-}
-
-\fcaset{%
 }
 
 \newcommand*\fca@tikz@without@library{%

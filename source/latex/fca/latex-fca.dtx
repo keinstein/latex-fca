@@ -342,11 +342,12 @@ Formal Concept Analysis macros]
 % to the preamble.
 %
 % There is a package option, \texttt{compat}, to be used for files
-% which were written for older versions up to Version 2.1 of \texttt{fca.sty}.
+% which were written for older versions up to Version 2.1 of
+% \texttt{fca.sty}. See Section~\ref{subsec:compat} for details.
 %
 % The \texttt{newdrawline.sty} package is no longer needed.
 %
-% \section{Typesetting formal contexts}
+% \section{Typesetting formal contexts with \env{cxt}}
 % Formal contexts can be typeset using the |cxt| environment. What
 % this (very simple) environment does can be guessed from an example.
 % \begin{dtxexample}{A formal context.}
@@ -363,27 +364,35 @@ Formal Concept Analysis macros]
 %   \end{cxt}
 % \end{dtxexample}
 % \subsection{Basic usage of the \env{cxt} environment}
+% \DescribeEnv{cxt}
+%
+% \DescribeMacro{\begin\{cxt\}} begins typesetting a formal context table.
+%
 % The commands within a \env{cxt} environment are
 %
-% \begin{description}
-% \item[]|\cxtName{}|\quad Define the text for the upper left cell of the
-%  table. Optional. The default is no text.
-% \item[]|\att{}|\quad Give an attribute name. These names are processed
-%  in the order in which they are given. Attribute names given after an
-%  |\obj|  command are ignored.
-% \item[]|\atr{}|\quad Same as |\att{}|, but with rotated text.
-% \item[]|\obj{}{}|\quad Give an object's name and its incidence vector,
-%  consisting of dots and `x'es. The incidences come first, for better
-%  alignment. The length of each incidence vector must be the number of
-%  attributes.
+% \DescribeMacro{\cxtName}\marg{text}  Define the text for the upper
+% left cell of the table. Optional. The default is no text.
+%
+% \DescribeMacro{\att}\marg{text} Give an attribute name. These names
+% are processed in the order in which they are given. Attribute names
+% given after an |\obj|  command are ignored.
+%
+% \DescribeMacro{\atr}\marg{text} Same as |\att|, but with rotated text.
+%
+% \DescribeMacro{\obj}\marg{text}\marg{text} Give an object's name and
+% its incidence vector, consisting of dots and `x'es. The incidences
+% come first, for better alignment. The length of each incidence
+% vector must be the number of attributes.
 %
 % Each  instance of |\obj| is directly translated to a row of the
 % |tabular|-environment. It is therefore possible to mix  |\obj|
 % commands with usual  |tabular|-commands.
-% \end{description}
+%
+% \DescribeMacro{\begin\{cxt\}} Completes typesetting the context table.
+%
 % \texttt{cxt} can handle an arbitrary number of attributes.
 %
-% \subsection{Other predefined entries}
+% \subsubsection{Other predefined entries}
 % An incidence vector for an object consists of dots and crosses
 % (``\texttt{x}'' of ``\texttt{X}'').
 % The arrow relations may also be noted. Instead of \texttt{x} and \texttt{.},
@@ -408,14 +417,18 @@ Formal Concept Analysis macros]
 % arrows red. The default colour is black.
 %
 % The digits 0 to 9 may be used as well.
-% \subsection{Defining context characters}
+%
+% \subsection{Advanced usage of the \env{cxt} environment}
+% \subsubsection{Defining context characters}
 %
 % You can define your own markers using |\fcaNewContextChar|. It
 % works like |\newcommand| but defines a single character. For
 % single signs use |\cxtrlap| in order to give it an apropriate
 % size as in the following example:
 % \bigbreak
-%
+% \textcolor{red}{Die Zeile
+% \texttt{$\backslash$fcaProvideContextChar\{.\}\{ignored\}\%}\ im
+% folgenden Beispiel verstehe ich nicht.}
 % \begin{dtxexample}{(Re-)defining context characters.}
 % \begin{cxt}%
 % \fcaNewContextChar{v}{\cxtrlap{$\vee$}}%
@@ -468,7 +481,7 @@ Formal Concept Analysis macros]
 % \end{minipage}
 %
 %
-% \subsection{\env{cxt} alignment}
+% \subsubsection{\env{cxt} alignment}
 %
 % |cxt| takes an optional alignment parameter, which can be one of
 % \texttt{t, c} or \texttt{b}. It is passed to the tabular
@@ -514,26 +527,21 @@ Formal Concept Analysis macros]
 %
 %
 %
-% \subsection{Including Burmeister context files}
+% \subsubsection{Including Burmeister context files}
 %
 % The package |fca| allows to use context files in Burmeister format
 % (which usually have the \texttt{.cxt} file name extension) to be
-% included directly in a \LaTeX{} document. It's usage is as simple as
+% included directly in a \LaTeX{} document. Its usage is as simple as
 % possible.
 %
-% \begin{dtxexample}{Including Burmeister context files}
+% \begin{dtxexample}{Including a Burmeister context file}
 % \begin{cxt}%
 % \cxtinput{formula1.cxt}%
 % \end{cxt}
 % \end{dtxexample}
 %
 % The name of the context can be overwritten by using |\cxtName|
-% inside the \env{cxt} environment.
-%
-% \begin{cxt}{Overwriting the title in the context file}
-% \cxtName{Formula 2}%
-% \cxtinput{formula1.cxt}%
-% \end{cxt}
+% inside the \env{cxt} environment. \textcolor{red}{Funktioniert nicht!}
 %
 % To get non-rotated attribute names, redefine the \texttt{atr} command
 % as in the following example:
@@ -548,7 +556,7 @@ Formal Concept Analysis macros]
 % \end{cxt}
 % \end{dtxexample}
 %
-% \section{Environment \env{diagram}}
+% \section{Drawing lattices with \env{diagram}}
 % The \texttt{diagram} environment helps typesetting diagrams of concept
 % lattices, but can be used for ordered sets and graphs as well. Again we start
 % with a small example (for which we set |\unitlength 1.2mm|):
@@ -605,14 +613,6 @@ Formal Concept Analysis macros]
 %
 % The old syntax |\Node{nodenumber}{xpos}{ypos}| is also supported.
 %
-% The |\Node| macro allows some options, see \ref{subsec:}.
-% For example,
-%
-% |\Node[fill=blue](4)(20,10)|
-%
-% defines a \emph{blue} node with node
-% number 4 at  position (20,10).
-%
 % \DescribeMacro{\Edge}\marg{nodenumber1}\marg{nodenumber2}
 % Puts a line between the two nodes with the given numbers. These must
 % have been declared earlier with a |\Node|--command.
@@ -639,140 +639,11 @@ Formal Concept Analysis macros]
 % 3~|\unitlegth| in x-direction and by 5~|\unitlength| in y-direction.
 %
 % The old syntax |\rightObjbox{nodenumber}{xoffset}{yoffset}{labeltext}|
-% is also supported.
-%
-%
-% \subsection{Advanced usage of the \env{diagram} environment}
-% \label{subsec:diagram-adv}
-%
-% \textcolor{red}{\bf Bernhards Arbeitsende}
-
-% \section{Zeugs, auf dem ich besthe (inhaltlich)}
-% \subsection{compat / nocompat}
-%
-% \begin{itemize}
-% \item Die Versionsnummer ist wichtig (falls später mal
-% inkonsistenzen auftauchen
-% \item \optn{compat} / \optn{nocompat} müssen \textbf{beide}
-% dokumentiert werden.
-% \end{itemize}
-%
-% In order to reduce incompatibilities with other packages,
-% since version 2.2 |fca.sty| nearly all macros of |fca.sty|
-% belong to a so called namespace. That means most of
-% them start with the |\fca...|. Only in the environments |cxt| and
-% |diagram| this rule is relaxed.
-%
-% The option |compat| also defines the old names that have been used
-% before version 2.2.
-%
-% \watchout The current implementation can be only used to typeset
-% unmodified Documents that were written before version 2.2. It maps
-% the new macros to use the old ones. As soon as the new macros are
-% redefined, the old ones are ignored. So, make shure you replace all
-% occurrances of the old macros by the corresponding new ones at once.
-%
-% \DescribeOption{nocompat}
-%
-% This option reverts the effect of |compat|.
-%
-% \subsection{Definition der Symbole im Kontext}
-% Die Makros sind im Abschnitt \textbf{The Code} \ref{sec:the-code}
-% für Entwickler dokumentiert. Ein sinnvolles Vorgehen für Endnutzer
-% muss spätestens im Abchnitt advanced usage für die
-% \env{cxt}-Umgebung kommen. Dauzu gehört auch der hier aufgeführt
-% Inhalt, insbesondere die tabellarische Form ist fürs schnelle
-% Nachschlagen wichtig.
-%
-% \DescribeEnv{cxt}\oarg{alignment}
-%
-% |cxt| generates a tabular of the appropriate format. It takes
-% an optional alignment parameter, that is passed to the tabular
-% environment (see there for further documentation). The tabular is
-% defined as soon as the first |\obj| command is given. Spaces in the
-% preceding lines are not ignored in general. The standard macros have
-% been designed to ignore following spaces. But this cannot be extended
-% to other macros. Therefore, each line that contains individual
-% (non-cxt-code) should be ended with a |%|\ .
-%
-% By default the following characters are predefined for the use in the first argument of \cs{obj}:
-% \begin{description}
-%   \ItemDescribeOther[char]{.} A non-incidence, usually printed as white space.
-%   \ItemDescribeOther[char]{x} A a cross in the cross table.
-%   \ItemDescribeOther[char]{X} A a cross in the cross table (alternate syntax).
-%   \ItemDescribeOther[char]{u} An updarrow for the arrow relation.
-%   \ItemDescribeOther[char]{d} A downarrow of the arrow relation.
-%   \ItemDescribeOther[char]{b} An up- and downarrow of the arrow relation.
-%   \ItemDescribeOther[char]{0} The number $0$ for many-valued contexts
-%   \ItemDescribeOther[char]{1} The number $1$ for many-valued contexts
-%   \ItemDescribeOther[char]{2} The number $2$ for many-valued contexts
-%   \ItemDescribeOther[char]{3} The number $3$ for many-valued contexts
-%   \ItemDescribeOther[char]{4} The number $4$ for many-valued contexts
-%   \ItemDescribeOther[char]{5} The number $5$ for many-valued contexts
-%   \ItemDescribeOther[char]{6} The number $6$ for many-valued contexts
-%   \ItemDescribeOther[char]{7} The number $7$ for many-valued contexts
-%   \ItemDescribeOther[char]{8} The number $8$ for many-valued contexts
-%   \ItemDescribeOther[char]{9} The number $9$ for many-valued contexts
-% \end{description}
-%
-% A short demonstration of the alignment parameter:
-%
-% \begin{dtxexample}{Alignment parameter of the formal context}
-%   \makebox{%
-%   \begin{cxt}[t]
-%     \cxtName{Formula t}
-%     %
-%     \att{1.}
-%     \att{2.}
-%     \atr{disqualified}
-%     %
-%     \obj{x..}{Hamilton}
-%     \obj{.x.}{Alonso}
-%     \obj{.xx}{Massa}
-%   \end{cxt}%
-%   \begin{cxt}[c]
-%     \cxtName{Formula c}
-%     %
-%     \att{1.}
-%     \att{2.}
-%     \atr{disqualified}
-%     %
-%     \obj{x..}{Hamilton}
-%     \obj{.x.}{Alonso}
-%     \obj{.xx}{Massa}
-%   \end{cxt}%
-%   \begin{cxt}[b]
-%     \cxtName{Formula b}
-%     %
-%     \att{1.}
-%     \att{2.}
-%     \atr{disqualified}
-%     %
-%     \obj{x..}{Hamilton}
-%     \obj{.x.}{Alonso}
-%     \obj{.xx}{Massa}
-%   \end{cxt}
-%   }
-% \end{dtxexample}
-% The commands within a \env{cxt} environment are
-%
-%
-% \section {weiter im normalen Text}
-%
-% \textcolor{red}{All this can be modified with the |shift| option.}
-%
-% \iffalse
-% The offsets increase the placement effect. A |\rightObjbox|, which is
-% placed to the lower right of the corresponding node, will be moved even
-% further to the lower right if the offsets are positive. Similarly, positive
-% offsets will push a |\leftAttbox| even more to the upper left, etc.
-% \fi
-%
-% When |text width| is set to a length, the text of the label is put
-% in a |\parbox|. It can be broken into several lines using |\\|. The
-% width of the |\parbox| is the value of the |text width| parameter.
-% It is unset by default, resulting in a one-line box (i.e. hbox) for
-% the label. In this case the width of the box is automatically detected.
+% is also supported. However, there is a small difference: while in
+% the old syntax the shift |{xoffset}{yoffset}| is understood relative
+% to the node, the shift |(xoffset,yoffset)| is interpreted relative
+% to the diagram. This means that, e.g., |\leftAttbox{4}{3}{5}{text}|
+% corresponds to |\leftAttbox(4)(-3,5){text}|.
 %
 % \DescribeMacro{\end\{diagram\}} This concludes the diagram. The circles
 %  representing the nodes are drawn and filled with white, unless
@@ -803,9 +674,191 @@ Formal Concept Analysis macros]
 % from the numbering.
 %
 %
+% \subsection{Advanced usage of the \env{diagram} environment}
+% \label{subsec:diagram-adv}
+% The connection with PGF and TikZ results in many design tools that
+% cannot be presented in detail here. We will discuss three simple
+% possibilities, although not in all details: The use of optional
+% parameters, setting global parameters and defining own styles for
+% diagrams.
+%
+% \subsubsection{Optional parameters}
+%
+% All macros of the \env{diagram} environment, except for
+% |\end{diagram}|, allow optional parameter. These must be specified
+% within square brackets, as in the following example,
+%
+% |\Node[draw=red, fill=blue](4)(20,10)|
+%
+% which specified that a red circle, filled with blue, is to be drawn
+% at position (20,10), representing the node with nodenumber 4.
+%
+% The impatient reader my infer some of the possibilities from the
+% next example.
+%
+% \begin{dtxexample}{A \env{diagram} with some optional parameters}
+% {\unitlength 1.2mm
+% \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
+% \begin{diagram}
+%  \Node[draw=red, fill=green](1)(20,10)
+%  \Node[fill=black, radius=2mm](2)(35,20)
+%  \Node[/tikz/opacity=0.3,fill=red](3)(5,30)
+%  \Node[fill=darkgreen](4)(35,40)
+%  \Node(5)(20,50)
+%  {\color{red}\Edge(1)(2)}
+%  \Edge[draw=blue,dotted](1)(3)
+%  \Edge(2)(4)
+%  \Edge[draw=green](3)(5)
+%  \Edge(4)(5)
+%   \leftAttbox(3){1.}
+%   \rightAttbox(2){disqualified}
+%   \rightAttbox(4){2.}
+%   \leftObjbox(3){Verstappen}
+%   \rightObjbox(2){Leclerc}
+%   \rightObjbox(4){Hamilton}
+% \end{diagram}}
+% \end{dtxexample}
+%
+% \subsubsection{Global parameters}
+%
+% An example of a parameter for \texttt{fca.sty} is text width. It
+% affects the type and size of the label boxes.
+%
+% When |text width| is set to a length, the text of the label is put
+% in a |\parbox|. It can be broken into several lines using |\\|. The
+% width of the |\parbox| is the value of the |text width| parameter.
+% It is unset by default, resulting in a one-line box (i.e. hbox) for
+% the label. In this case the width of the box is automatically detected.
+%
+% Label boxes are framed with the \texttt{draw} option. Their
+% background color can be set with \texttt{fill}.
+%
+% Setting |text width| to a length can either be done as an optional
+% parameter to the diagram, such as
+%
+% |\begin{diagram}[text width=6mm]|
+%
+%   or globally (for all diagrams) by
+%
+%   |\fcaset{text width=6mm}|
+%
+% or for single nodes only, again as an optional parameter.
+%
+% {\unitlength .7mm
+% \begin{dtxexample}{Node labels}
+%   \begin{diagram}[text width=4cm]%originally{40}{15}
+%     \Node{0}{20}{10}
+%     \leftAttbox[draw]{0}{1}{1}{left\\
+%     attribute\\ label}
+%     \rightAttbox[fill=red!50!blue!20]{0}{10}{10}{right
+%     attri-\\ bute label}
+%     \rightObjbox[draw]{0}{20}{5}{right\\
+%     object\\ label}
+%     \centerObjbox{0}{0}{5}{centered\\
+%     object label}
+%   \end{diagram}
+% \end{dtxexample}
+% }
+%
+% The style of the lables is given by
+% \begin{description}
+% \item[]|\fcaObjectLabelStyle|\hspace*{3.5ex}\quad
+% Default: |\small\baselineskip6pt\rm|
+% \item[]|\fcaAttributeLabelStyle|\quad
+% Default: |\small\baselineskip6pt\it|.
+% \end{description}
+% These values can be changed with |\renewcommand|.
+%
+% \subsubsection{Defining a diagram style}
+% With some knowledge about PGF and TikZ you can define your own style
+% for concept lattice diagrams. For multiple use such definitions can
+% be outsourced using the  |\fcaset{}| macro.
+%
+% We demonstrate this with an example where we define and then use a
+% style called conexpstyle. It is based on Serhiy Yevtushenko's
+% \texttt{Concept Explorer}, in which object and attribute concepts
+% are color-coded, by a black lower semicircle and a blue upper
+% semicircle, respectively.
+%
+% \begin{dtxexample}{Defining a \env{diagram} style}
+% \fcaset{conexpstyle/.style={%
+%     every attributes/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=blue,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         label/at=center,
+%         solid
+%       }
+%     },
+%     every objects/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=black,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         label/at=center,
+%         solid,
+%         rotate=180
+%       }
+%       }}}
+% \end{dtxexample}
+%
+% To apply the defined style, use its name as an optional argument of
+% \texttt{$\backslash$begin\{diagram\}}, or, if it shall be applied to
+% single nodes only, as an optional argument for the respective node
+% declarations.
+%
+% \begin{dtxexample}{Using a \env{diagram} style}
+% {\unitlength 1.2mm
+% \begin{diagram}[conexpstyle]
+%   \Node(1)(20,10)
+%   \Node(2)(35,20)
+%   \Node(3)(5,30)
+%   \Node(4)(35,40)
+%   \Node(5)(20,50)
+%   \Edge(1)(2)
+%   \Edge(1)(3)
+%   \Edge(2)(4)
+%   \Edge(3)(5)
+%   \Edge(4)(5)
+%   \leftAttbox{3}{2}{2}{1}
+%    \rightAttbox{2}{2}{2}{disqualified}
+%   \rightAttbox{4}{2}{2}{2.}
+%   \leftObjbox{3}{2}{2}{Verstappen}
+%   \rightObjbox{2}{2}{2}{Leclerc}
+%   \rightObjbox{4}{2}{2}{Hamilton}
+% \end{diagram}
+% }
+% \end{dtxexample}
+%
+% \textcolor{red}{\bf Bernhards Arbeitsende}
+%
+%
+% \section {weiter im normalen Text}
+%
+% \textcolor{red}{All this can be modified with the |shift| option.}
+%
+% \iffalse
+% The offsets increase the placement effect. A |\rightObjbox|, which is
+% placed to the lower right of the corresponding node, will be moved even
+% further to the lower right if the offsets are positive. Similarly, positive
+% offsets will push a |\leftAttbox| even more to the upper left, etc.
+% \fi
+%
+% When |text width| is set to a length, the text of the label is put
+% in a |\parbox|. It can be broken into several lines using |\\|. The
+% width of the |\parbox| is the value of the |text width| parameter.
+% It is unset by default, resulting in a one-line box (i.e. hbox) for
+% the label. In this case the width of the box is automatically detected.
+%
+%
 % \iffcatikzdoc
 %   {\unitlength 1.2mm\relax
-% \begin{dtxexample}*{A \protect\TikZ enhanced diagram}
+%   \begin{dtxexample}*{A \protect\TikZ -enhanced diagram}
 %   \begin{diagram}[
 %     every attributes/.append style={
 %       label concept/.append style={
@@ -830,6 +883,7 @@ Formal Concept Analysis macros]
 %         rotate=180
 %       }
 %       }]%
+%
 %     \begin{pgfscope}
 %       \color{red}
 %       \pgftransformshift{\pgfpoint{20\unitlength}{30\unitlength}}%
@@ -1082,119 +1136,6 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 % }
 %
-% Here are the commands of the \texttt{diagram}--environment:
-%   \DescribeEnv{diagram}\parg{width,height}
-% Starts a PGF picture and sets its bounding box.
-% Note that the diagram dimensions do not take the labels
-% into account, these may overlap. Putting an |\fbox| around the above
-% diagram yields (with |\unitlength .7mm|)
-%
-% \unitlength .7mm
-%
-% \begin{dtxexample}{Changing the bounding box}
-%   \fbox{%
-%     \begin{diagram}{70}{100}
-%       \Node{1}{20}{10}
-%       \Node{2}{35}{20}
-%       \Node{3}{5}{30}
-%       \Node{4}{35}{40}%
-%       \Node{5}{20}{50}
-%       \Edge{1}{2}
-%       \Edge{1}{3}
-%       \Edge{2}{4}
-%       \Edge{3}{5}
-%       \Edge{4}{5}
-%       \leftAttbox{3}{2}{2}{1.}
-%       \rightAttbox{2}{2}{2}{disqualified}
-%       \rightAttbox{4}{2}{2}{2.}
-%       \leftObjbox{3}{2}{2}{Verstappen}
-%       \rightObjbox{2}{2}{2}{Leclerc}
-%       \rightObjbox{4}{2}{2}{Hamilton}
-%     \end{diagram}}
-% \end{dtxexample}
-% \DescribeEnv{diagram}
-% If the diagram environment is called without parameters, the
-% bounding box is calculated automatically by PGF.
-%
-% \begin{dtxexample}{Automatic bounding box}
-%   \fbox{%
-%   \begin{diagram}
-%     \Node{1}{20}{10}
-%     \Node{2}{35}{20}
-%     \Node{3}{5}{30}
-%     \Node{4}{35}{40}%
-%     \Node{5}{20}{50}
-%     \Edge{1}{2}
-%     \Edge{1}{3}
-%     \Edge{2}{4}
-%     \Edge{3}{5}
-%     \Edge{4}{5}
-%     \leftAttbox{3}{2}{2}{1.}
-%     \rightAttbox{2}{2}{2}{disqualified}
-%     \rightAttbox{4}{2.}%
-%     \leftObjbox{3}{Verstappen}
-%     \rightObjbox{2}{2}{2}{Leclerc}
-%     \rightObjbox{4}{2}{2}{Hamilton}
-%   \end{diagram}}
-% \end{dtxexample}
-% \DescribeMacro{\Node}\parg{nodenumber}\parg{xpos,ypos}
-% Puts a circle at position \texttt{(xpos,ypos)} of the picture.
-% These circles are drawn when |\end{diagram}| is invoked. The default
-% diameter of the circles is 4 (times |\unitlength|). It can be changed
-% (for all circles) with |\fcaCircleSize{}|. The argument must be an integer.
-% The node numbers must be different, consecutive between 0 and 51, but need not
-% necessarily be given in ascending order.
-%
-% \DescribeMacro{\Numbers} Puts numbers inside circles.  While working on a
-%  diagram it can be helpful to have a picture with numbered
-% nodes. The result of the following command sequence is shown on the right:
-%
-% \begin{dtxexample}{Plotting numbers inside of nodes}
-%   \fbox{\unitlength .7mm
-%   \begin{diagram}{40}{55}
-%     \Numbers
-%     \Node{5}{20}{10}
-%     \Node{6}{35}{20}
-%     \Node{4}{5}{30}
-%     \Node{8}{35}{40}
-%     \Node{7}{20}{50}
-%   \end{diagram}}
-% \end{dtxexample}
-%
-% We recommend to remove the |\Numbers|--command when the diagram is
-% ready. In most cases it is not a good idea to put text inside the nodes of a diagram.
-%
-%
-% \DescribeMacro{\noNumbers} switches numbers off. So you can
-% enable numbers only for special nodes:
-%
-% \begin{dtxexample}{Switching numbers on and off}
-%   \fbox{\unitlength .7mm
-%   \begin{diagram}{40}{55}
-%     \Numbers
-%     \Node{5}{20}{10}
-%     \noNumbers
-%     \Node{6}{35}{20}
-%     \Node{4}{5}{30}
-%     \Numbers
-%     \Node{8}{35}{40}
-%     \noNumbers
-%     \Node{7}{20}{50}
-%   \end{diagram}}
-% \end{dtxexample}
-%
-% \DescribeMacro{\Edge}\marg{nodenumber1}\marg{nodenumber2}
-% Puts a line between the two nodes with the given numbers. These must have been
-% declared earlier with a |\Node|--command. For nodes with coordinates
-% |(u,v)| and |(x,y)| the command translates to
-% \begin{center}|\fcadrawline(u,v)(x,y)|.\end{center}
-% |\fcadrawline(u,v)(x,y)| is a \pdfLaTeX--compatible reimplementation of
-% the |\drawline| command, the latter provided by the \texttt{eepic}
-% package.
-%
-% The |\Edge|--command is executed immediately. It can be mixed with other
-% \texttt{picture}- and \texttt{eepic}--commands like |\spline|
-% (see the \texttt{eepic} manual).
 %
 % \DescribeMacro{\leftAttbox}\oarg{options}\parg{nodenumber}\marg{text}\\
 % \DescribeMacro{\centerAttbox}\oarg{options}\parg{nodenumber}\marg{text}\\
@@ -1225,35 +1166,78 @@ Formal Concept Analysis macros]
 % The label text and the labelled node are connected with a dotted line.
 % Here is an example:
 %
-% {\unitlength .7mm
-% \begin{dtxexample}{Node labels}
-%   \begin{diagram}[text width=4cm]%originally{40}{15}
-%     \Node{0}{20}{10}
-%     \leftAttbox[draw]{0}{1}{1}{left\\
-%     attribute\\ label}
-%     \rightAttbox[fill=red!50!blue!20]{0}{10}{10}{right
-%     attri-\\ bute label}
-%     \rightObjbox[draw]{0}{20}{5}{right\\
-%     object\\ label}
-%     \centerObjbox{0}{0}{5}{centered\\
-%     object label}
-%   \end{diagram}
-% \end{dtxexample}
-% }
-%
-% The style of the lables is given by
-% \begin{description}
-% \item[]|\fcaObjectLabelStyle|\hspace*{3.5ex}\quad
-% Default: |\small\baselineskip6pt\rm|
-% \item[]|\fcaAttributeLabelStyle|\quad
-% Default: |\small\baselineskip6pt\it|.
-% \end{description}
-% These values can be changed with |\renewcommand|.
-%
 % \DescribeMacro{\end\{diagram\}} This concludes the diagram. The circles
 %  representing the nodes are drawn and filled with white. Everything inside
 %  such a circle (except for the numbers caused by the |\Numbers| command)
 %  is erased.
+% \section{Zeugs, auf dem ich besthe (inhaltlich)}
+% \subsection{compat / nocompat}\label{subsec:compat}
+%
+% \begin{itemize}
+% \item Die Versionsnummer ist wichtig (falls später mal
+% inkonsistenzen auftauchen
+% \item \optn{compat} / \optn{nocompat} müssen \textbf{beide}
+% dokumentiert werden.
+% \end{itemize}
+%
+% In order to reduce incompatibilities with other packages,
+% since version 2.2 |fca.sty| nearly all macros of |fca.sty|
+% belong to a so called namespace. That means most of
+% them start with the |\fca...|. Only in the environments |cxt| and
+% |diagram| this rule is relaxed.
+%
+% The option |compat| also defines the old names that have been used
+% before version 2.2.
+%
+% \watchout The current implementation can be only used to typeset
+% unmodified Documents that were written before version 2.2. It maps
+% the new macros to use the old ones. As soon as the new macros are
+% redefined, the old ones are ignored. So, make shure you replace all
+% occurrances of the old macros by the corresponding new ones at once.
+%
+% \DescribeOption{nocompat}
+%
+% This option reverts the effect of |compat|.
+%
+% \subsection{Definition der Symbole im Kontext}
+% Die Makros sind im Abschnitt \textbf{The Code} \ref{sec:the-code}
+% für Entwickler dokumentiert. Ein sinnvolles Vorgehen für Endnutzer
+% muss spätestens im Abchnitt advanced usage für die
+% \env{cxt}-Umgebung kommen. Dauzu gehört auch der hier aufgeführt
+% Inhalt, insbesondere die tabellarische Form ist fürs schnelle
+% Nachschlagen wichtig.
+%
+% \DescribeEnv{cxt}\oarg{alignment}
+%
+% |cxt| generates a tabular of the appropriate format. It takes
+% an optional alignment parameter, that is passed to the tabular
+% environment (see there for further documentation). The tabular is
+% defined as soon as the first |\obj| command is given. Spaces in the
+% preceding lines are not ignored in general. The standard macros have
+% been designed to ignore following spaces. But this cannot be extended
+% to other macros. Therefore, each line that contains individual
+% (non-cxt-code) should be ended with a |%|\ .
+%
+% By default the following characters are predefined for the use in the first argument of \cs{obj}:
+% \begin{description}
+%   \ItemDescribeOther[char]{.} A non-incidence, usually printed as white space.
+%   \ItemDescribeOther[char]{x} A a cross in the cross table.
+%   \ItemDescribeOther[char]{X} A a cross in the cross table (alternate syntax).
+%   \ItemDescribeOther[char]{u} An updarrow for the arrow relation.
+%   \ItemDescribeOther[char]{d} A downarrow of the arrow relation.
+%   \ItemDescribeOther[char]{b} An up- and downarrow of the arrow relation.
+%   \ItemDescribeOther[char]{0} The number $0$ for many-valued contexts
+%   \ItemDescribeOther[char]{1} The number $1$ for many-valued contexts
+%   \ItemDescribeOther[char]{2} The number $2$ for many-valued contexts
+%   \ItemDescribeOther[char]{3} The number $3$ for many-valued contexts
+%   \ItemDescribeOther[char]{4} The number $4$ for many-valued contexts
+%   \ItemDescribeOther[char]{5} The number $5$ for many-valued contexts
+%   \ItemDescribeOther[char]{6} The number $6$ for many-valued contexts
+%   \ItemDescribeOther[char]{7} The number $7$ for many-valued contexts
+%   \ItemDescribeOther[char]{8} The number $8$ for many-valued contexts
+%   \ItemDescribeOther[char]{9} The number $9$ for many-valued contexts
+% \end{description}
+%
 %
 % \subsection{Error messages}
 % Package error messages for the \texttt{diagram} environment are not yet

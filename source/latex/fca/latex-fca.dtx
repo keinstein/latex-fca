@@ -542,6 +542,12 @@ Formal Concept Analysis macros]
 %
 % The name of the context can be overwritten by using |\cxtName|
 % inside the \env{cxt} environment. \textcolor{red}{Funktioniert nicht!}
+% \begin{dtxexample}{Overwriting the context name}
+% \begin{cxt}
+% \cxtName{Formula 2}%
+% \cxtinput{formula1.cxt}%
+% \end{cxt}
+% \end{dtxexample}
 %
 % To get non-rotated attribute names, redefine the \texttt{atr} command
 % as in the following example:
@@ -2062,7 +2068,7 @@ Formal Concept Analysis macros]
   \let\freeobj\fca@cxt@freeobj
   \let\cxtphantom\fca@cxt@phantom
   \let\cxtrlap\fca@cxt@rlap
-  \def\fca@cxtn@me{}%
+  \let\fca@cxtn@me\@empty%
   \let\fca@cxt@tabdef\fca@cxt@tabdef@@
 }%
 %    \end{macrocode}
@@ -2509,8 +2515,7 @@ Formal Concept Analysis macros]
 %
 %    \begin{macrocode}
 \def\fca@cxt@input@read@cxtname#1{%
-  \ifx\fca@cxtn@name\@empty
-  \else
+  \ifx\fca@cxtn@me\@empty
     \fcaCxtName{#1}%
   \fi
   \def\fca@cxt@input@newline{%

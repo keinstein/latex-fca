@@ -3464,15 +3464,273 @@ densely dotted%
 % \fi
 %
 % \begin{macro}{\fcaset}\marg{key value list}
+%   Sets the options for the following operations. Possible options
+%   are listed below. The beginning \optn{/fca/} can be omitted as it
+%   is provieded by the macro \cs{fcaset}. \cs{fcaset}\marg{key value
+%   list} is expanded to \cs{pgfqkeys}\optn{{/fca}}\marg{key value list}.
+%
 %   This macro is similar to \cs{pgfkeys}, except that it
-%   sets \filenm{/fca} as default path.
+%   sets \filenm{/fca} as default path. This is a powerful macro that
+%   cannot be described here in full detail. The full documentation
+%   can be found in the \href{https://tikz.dev/pgfkeys}{\PGF/\TikZ{}
+%   Manual} in \filenm{pgfmanual.pdf} of your \PGF{} documentation.
+%
+%
 %    \begin{macrocode}
 \newcommand*\fcaset{\pgfqkeys{/fca}}
 %    \end{macrocode}
 % \end{macro}
 %
+% Options can be set globally outside
+%
 % \begin{description}
-% \item[kommt noch]
+% \ItemDescribeOption{/fca/connector} Draw a connector line between the node
+% and the label
+% \ItemDescribeOption{/fca/namespace} Namespace used in name prefixes and
+% layer names, Default: fca, \textbf{value required}
+% \ItemDescribeOption{/fca/name prefix} Pattern to be added before node
+% names. This can be interesting when a diagram is inside a
+% \env{tikzpicture} or \env{pgfpicture} environment in order to
+% address the diagram nodes. Default: |\pgfkeysvalueof{/fca/namespace}\space node\space|,
+%   \textbf{value required}
+% \ItemDescribeOption{/fca/name suffix} Default: empty,
+%   \textbf{value required}
+% \ItemDescribeOption{/fca/every node/.style} Style to be executed at the
+% beginning of every node (both labels as well as concepts). Default: empty
+% \ItemDescribeOption{/fca/every concept/.style} Style to be executed at
+% every concept node (when calling \cs{Node}).
+% Default:
+% \begin{verbatim}
+% {%
+%   radius = 2,
+%   fill=white,
+%   draw=black
+% },
+% \end{verbatim}
+% \ItemDescribeOption{/fca/every attributes/.style} Style that is executed
+% whenever an attribute label is typeset. Default:
+% \begin{verbatim}
+% {%
+%   font=\small\baselineskip1em\rmfamily\itshape
+% }%
+% \end{verbatim}
+% \ItemDescribeOption{/fca/every objects/.style} Style that is executed
+% whenever an object label is placed in the diagram. Defaul:
+% \begin{verbatim}
+% {%
+%   font=\small\baselineskip1em\rmfamily\upshape
+% }
+% \end{verbatim}
+% \ItemDescribeOption{/fca/every edge/.style} Style that is executed
+% whenever an edge betwee two concepts is drawn using
+% \cs{Edge}. Default: empty.
+% \ItemDescribeOption{/fca/every label edge/.style}
+%   Style that is drawn whenever a connector between a concept and one
+%   of its labels is drawn. Default:
+% \begin{verbatim}
+% {
+%   dotted, draw=black
+% }
+% \end{verbatim}
+%   \ItemDescribeOption{/fca/font}
+%   Font to be used inside labels. This is the actually set font.
+%   Default: |\small\baselineskip1em\rmfamily|
+%
+% \watchout the font is applied after the node size has been
+% calculated. The font size for the size calculations must be set
+% using the option \optn{node font}.
+% \ItemDescribeOption{/fca/shape} Shape of the nodes. Default: circle,
+% \ItemDescribeOption{/fca/minimum width} Set the minimum width of a node
+% or label.
+% This is an alias of \optn{/pgf/minimum width}.
+% \ItemDescribeOption{/fca/minimum height} set the minimum height of a node
+% or label. This is an alias of /pgf/minimum height.
+% \ItemDescribeOption{/fca/minimum size} Set both \optn{minimum width} and
+% \optn{minimum height}. This is an alias of /pgf/minimum size.
+% \ItemDescribeOption{/fca/inner xsep} Minimum horizontal distance between
+% node content and node border (same for labels). This is an alias of /pgf/inner xsep.
+% \ItemDescribeOption{/fca/inner ysep} Minimum vertical distance between
+% node content and node border (same for labels). This is an alias of /pgf/inner ysep.
+% \ItemDescribeOption{/fca/inner sep} Sets both \optn{inner xsep} and
+% \optn{inner ysep}. This is an alias of /pgf/inner sep.
+% \ItemDescribeOption{/fca/outer xsep} Minimum horizontal distance between
+% node border and the next elements. This is an alias of /pgf/outer xsep.
+% \ItemDescribeOption{/fca/outer ysep} Minimum vertical distance between
+% node border and the next elements. This is an alias of /pgf/outer ysep.
+% \ItemDescribeOption{/fca/outer sep} Sets both \optn{inner xsep} and
+% \optn{inner ysep}. This is an alias of /pgf/outer sep.
+% \ItemDescribeOption{/fca/radius} Set the radius of circled nodes in |\unitlength|
+% \ItemDescribeOption{/fca/anchor} Determines which anchor should be
+% represented by the given coordinates.
+%   \textbf{value required}
+% \ItemDescribeOption{/fca/node number/.style} Style of the node names
+% (traditionally numbers) of the diagram when \cs{fcaNumbers} is used.
+% Default:
+% \begin{verbatim}
+% {
+%   node font=\tiny,
+%   font=\tiny
+% }
+% \end{verbatim}
+% \ItemDescribeOption{/fca/color} Change the color of the things to be drawn
+% \ItemDescribeOption{/fca/stroke} Draw the line in the current object. If
+% a value is given it is interpreted to be the line colour.
+% \ItemDescribeOption{/fca/draw} This is an alias of \optn{/fca/stroke}.
+% \ItemDescribeOption{/fca/fill} Fill the current object with the colour
+% given as value or the default fill colour.
+% \ItemDescribeOption{/fca/text} The colour that is used for texts in
+% nodes. Default: |pgfstrokecolor|, that is the line colour.
+%   \textbf{value required}
+% \ItemDescribeOption{/fca/label type} This is an alias of \optn{/fca/label/type}.
+% \ItemDescribeOption{/fca/label position} This is an alias of \optn{/fca/label/position}.
+% \ItemDescribeOption{/fca/pgfnode} Pattern used to construct node names
+% (if \TikZ{} is not loaded). \textbf{value required} Default:
+% \begin{verbatim}
+% \pgfkeysvalueof{/fca/name prefix}\pgfkeysvalueof{/fca/node}\pgfkeysvalueof{/fca/name suffix}a
+% \end{verbatim}
+% \ItemDescribeOption{/fca/node} Name of the node where the label should be
+% attached to. Default: {},
+%   \textbf{value required}
+% \ItemDescribeOption{/fca/node contents} Contents of the new node to be
+% drawn. This is mainly used for labels. Default: {},
+%   \textbf{value required}
+% \ItemDescribeOption{/fca/shift/x} \textbf{value required}
+% \ItemDescribeOption{/fca/shift/y} \textbf{value required}
+% \ItemDescribeOption{/fca/shift=\{\parg{x,y}\}} Offset values for
+% shifting labels from their default position. Usually the offset is
+% added to the coordinates where the anchor would be. Prior to version
+% 3.0 \filenm{fca.sty} used distences to shift the nodes. Both Schemes
+% are valid and have their benefits. The current implementation
+% follows the scheme of \TikZ{}.
+%
+% \watchout[changes in 3.0] For compatibility reasons the sign of the
+% shift parameter is changed when the old syntax for labels is used.
+%
+% \ItemDescribeOption{/fca/shift/x/signv2.1} \textbf{value required}
+% \ItemDescribeOption{/fca/shift/y/signv2.1} \textbf{value required}
+% These parameters define how the distance values in the old syntax
+% should be interpreted by \LaTeX{}. You should change this parameter
+% only, if you really know what you are doing. Otherwise you could
+% easily mess up the diagram.
+%
+% \ItemDescribeOption{/fca/rotate} rotate the current object
+% \ItemDescribeOption{/fca/solid} Draw lines as solid lines
+% \ItemDescribeOption{/fca/dotted} Draw lines as dotted lines
+% \ItemDescribeOption{/fca/loosely dotted} Draw lines as dotted lines with
+% more space between the dots
+% \ItemDescribeOption{/fca/densely dotted} Draw lines as dotted lines with
+% less space between the dots
+% \ItemDescribeOption{/fca/every label/.style} A style that describes how
+% object and attribute labels should be decorated. Default:
+% \begin{verbatim}
+% {
+%   text=pgfstrokecolor,
+%   /pgf/outer sep=0pt,
+%   /pgf/inner sep=0pt,
+% }
+% \end{verbatim}
+%
+% \ItemDescribeOption{/fca/node/thickness} line width of the nodes
+%   \textbf{value required}
+% \ItemDescribeOption{/fca/node/radius} Node radius
+%  \ItemDescribeOption{/fca/node/layer} Layer where the node shall be
+%  put in.
+% \ItemDescribeOption{/fca/node/numbers}  \meta{true} or \meta{false},
+% defaults to \meta{true}, if given without value.  Draw \PGF{} node names of the
+% concepts in the diagram.
+%
+% \ItemDescribeOption{/fca/node/number prefix}
+%   \textbf{value required} Prefix to be added to the node name for
+%   the name of the node that contains the node name
+% \ItemDescribeOption{/fca/node/number suffix}
+%   \textbf{value required} Prefix to be added to the node name for
+%   the name of the node that contains the node
+%   name
+% \watchout[Confused?] The printed node name is a node
+%   itself. And every node in \PGF{} must have a unique name. This is
+%   constructed by appending this prefix to the already existing
+%   prefix and prepending this suffix to the already existing suffix.
+%
+% \watchout[TODO!] Or are prefix and suffix simply replaced?
+% \ItemDescribeOption{/fca/label/name prefix} Default: |\pgfkeysvalueof{/fca/namespace}\space node\space|,
+%   \textbf{value required}
+% \ItemDescribeOption{/fca/label/name suffix} Default: |\space\fca@label@type\space\fca@label@position|,
+% \textbf{value required}
+% Prefix and suffix to be added to the node name for
+%   the name of the label
+%
+% \watchout[TODO!] Or are prefix and suffix simply replaced?
+% \ItemDescribeOption{/fca/label/fill}
+%   \textbf{value required}, fill the label with the given colour,
+% \ItemDescribeOption{/fca/label/text width},
+%   \textbf{value required} Width of the text of the node. This option
+%   enables multiline labels.
+% \ItemDescribeOption{/fca/label/node font}
+%   \textbf{value required}, Font macros to be applied to the label content
+%   before the size of the node is calculated.
+% \ItemDescribeOption{/fca/label/edge thickness}
+%   \textbf{value required}, thickness of the edge of the label node
+%   (typically the border size)
+% \ItemDescribeOption{/fca/label/at}
+% \textbf{value required} Information for anchoring labels on nodes
+% \watchout[TODO!!!] look up what is really done
+% \ItemDescribeOption{/fca/label/type}
+% Defines the type of the given label. Every subobject of
+% \optn{/fca/label/type} can be chose as label type. The predefined
+% options are \optn{attributes} and \optn{objects}.
+%
+% New types can be defined by adding it to this path. In that case
+% also a styles named \optn{/fca/label/\meta{type} \meta{position}}
+% should be defined that do the actual formatting of the new label
+% type. These types are immediately executed whenever a label type or
+% a label position is changed (see below).
+%
+% \ItemDescribeOption{/fca/label/type/attributes/.style}
+% Makes the label type \optn{attributes} available and defines styles
+% for all attribute labels.
+% \ItemDescribeOption{/fca/label/type/objects/.style}
+% Makes the label type \optn{objects} available and defines styles
+% for all object labels.
+%
+% \ItemDescribeOption{/fca/label/position}
+% Defines the positon of the given label. Every subobject of
+% \optn{/fca/label/positon} can be chose as position. The predefined
+% options are \optn{left}, \optn{center} and \optn{right}.
+%
+% \ItemDescribeOption{/fca/label/position/left/.style}
+% Makes the label position \optn{left} available and defines styles
+% for all left labels.
+% \ItemDescribeOption{/fca/label/position/center/.style}
+% Makes the label position \optn{center} available and defines styles
+% for all centered labels.
+% \ItemDescribeOption{/fca/label/position/right/.style}
+% Makes the label position \optn{right} available and defines styles
+% for all right labels.
+%
+% \ItemDescribeOption{/fca/label/attributes left/.style}
+% Describes how attribute labels on the left hand side of the concept
+% should be formatted. By default this affects placement and text
+% alignment.
+% \ItemDescribeOption{/fca/label/attributes center.style}
+% Describes how attribute labels that are horizontally centered to the concept
+% should be formatted. By default this affects placement and text
+% alignment.
+% \ItemDescribeOption{/fca/label/attributes left/.style}
+% Describes how attribute labels on the right hand side of the concept
+% should be formatted. By default this affects placement and text
+% alignment.
+% \ItemDescribeOption{/fca/label/objects left/.style}
+% Describes how object labels on the left hand side of the concept
+% should be formatted. By default this affects placement and text
+% alignment.
+% \ItemDescribeOption{/fca/label/objects center.style}
+% Describes how object labels that are horizontally centered to the concept
+% should be formatted. By default this affects placement and text
+% alignment.
+% \ItemDescribeOption{/fca/label/objects left/.style}
+% Describes how object labels on the right hand side of the concept
+% should be formatted. By default this affects placement and text
+% alignment.
 % \end{description}
 %    \begin{macrocode}
 

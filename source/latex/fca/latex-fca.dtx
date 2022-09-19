@@ -3245,6 +3245,48 @@ Formal Concept Analysis macros]
   \pgfkeysdef{/fca/#1}{\pgfkeys{/tikz/#1=##1}}
   \pgfkeyssetvalue{/fca/#1}{#3}%
 }
+%    \end{macrocode}
+%   \paragraph{Options that are directly forwarded to \TikZ{}} If they
+%   are not documented somewhere else, their implementation needs
+%   \filenm{fca.sty} fröm the \TikZ{library} \filenm{fca}.
+%   \begin{description}
+% \ItemDescribeOption{shape} shape of the node
+% \ItemDescribeOption{text ragged} node text is ragged right with hyphenation%
+% \ItemDescribeOption{text badly ragged} node text is ragged right
+% nearly without hyphenation (normal \LaTeX{} mode)%
+% \ItemDescribeOption{text ragged left} node text is ragged left%
+% \ItemDescribeOption{text badly ragged left} node text is ragged left
+% nearly without hyphenation (normal \LaTeX{} mode)%%
+% \ItemDescribeOption{text justified} The text is spread to fit the
+% border on both sides of the text box (typically with hyphanation)%
+% \ItemDescribeOption{text centered} The node text is horizontally centered%
+% \ItemDescribeOption{text badly centered}  node text is centered horizontally
+% nearly without hyphenation (normal \LaTeX{} mode)%%%
+% \ItemDescribeOption{even odd rule} self overlapping paths are filled
+% so that every border is an outside border (an even number of borders
+% in each direction means outside and an odd number means inside.
+% \ItemDescribeOption{nonzero rule} The default rule of \TikZ{} for
+% filling paths. The algorithm is described in the
+% \href{https://tikz.dev/tikz-actions#sec-15.5.2}{\TikZ{} documentation}
+% (see \cmd{texdoc pgfmanual.pdf}).
+% \ItemDescribeOption{fill opacity} The opacity of the filled copy of
+% the path or node
+% \ItemDescribeOption{opacity} General option of the opacity%
+% \ItemDescribeOption{blend mode} This option defines, how thransparency
+% changes the colors of semitransparent objects. See the
+% \href{https://tikz.dev/tikz-transparency#sec-23.3}{\TikZ{}
+%   documentation} for further details.
+% \ItemDescribeOption{color} Sets stroke and fill color (border and
+% interior) to the same color
+% \ItemDescribeOption{rotate} rotate some path%
+% \ItemDescribeOption{solid} draw lines solid%
+% \ItemDescribeOption{dotted} draw lines dotted%
+% \ItemDescribeOption{loosely dotted} draw lines dotted with more space
+% between the dots%
+% \ItemDescribeOption{densely dotted} draw lines dotted with less space
+% between the dots%
+%   \end{description}
+%    \begin{macrocode}
 \fca@generate@tikz@parameters
 \@for \@tempa:=%
 shape,
@@ -3489,8 +3531,33 @@ densely dotted%
 % Options can be set globally outside
 %
 % \begin{description}
+% \ItemDescribeOption{/fca/font} font selection macros used inside
+% nodes (forwarded to \optn{/tikz/font} when loaded as TikZ library).
+% \ItemDescribeOption{/fca/node font} The font selection macros that
+% are used during node size calculation
+% (forwarded to \optn{/tikz/node font} when loaded as TikZ library).
+% \ItemDescribeOption{/fca/text opacity} Opacity of the text in nodes
+% (forwarded to \optn{/tikz/text opacity} when loaded as TikZ library).
+% \ItemDescribeOption{/fca/text width} Width of the text in nodes
+% (allows multiline nodes e.g. multi-line labels)
+% (forwarded to \optn{/tikz/text width} when loaded as TikZ library).
+% \ItemDescribeOption{/fca/text height} height of the text box of
+% \PGF{} nodes
+% (forwarded to \optn{/tikz/text height} when loaded as TikZ library).
+% \ItemDescribeOption{/fca/text depth} depth of the text box of \PGF{}
+% nodes
+% (forwarded to \optn{/tikz/text depth} when loaded as TikZ library).
+% \ItemDescribeOption{/fca/text action} \textbf{Undocumented extension
+% to \TikZ} Stores the alignment setup macros \TikZ{} nodes.
+% \ItemDescribeOption{/fca/options}  \textbf{Undocumented extension
+% to \TikZ} direct access to \cs{tikz@options}.
+% \ItemDescribeOption{/fca/anchor} specifies the anchor of a node to
+% be used for placement
+% (forwarded to \optn{/tikz/anchor} when loaded as TikZ library).
+% \ItemDescribeOption{/fca/shape} the shape of a node (concept or label)
+% (forwarded to \optn{/tikz/shape} when loaded as TikZ library).
 % \ItemDescribeOption{/fca/connector} Draw a connector line between the node
-% and the label
+% and the label. Values are \optn{true} and \optn{false}.
 % \ItemDescribeOption{/fca/namespace} Namespace used in name prefixes and
 % layer names, Default: fca, \textbf{value required}
 % \ItemDescribeOption{/fca/name prefix} Pattern to be added before node
@@ -3737,6 +3804,7 @@ densely dotted%
 % should be formatted. By default this affects placement and text
 % alignment.
 % \end{description}
+%
 %    \begin{macrocode}
 
 \newcommand\fca@append[2]{%
@@ -4490,7 +4558,7 @@ densely dotted%
 %\end{diagram}
 %}
 %
-%
+% Using the style only for special nodes
 %\fbox{\unitlength 1.2mm
 %\begin{diagram}
 %  \Node(1)(20,10)

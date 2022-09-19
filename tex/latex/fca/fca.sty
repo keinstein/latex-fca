@@ -44,7 +44,7 @@
 %%   Right brace   \}     Tilde         \~}
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesPackage{fca}
-    [2022/09/12 v3.0
+    [2022/09/17 v3.0
 Formal Concept Analysis macros]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -160,7 +160,7 @@ Formal Concept Analysis macros]
   \let\freeobj\fca@cxt@freeobj
   \let\cxtphantom\fca@cxt@phantom
   \let\cxtrlap\fca@cxt@rlap
-  \def\fca@cxtn@me{}%
+  \let\fca@cxtn@me\@empty%
   \let\fca@cxt@tabdef\fca@cxt@tabdef@@
 }%
 \def\fca@cxt@phantom{\phantom{\fca@cxt@Kreuz}}%
@@ -317,8 +317,7 @@ Formal Concept Analysis macros]
   }%
 }
 \def\fca@cxt@input@read@cxtname#1{%
-  \ifx\fca@cxtn@name\@empty
-  \else
+  \ifx\fca@cxtn@me\@empty
     \fcaCxtName{#1}%
   \fi
   \def\fca@cxt@input@newline{%
@@ -1084,7 +1083,7 @@ Formal Concept Analysis macros]
     {%
       \fca@parse@parenlabel{#1}%
     }{%
-      #2
+      #2%
     }%
   }%
 }
@@ -1120,9 +1119,9 @@ Formal Concept Analysis macros]
         }{%
           \expandafter\fca@@labelBox\expandafter{\fca@tempa}%
         }%
-      }{}{\@tempdima}{\@tempdimb}
+      }{}{\@tempdima}{\@tempdimb}%
     }{%
-      \fca@@labelBox{#1,node={#2}}
+      \fca@@labelBox{#1,node={#2}}%
     }%
   }%
 }
@@ -1169,6 +1168,10 @@ Formal Concept Analysis macros]
     node contents={#4}%
   }%
 }
+\newcommand\fca@remove@anchor[1]{%
+  \fca@remove@anch@r#1.\fca@remove@anchor%
+}
+\def\fca@remove@anch@r#1.#2\fca@remove@anchor{#1}
 \newcommand\fca@prepare@node[5]{%
   \def\@tempa{\fca@split@node@{#1}{#2}{#3}{#4}}%
   \edef\@tempb{#5.center.}%
@@ -1215,9 +1218,13 @@ Formal Concept Analysis macros]
     \fca@labelslayer
     \pgfkeysvalueof{/fca/node font}%
     \fca@options
+    \edef\@tempa{\pgfkeysvalueof{/fca/pgfnode}}%
+    \xdef\fca@temp@node@name{%
+      \expandafter\fca@remove@anchor\expandafter{\@tempa}%
+    }%
     \pgftransformshift{%
       \pgfpointanchor{%
-        \pgfkeysvalueof{/fca/pgfnode}%
+        \fca@temp@node@name
       }{\fca@label@at}%
     }%
     \fca@parselength\@tempdima{\fca@label@shift@x}\unitlength
@@ -1269,10 +1276,9 @@ Formal Concept Analysis macros]
       \fca@labelconceptslayer
       \pgftransformshift{%
         \pgfpointanchor{%
-          \pgfkeysvalueof{/fca/pgfnode}%
+          \fca@temp@node@name
         }{\fca@label@at}%
       }%
-      \pgfusepath{stroke}%
       \fca@transform
       \fca@options
       % \pgfsetstrokecolor{\fca@node@color}%

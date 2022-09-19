@@ -44,7 +44,7 @@
 %%   Right brace   \}     Tilde         \~}
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesFile{tikzlibraryfca.code.tex}
-    [2022/09/12 v3.0
+    [2022/09/17 v3.0
  TikZ support for Formal concept Analysis]
 \RequirePackage{fca}
 \let\fca@tikz@without@library\relax
@@ -173,9 +173,13 @@ densely dotted%
 \newcommand\fca@tikz@labelBox[1]{%
   \begin{scope}%
     \fcaset{every node/.try,every label/.try,#1}%
+    \edef\@tempa{\pgfkeysvalueof{/fca/pgfnode}}%
+    \xdef\fca@temp@node@name{%
+      \expandafter\fca@remove@anchor\expandafter{\@tempa}%
+    }%
     \fca@labelslayer
       \path[/fca/.cd,every node/.try,every label/.try,#1]
-      (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
+      (\fca@temp@node@name.\fca@label@at)
       ++(\fca@label@shift@x,\fca@label@shift@y)
       node[shape=rectangle] (%
         \pgfkeysvalueof{/fca/label/name prefix}%
@@ -189,7 +193,7 @@ densely dotted%
       \begin{scope}
         \fca@connectorslayer
         \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
-        (\pgfkeysvalueof{/fca/pgfnode}) --
+        (\pgfkeysvalueof{/fca/node}) --
         (%
         \pgfkeysvalueof{/fca/label/name prefix}%
         \pgfkeysvalueof{/fca/node}%
@@ -209,9 +213,10 @@ densely dotted%
       \ifx\@tempa\tikz@shape
       \else
         \fca@labelconceptslayer
+        %\edef\fca@tempa{
         \path
-        (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
-        node[draw,
+          (\fca@temp@node@name.\fca@label@at)%
+          node[draw,
           /fca/.cd,
           shape=coordinate,
           #1,
@@ -222,7 +227,7 @@ densely dotted%
           \pgfkeysvalueof{/fca/label/name suffix}%
           ){};
         % \pgfsetstrokecolor{\fca@node@color}%
-        %\pgfnode{}{\pgfkeysvalueof{/fca/anchor}}{}{%
+        %\pgfnode{}{\pgfkeysvalueof{/fca/anchor}}{}{}%
         \fca@endlabelconceptslayer
       \fi
     \end{scope}

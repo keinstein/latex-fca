@@ -161,7 +161,7 @@ http://www.latex-project.org/lppl.txt
 %<fca.sty>\ProvidesPackage{fca}
 %<tikz>\ProvidesFile{tikzlibraryfca.code.tex}
 %<*package|driver|notikzdriver>
-    [2022/09/12 v3.0
+    [2022/09/17 v3.0
 %</package|driver|notikzdriver>
 %<*fca.sty|driver|notikzdriver>
 Formal Concept Analysis macros]
@@ -3369,9 +3369,13 @@ densely dotted%
 \newcommand\fca@tikz@labelBox[1]{%
   \begin{scope}%
     \fcaset{every node/.try,every label/.try,#1}%
+    \edef\@tempa{\pgfkeysvalueof{/fca/pgfnode}}%
+    \xdef\fca@temp@node@name{%
+      \expandafter\fca@remove@anchor\expandafter{\@tempa}%
+    }%
     \fca@labelslayer
       \path[/fca/.cd,every node/.try,every label/.try,#1]
-      (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
+      (\fca@temp@node@name.\fca@label@at)
       ++(\fca@label@shift@x,\fca@label@shift@y)
       node[shape=rectangle] (%
         \pgfkeysvalueof{/fca/label/name prefix}%
@@ -3385,7 +3389,7 @@ densely dotted%
       \begin{scope}
         \fca@connectorslayer
         \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
-        (\pgfkeysvalueof{/fca/pgfnode}) --
+        (\pgfkeysvalueof{/fca/node}) --
         (%
         \pgfkeysvalueof{/fca/label/name prefix}%
         \pgfkeysvalueof{/fca/node}%
@@ -3405,9 +3409,10 @@ densely dotted%
       \ifx\@tempa\tikz@shape
       \else
         \fca@labelconceptslayer
+        %\edef\fca@tempa{
         \path
-        (\pgfkeysvalueof{/fca/pgfnode}.\fca@label@at)
-        node[draw,
+          (\fca@temp@node@name.\fca@label@at)%
+          node[draw,
           /fca/.cd,
           shape=coordinate,
           #1,
@@ -3418,7 +3423,7 @@ densely dotted%
           \pgfkeysvalueof{/fca/label/name suffix}%
           ){};
         % \pgfsetstrokecolor{\fca@node@color}%
-        %\pgfnode{}{\pgfkeysvalueof{/fca/anchor}}{}{%
+        %\pgfnode{}{\pgfkeysvalueof{/fca/anchor}}{}{}%
         \fca@endlabelconceptslayer
       \fi
     \end{scope}
@@ -4177,7 +4182,7 @@ densely dotted%
     {%
       \fca@parse@parenlabel{#1}%
     }{%
-      #2
+      #2%
     }%
   }%
 }
@@ -4251,9 +4256,9 @@ densely dotted%
         }{%
           \expandafter\fca@@labelBox\expandafter{\fca@tempa}%
         }%
-      }{}{\@tempdima}{\@tempdimb}
+      }{}{\@tempdima}{\@tempdimb}%
     }{%
-      \fca@@labelBox{#1,node={#2}}
+      \fca@@labelBox{#1,node={#2}}%
     }%
   }%
 }
@@ -4301,6 +4306,22 @@ densely dotted%
   }%
 }
 %    \end{macrocode}
+%
+% \begin{macro}{\fca@remove@anchor}\marg{point}
+%   This macro removes the anchor part of a node name.
+%    \begin{macrocode}
+\newcommand\fca@remove@anchor[1]{%
+  \fca@remove@anch@r#1.\fca@remove@anchor%
+}
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\fca@remove@anch@r}
+%
+\def\fca@remove@anch@r#1.#2\fca@remove@anchor{#1}
+%
+% \end{macro}
+%
 % \begin{macro}{\fca@prepare@node}\marg{point}\marg{direction}\marg{prefix}\marg{suffix}\marg{node}
 %
 % This macro is used to find the correct anchor point and the point a
@@ -4398,6 +4419,118 @@ densely dotted%
   \fi
 }
 %    \end{macrocode}
+%
+% \fcaset{conexpstyle/.style={%
+%    every attributes/.append style={
+%      label concept/.append style={
+%        shape=semicircle,
+%        fill=blue,
+%        draw=black,
+%        anchor=south,
+%        outer sep=0pt,
+%        minimum height=2\unitlength,
+%        label/name suffix=attribute concept,
+%        label/at=center,
+%        solid
+%      }
+%    },
+%    every objects/.append style={
+%      label concept/.append style={
+%      shape=semicircle,
+%      outer sep=0pt,
+%        fill=black,
+%        draw=black,
+%        anchor=south,
+%        minimum height=2\unitlength,
+%        label/name suffix=attribute concept,
+%        label/at=center,
+%        solid,
+%        rotate=180
+%      }
+%    }}}
+%
+%\fbox{\unitlength 1.2mm
+%  \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
+% \begin{diagram}
+%  \Node[draw=red, fill=green](1)(20,10)
+%  \Node[fill=black]{2}{35}{20}
+%  \Node{3}{5}{30}
+%  \Node[fill=darkgreen]{4}{35}{40}
+%  \Node{5}{20}{50}
+%  {\color{red}\Edge{1}{2}}
+%  \Edge[draw=blue,dotted]{1}{3}
+%  {\thicklines\Edge{2}{4}}
+%  \Edge[draw=darkgreen](3)(5)
+%  \Edge{4}{5}
+%  \leftAttbox{3}{2}{2}{1}
+%   \rightAttbox{2}{2}{2}{disqualified}
+%  \rightAttbox{4}{2}{2}{2.}
+%  \leftObjbox{3}{2}{2}{Verstappen}
+%  \rightObjbox{2}{2}{2}{Leclerc}
+%  \rightObjbox{4}{2}{2}{Hamilton}
+%\end{diagram}
+%
+%\begin{diagram}[conexpstyle]
+%  \Node(1)(20,10)
+%  \Node(2)(35,20)
+%  \Node(3)(5,30)
+%  \Node(4)(35,40)
+%  \Node(5)(20,50)
+%  \Edge(1)(2)
+%  \Edge(1)(3)
+%  \Edge(2)(4)
+%  \Edge(3)(5)
+%  \Edge(4)(5)
+%  \leftAttbox{3}{2}{2}{1}
+%   \rightAttbox{2}{2}{2}{disqualified}
+%  \rightAttbox{4}{2}{2}{2.}
+%  \leftObjbox{3}{2}{2}{Verstappen}
+%  \rightObjbox{2}{2}{2}{Leclerc}
+%  \rightObjbox{4}{2}{2}{Hamilton}
+%\end{diagram}
+%}
+%
+%
+%\fbox{\unitlength 1.2mm
+%\begin{diagram}
+%  \Node(1)(20,10)
+%  \Node(2)(35,20)
+%  \Node(3)(5,30)
+%  \Node(4)(35,40)
+%  \Node(5)(20,50)
+%  \Edge(1)(2)
+%  \Edge(1)(3)
+%  \Edge(2)(4)
+%  \Edge(3)(5)
+%  \Edge(4)(5)
+%  \leftAttbox[conexpstyle]{3}{2}{2}{1}
+%  \rightAttbox[conexpstyle]{2}{2}{2}{disqualified}
+%  \rightAttbox{4}{2}{2}{2.}
+%  \leftObjbox[conexpstyle]{3}{2}{2}{Verstappen}
+%  \rightObjbox{2}{2}{2}{Leclerc}
+%  \rightObjbox[conexpstyle]{4}{2}{2}{Hamilton}
+%\end{diagram}
+%}
+%
+% \begin{diagram}[conexpstyle]
+%   \Node(1)(20,10)
+%   \Node(2)(35,20)
+%   \Node(3)(5,30)
+%   \Node(4)(35,40)
+%   \Node(5)(20,50)
+%   \Edge(1)(2)
+%   \Edge(1)(3)
+%   \Edge(2)(4)
+%   \Edge(3)(5)
+%   \Edge(4)(5)
+%   \leftAttbox(3)(-20,20){1}
+%   \rightAttbox(2)(20,20){disqualified}
+%   \rightAttbox(4)(20,20){2.}
+%   \leftObjbox(3)(-20,-2){Verstappen}
+%   \rightObjbox(2)(2,-2){Leclerc}
+%   \rightObjbox(4)(20,-2){Hamilton}
+% \end{diagram}
+%
 %    \begin{macrocode}
 \newcommand\fca@@labelBox[1]{%
   \begin{pgfscope}%
@@ -4405,9 +4538,13 @@ densely dotted%
     \fca@labelslayer
     \pgfkeysvalueof{/fca/node font}%
     \fca@options
+    \edef\@tempa{\pgfkeysvalueof{/fca/pgfnode}}%
+    \xdef\fca@temp@node@name{%
+      \expandafter\fca@remove@anchor\expandafter{\@tempa}%
+    }%
     \pgftransformshift{%
       \pgfpointanchor{%
-        \pgfkeysvalueof{/fca/pgfnode}%
+        \fca@temp@node@name
       }{\fca@label@at}%
     }%
     \fca@parselength\@tempdima{\fca@label@shift@x}\unitlength
@@ -4459,10 +4596,9 @@ densely dotted%
       \fca@labelconceptslayer
       \pgftransformshift{%
         \pgfpointanchor{%
-          \pgfkeysvalueof{/fca/pgfnode}%
+          \fca@temp@node@name
         }{\fca@label@at}%
       }%
-      \pgfusepath{stroke}%
       \fca@transform
       \fca@options
       % \pgfsetstrokecolor{\fca@node@color}%

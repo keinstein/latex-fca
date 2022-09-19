@@ -184,6 +184,7 @@ Formal Concept Analysis macros]
 %<*driver|notikzdriver>
 % Hack around the convention to use the vertical bar for macro names.
 % This clashes with the tabular environment.
+\newcommand\VertStroke{|}
 \edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|\relax}%
 \documentclass[a4paper]{ltxdoc}
 \def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
@@ -541,18 +542,24 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 %
 % The name of the context can be overwritten by using |\cxtName|
-% inside the \env{cxt} environment. \textcolor{red}{Funktioniert nicht!}
+% inside the \env{cxt} environment.
+% \begin{dtxexample}{Overwriting the context name}
+% \begin{cxt}
+% \cxtName{Formula 2}
+% \cxtinput{formula1.cxt}
+% \end{cxt}
+% \end{dtxexample}
 %
 % To get non-rotated attribute names, redefine the \texttt{atr} command
 % as in the following example:
 % \begin{dtxexample}{Including contexts with unrotated attributes}
-% \begin{cxt}[b]%
-% \renewcommand{\atr}{\att}%
-% \cxtinput{formula0.cxt}%
+% \begin{cxt}[b]
+% \renewcommand{\atr}{\att}
+% \cxtinput{formula1.cxt}
 % \end{cxt}\quad
 % \begin{cxt}[b]
-% \cxtName{Formula 2}%
-% \cxtinput{formula0.cxt}%
+% \cxtName{Formula 2}
+% \cxtinput{formula1.cxt}
 % \end{cxt}
 % \end{dtxexample}
 %
@@ -670,7 +677,7 @@ Formal Concept Analysis macros]
 % ready. In most cases it is not a good idea to put text inside the
 % nodes of a diagram.
 %                                                                   %
-% \DescribeMacro{\NoNumbers} can be used to exclude individual circles
+% \DescribeMacro{\NoNumbers} can be used to exclude individual nodes
 % from the numbering.
 %
 %
@@ -721,17 +728,14 @@ Formal Concept Analysis macros]
 %
 % \subsubsection{Global parameters}
 %
-% An example of a parameter for \texttt{fca.sty} is text width. It
-% affects the type and size of the label boxes.
+% An example of a parameter for \texttt{fca.sty} is \texttt{text
+% width}. It affects the type and size of the label boxes.
 %
-% When |text width| is set to a length, the text of the label is put
+% When |text width| is set to a length, then the text of the label is put
 % in a |\parbox|. It can be broken into several lines using |\\|. The
 % width of the |\parbox| is the value of the |text width| parameter.
 % It is unset by default, resulting in a one-line box (i.e. hbox) for
 % the label. In this case the width of the box is automatically detected.
-%
-% Label boxes are framed with the \texttt{draw} option. Their
-% background color can be set with \texttt{fill}.
 %
 % Setting |text width| to a length can either be done as an optional
 % parameter to the diagram, such as
@@ -744,18 +748,19 @@ Formal Concept Analysis macros]
 %
 % or for single nodes only, again as an optional parameter.
 %
+% Label boxes are framed with the \texttt{draw} option, which may also
+% be used to set a color for the text and the frame. Their
+% background color can be set with \texttt{fill}.
+%
 % {\unitlength .7mm
 % \begin{dtxexample}{Node labels}
-%   \begin{diagram}[text width=4cm]%originally{40}{15}
-%     \Node{0}{20}{10}
-%     \leftAttbox[draw]{0}{1}{1}{left\\
-%     attribute\\ label}
-%     \rightAttbox[fill=red!50!blue!20]{0}{10}{10}{right
+%   \begin{diagram}[text width=3.4cm]
+%     \Node(0)(20,10)
+%     \leftAttbox[draw](0)(-1,1){left\\ attribute\\ label}
+%     \rightAttbox[fill=red!50!blue!20](0)(10,10){right
 %     attri-\\ bute label}
-%     \rightObjbox[draw]{0}{20}{5}{right\\
-%     object\\ label}
-%     \centerObjbox{0}{0}{5}{centered\\
-%     object label}
+%     \rightObjbox[draw=brown](0)(20,5){right\\ object\\ label}
+%     {\fcaNoDots\centerObjbox(0)(0,-5){centered\\ object label}}
 %   \end{diagram}
 % \end{dtxexample}
 % }
@@ -781,12 +786,13 @@ Formal Concept Analysis macros]
 % semicircle, respectively.
 %
 % \begin{dtxexample}{Defining a \env{diagram} style}
-% \fcaset{conexpstyle/.style={%
+% \fcaset{conexp style/.style={%
 %     every attributes/.append style={
 %       label concept/.append style={
 %         shape=semicircle,
 %         fill=blue,
 %         anchor=south,
+%         outer sep=0pt,
 %         minimum height=2\unitlength,
 %         label/name suffix=attribute concept,
 %         label/at=center,
@@ -798,6 +804,7 @@ Formal Concept Analysis macros]
 %         shape=semicircle,
 %         fill=black,
 %         anchor=south,
+%         outer sep=0pt,
 %         minimum height=2\unitlength,
 %         label/name suffix=attribute concept,
 %         label/at=center,
@@ -814,7 +821,7 @@ Formal Concept Analysis macros]
 %
 % \begin{dtxexample}{Using a \env{diagram} style}
 % {\unitlength 1.2mm
-% \begin{diagram}[conexpstyle]
+% \begin{diagram}[conexp style]
 %   \Node(1)(20,10)
 %   \Node(2)(35,20)
 %   \Node(3)(5,30)
@@ -825,12 +832,12 @@ Formal Concept Analysis macros]
 %   \Edge(2)(4)
 %   \Edge(3)(5)
 %   \Edge(4)(5)
-%   \leftAttbox{3}{2}{2}{1}
-%    \rightAttbox{2}{2}{2}{disqualified}
-%   \rightAttbox{4}{2}{2}{2.}
-%   \leftObjbox{3}{2}{2}{Verstappen}
-%   \rightObjbox{2}{2}{2}{Leclerc}
-%   \rightObjbox{4}{2}{2}{Hamilton}
+%   \leftAttbox(3)(-2,2){1}
+%   \rightAttbox(2)(2,2){disqualified}
+%   \rightAttbox(4)(2,2){2.}
+%   \leftObjbox(3)(-2,2){Verstappen}
+%   \rightObjbox(2)(2,2){Leclerc}
+%   \rightObjbox(4)(2,2){Hamilton}
 % \end{diagram}
 % }
 % \end{dtxexample}
@@ -1135,354 +1142,14 @@ Formal Concept Analysis macros]
 %   \end{diagram}
 % \end{dtxexample}
 % }
-%
-%
-% \DescribeMacro{\leftAttbox}\oarg{options}\parg{nodenumber}\marg{text}\\
-% \DescribeMacro{\centerAttbox}\oarg{options}\parg{nodenumber}\marg{text}\\
-% \DescribeMacro{\rightAttbox}\oarg{options}\parg{nodenumber}\marg{text}\\
-% \DescribeMacro{\leftObjbox}\oarg{options}\parg{nodenumber}\marg{text}\\
-% \DescribeMacro{\centerObjbox}\oarg{options}\parg{nodenumber}\marg{text}\\
-% \DescribeMacro{\rightObjbox}\oarg{options}\parg{nodenumber}\marg{text}
-%
-% These are used to put
-% text to diagram nodes. The |Attbox|--commands place the text above the
-% corresponding node, the |Objbox| below. Similarly, the text can be placed
-% to the left, be centered, or be placed to the right of the labelled node. All
-% this can be modified with the |shift| option.
-%
-% \iffalse
-% The offsets increase the placement effect. A |\rightObjbox|, which is
-% placed to the lower right of the corresponding node, will be moved even
-% further to the lower right if the offsets are positive. Similarly, positive
-% offsets will push a |\leftAttbox| even more to the upper left, etc.
-% \fi
-%
-% When |text width| is set to a length, the text of the label is put
-% in a |\parbox|. It can be broken into several lines using |\\|. The
-% width of the |\parbox| is the value of the |text width| parameter.
-% It is unset by default, resulting in a one-line box (i.e. hbox) for
-% the label. In this case the width of the box is automatically detected.
-%
-% The label text and the labelled node are connected with a dotted line.
-% Here is an example:
-%
-% \DescribeMacro{\end\{diagram\}} This concludes the diagram. The circles
-%  representing the nodes are drawn and filled with white. Everything inside
-%  such a circle (except for the numbers caused by the |\Numbers| command)
-%  is erased.
-% \section{Zeugs, auf dem ich besthe (inhaltlich)}
-% \subsection{compat / nocompat}\label{subsec:compat}
-%
-% \begin{itemize}
-% \item Die Versionsnummer ist wichtig (falls später mal
-% inkonsistenzen auftauchen
-% \item \optn{compat} / \optn{nocompat} müssen \textbf{beide}
-% dokumentiert werden.
-% \end{itemize}
-%
-% In order to reduce incompatibilities with other packages,
-% since version 2.2 |fca.sty| nearly all macros of |fca.sty|
-% belong to a so called namespace. That means most of
-% them start with the |\fca...|. Only in the environments |cxt| and
-% |diagram| this rule is relaxed.
-%
-% The option |compat| also defines the old names that have been used
-% before version 2.2.
-%
-% \watchout The current implementation can be only used to typeset
-% unmodified Documents that were written before version 2.2. It maps
-% the new macros to use the old ones. As soon as the new macros are
-% redefined, the old ones are ignored. So, make shure you replace all
-% occurrances of the old macros by the corresponding new ones at once.
-%
-% \DescribeOption{nocompat}
-%
-% This option reverts the effect of |compat|.
-%
-% \subsection{Definition der Symbole im Kontext}
-% Die Makros sind im Abschnitt \textbf{The Code} \ref{sec:the-code}
-% für Entwickler dokumentiert. Ein sinnvolles Vorgehen für Endnutzer
-% muss spätestens im Abchnitt advanced usage für die
-% \env{cxt}-Umgebung kommen. Dauzu gehört auch der hier aufgeführt
-% Inhalt, insbesondere die tabellarische Form ist fürs schnelle
-% Nachschlagen wichtig.
-%
-% \DescribeEnv{cxt}\oarg{alignment}
-%
-% |cxt| generates a tabular of the appropriate format. It takes
-% an optional alignment parameter, that is passed to the tabular
-% environment (see there for further documentation). The tabular is
-% defined as soon as the first |\obj| command is given. Spaces in the
-% preceding lines are not ignored in general. The standard macros have
-% been designed to ignore following spaces. But this cannot be extended
-% to other macros. Therefore, each line that contains individual
-% (non-cxt-code) should be ended with a |%|\ .
-%
-% By default the following characters are predefined for the use in the first argument of \cs{obj}:
-% \begin{description}
-%   \ItemDescribeOther[char]{.} A non-incidence, usually printed as white space.
-%   \ItemDescribeOther[char]{x} A a cross in the cross table.
-%   \ItemDescribeOther[char]{X} A a cross in the cross table (alternate syntax).
-%   \ItemDescribeOther[char]{u} An updarrow for the arrow relation.
-%   \ItemDescribeOther[char]{d} A downarrow of the arrow relation.
-%   \ItemDescribeOther[char]{b} An up- and downarrow of the arrow relation.
-%   \ItemDescribeOther[char]{0} The number $0$ for many-valued contexts
-%   \ItemDescribeOther[char]{1} The number $1$ for many-valued contexts
-%   \ItemDescribeOther[char]{2} The number $2$ for many-valued contexts
-%   \ItemDescribeOther[char]{3} The number $3$ for many-valued contexts
-%   \ItemDescribeOther[char]{4} The number $4$ for many-valued contexts
-%   \ItemDescribeOther[char]{5} The number $5$ for many-valued contexts
-%   \ItemDescribeOther[char]{6} The number $6$ for many-valued contexts
-%   \ItemDescribeOther[char]{7} The number $7$ for many-valued contexts
-%   \ItemDescribeOther[char]{8} The number $8$ for many-valued contexts
-%   \ItemDescribeOther[char]{9} The number $9$ for many-valued contexts
-% \end{description}
-%
-%
-% \subsection{Error messages}
-% Package error messages for the \texttt{diagram} environment are not yet
-% implemented. Errors usually are caused by using node numbers that have not
-% been defined earlier.
-%
-% \subsection{Fine tuning}
-% You can change certain layout parameters either permanently (by modifying the
-% file \texttt{fca.sty}) or temporarily using the following commands:
-% \begin{description}
-% \ItemDescribeMacro{\fcaCircleSize}\marg{size} Default: 4\qquad
-% (times |\unitlength|)
-% \ItemDescribeMacro {\NodeColor}\marg{color}   Default: white
-% \ItemDescribeMacro {\fcaNodeThickness}\marg{thickness}  \qquad
-% Default: 1.2pt
-% \ItemDescribeMacro {\fcaEdgeThickness}\marg{thickness}  \qquad
-% Default: .8pt
-% \ItemDescribeMacro {\NodeThickness}\marg{thickness} an alias to
-% \cs{fcaNodeThickness} inside a \env{diagram} environment
-% \ItemDescribeMacro {\EdgeThickness}\marg{thickness} an alias to
-% \cs{fcaEdgeThickness} inside a \env{diagram} environment
-% \ItemDescribeMacro {\fcaNoDots}
-% \ItemDescribeMacro {\fcaObjectLabelStyle} can be redefined to set the
-% style of object labels,
-% \ItemDescribeMacro {\fcaAttributeLabelStyle} can be redefined to set
-% the style of attribute labels,
-% \ItemDescribeMacro {\fcaLabelBoxWidth} can be redefined to a width,
-% which will be used to set the width of the object and attribute boxes.
-% \end{description}
-% Except for the first three, these commands can be focussed to single instances,
-% using braces. For example,
-% \begin{center}
-% |{\fcaNoDots\centerObjbox{nodenumber}{xoffset}{yoffset}{labeltext}}|
-% \end{center}
-% generates a single centered object label without dotted line.
-%
-% \subsection{\pdfLaTeX \ compatibility}
-% Version 2 of the \texttt{diagram} environment was designed to be \pdfLaTeX\
-% compatibile. It no longer uses \texttt{eepic.sty}, which is not supported by
-% \pdfLaTeX. Instead it uses \texttt{pict2e} and a |\fcadrawline| command,
-% that replaces \texttt{eepic}'s |\drawline|.
-%
-% \subsection{Problems with colour}
-% Since the diagrams are drawn using the \texttt{picture}--commands and the
-% \texttt{pict2e} package, we can combine with other packages, for example, with
-% the \texttt{color} package. This allows us to colour edges and text (but not
-% individual nodes, see \ref{subsec:colornode}).
-% However, \texttt{color} has a problem with spacing. Changing colors can cause
-% unwanted spaces, and these are particularly unpleasant in pictures. Have a
-% look at the following:\medbreak
-%
-% \begin{minipage}{.6\textwidth}
-% \begin{verbatim}
-% {\unitlength 2mm
-% \begin{diagram}{20}{20}
-% \Node{1}{5}{5}
-% \Node{2}{15}{15}
-% {\color{red}\Edge{1}{2}}
-% {\color{blue}\Edge{1}{2}}
-% {\color{red}\Edge{1}{2}}
-% {\color{blue}\Edge{1}{2}}
-% \end{diagram}}
-% \end{verbatim}
-% \end{minipage}\hfill
-% \begin{minipage}{.3\textwidth}
-% {\unitlength 2mm
-% \begin{diagram}{20}{20}
-% \Node{1}{5}{5}
-% \Node{2}{15}{15}
-% {\color{red}\Edge{1}{2}}
-% {\color{blue}\Edge{1}{2}}
-% {\color{red}\Edge{1}{2}}
-% {\color{blue}\Edge{1}{2}}
-% \end{diagram}}
-% \end{minipage}
-% \medbreak
-%
-% \noindent This effect disappears when spaces are avoided. Here is a better
-% version:\medbreak
-%
-% \begin{minipage}{.6\textwidth}
-% \begin{verbatim}
-% {\unitlength 2mm
-% \begin{diagram}{20}{20}
-% \Node{1}{5}{5}
-% \Node{2}{15}{15}
-% {\color{red}\Edge{1}{2}}%
-% {\color{blue}\Edge{1}{2}}%
-% {\color{red}\Edge{1}{2}}%
-% \color{blue}\Edge{1}{2}}%
-% \end{diagram}% In order to reduce incompatibilities with other packages,
-% since version 2.2 |fca.sty| nearly all macros of |fca.sty|
-% belong to a so called namespace. That means most of
-% them start with the |\fca...|. Only in the environments |cxt| and
-% |diagram| this rule is relaxed.
-%
-% The option |compat| also defines the old names that have been used
-% before version 2.2.
-%
-% \watchout The current implementation can be only used to typeset
-% unmodified Documents that were written before version 2.2. It maps
-% the new macros to use the old ones. As soon as the new macros are
-% redefined, the old ones are ignored. So, make shure you replace all
-% occurrances of the old macros by the corresponding new ones at once.
-%
-% \DescribeOption{nocompat}
-%
-% This option reverts the effect of |compat|.
-
-% \end{verbatim}
-% \end{minipage}\hfill
-% \begin{minipage}{.3\textwidth}
-% {\unitlength 2mm
-% \begin{diagram}{20}{20}
-% \Node{1}{5}{5}
-% \Node{2}{15}{15}
-% {\color{red}\Edge{1}{2}}%
-% {\color{blue}\Edge{1}{2}}%
-% {\color{red}\Edge{1}{2}}%
-% {\color{blue}\Edge{1}{2}}%
-% \end{diagram}}
-% \end{minipage}
-%
-%
-% \subsection{Colouring nodes}
-% \label{subsec:colornode}
-%
-% The nodes can be coloured by using the \texttt{draw=} and
-% \texttt{fill=} parameter. These can be set either by using
-% \cs{fcaset} or in any other way, that allows to set styles.% In order to reduce incompatibilities with other packages,
-% since version 2.2 |fca.sty| nearly all macros of |fca.sty|
-% belong to a so called namespace. That means most of
-% them start with the |\fca...|. Only in the environments |cxt| and
-% |diagram| this rule is relaxed.
-%
-% The option |compat| also defines the old names that have been used
-% before version 2.2.
-%
-% \watchout The current implementation can be only used to typeset
-% unmodified Documents that were written before version 2.2. It maps
-% the new macros to use the old ones. As soon as the new macros are
-% redefined, the old ones are ignored. So, make shure you replace all
-% occurrances of the old macros by the corresponding new ones at once.
-%
-% \DescribeOption{nocompat}
-%
-% This option reverts the effect of |compat|.
-
-% So you can also add a fill parameter to the node:
-%
-% \begin{dtxexample}{Colouring individual nodes}
-% {\definecolor{grey}{gray}{.8}
-% \unitlength 2mm
-% \fcaNodeThickness{2.5pt}
-% \fcaEdgeThickness{2.5pt}
-% \begin{diagram}
-% \NodeColor{grey}
-% \Node[fill=green](1)(5,5)
-% \Node(2)(15,15)
-% \Edge{1}{2}%
-% \end{diagram}}
-% \end{dtxexample}
-%
-% Nodes are filled with white by default. This can be changed to any other colour
-% using the command |\NodeColor{colorname}|. This color then applies to
-% \textbf{all nodes}. \texttt{colorname} must be a
-% color specification as  used by the \texttt{color} package.
-% \texttt{``red''}, \texttt{``blue''}, and \texttt{``green''} should usually
-% work. Other colors may be defined with the |\definecolor| command, see
-% the documentation of the \texttt{graphics} bundle. For finer colour
-% nuances use the \texttt{xcolor} package and its documentation.
-%
-% \fcastyle does not support individual node colouring, but there is a trick to
-% do it nevertheless. Simply include the \texttt{diagram} environment into a
-% \texttt{picture} environment and insert the coloured nodes after the diagram
-% is drawn. How this is done should become clear from the example
-% below. \fcastyle provides a command |\fcaColorNode{colorname}| for this.
-% It overwrites numbers generated by the |\Numbers| command.
-% \medbreak
-%
-% \begin{minipage}{.6\textwidth}
-% \begin{verbatim}
-% {\definecolor{grey}{gray}{.8}
-% \unitlength 2mm
-% \fcaNodeThickness{2.5pt}
-% \fcaEdgeThickness{2.5pt}
-% \begin{picture}(20,20)%
-% \put(0,0){%
-% \begin{diagram}{20}{20}
-% \NodeColor{grey}
-% \Node{1}{5}{5}
-% \Node{2}{15}{15}
-% \Edge{1}{2}%
-% \end{diagram}}
-% \put(5,5){\fcaColorNode{green}}
-% \end{picture}}
-% \end{verbatim}
-% \end{minipage}\hfill
-% \begin{minipage}{.3\textwidth}
-% {\unitlength 2mm\definecolor{grey}{gray}{.8}
-% \fcaNodeThickness{2.5pt}
-% \fcaEdgeThickness{2.5pt}
-% \begin{picture}(20,20)%
-% \put(0,0){%
-% \begin{diagram}{20}{20}
-% \NodeColor{grey}
-% \Node{1}{5}{5}
-% \Node{2}{15}{15}
-% \Edge{1}{2}%
-% \end{diagram}}
-% \put(5,5){\fcaColorNode{green}}
-% \end{picture}}
-% \end{minipage}
-%
-% \clearpage
-% \subsection{Some warning about future implementations}
-%
-% Currently |\unitlength| is used inside in the \env{diagram}
-% environment. However, since PGF already comes with support for
-% coordinate and canvas transformations, a future version might
-% completely rely on them and abandon the usage of |\unitlength|.
-% Then, |\unitlength| may be used only to initially set up the
-% coordinate system and ignored later. So it is strongly discouraged
-% to change |\unitlength| inside the \env{diagram} diagram
-% environment.
-%
-% Thus, it is recommended to use Euclidian coordinate systems for
-% diagrams. Other coordinate systems should work, too. However, the
-% output may change in that case using future versions of this
-% package. In particular the algorithm for the calculation of the node
-% radius may change, and changes to |\unitlength| inside the
-% environment will have no effect.
-%
-% The newly added option to encapsulate a \env{diagram} environment
-% inside a \env{tikzpicture} or \env{pgfpicture} already goes into
-% that direction. In this usage the |\unitlength| register is set to
-% the sum of the horizontal unit lengths of the x and the y
-% coordinates as provided by the surrounding environment.
-%
-% \section{Some macros}
-% For a short description see Figure~\ref{fig:macros}.
+% \section{Some macros for text}
+% Abbreviating macros are defined for some strings that occur
+% regularly in FCA texts. See Figure~\ref{fig:macros} for quick
+% overview.
 % \begin{figure}[p]
 %   \begin{center}
-%    \begin{tabular}{cll}\hline
-% Result&command& German version\\\hline
+%    \begin{tabular}{\VertStroke c\VertStroke l\VertStroke l\VertStroke}\hline
+% Result&command& German variant\\\hline
 % $\GMI$&|\GMI|&\\
 % $\context$&|\context|&\\
 % $\context[L]$&|\context[L]|&\\
@@ -1509,12 +1176,12 @@ Formal Concept Analysis macros]
 % \FBA   & &|\FBA| \\
 % \FnBA   & &|\FnBA| \\\hline
 %      \end{tabular}
-% \caption{Table of \texttt{fca.sty}--macros.}\label{fig:macros}
+% \caption{Table of \texttt{fca.sty} textmacros.}\label{fig:macros}
 %  \end{center}
 % \end{figure}
 % \begin{figure}[p]
 %  \begin{center}
-%      \begin{tabular}{lll}\hline
+%      \begin{tabular}{\VertStroke l\VertStroke l\VertStroke l\VertStroke }\hline
 % Symbol&command&package required\\\hline
 % $\vee$&|\vee|&\\
 % $\wedge$&|\wedge|&\\
@@ -1524,7 +1191,6 @@ Formal Concept Analysis macros]
 % $\sqcap$&|\sqcap|&\\
 % $\bigsqcup$&|\bigsqcup|&\\
 % $\bigsqcap$&|\bigsqcap|&stmaryrd\\\hline
-% &||&\\
 % \end{tabular}
 % \caption{Other symbols that are used in \FCA, and the commands that generate
 %  them.}\label{fig:2}\end{center}
@@ -1588,28 +1254,97 @@ Formal Concept Analysis macros]
 % \par\noindent
 % Here is a sample text:
 % \begin{verbatim}
-% \FCA offers an elegant way to determine the congruence relations
-% of a complete lattice: The congruence lattice of a doubly founded
+% \FCA provides an elegant way to determine the congruence relations of
+% a complete lattice. The congruence lattice of a doubly founded
 % concept lattice $\CLGMI$ is isomorphic to $\CL(G,M,\NDDArrow)$.
 % \end{verbatim}
 % This translates to:
 % \begin{center}
-%  \begin{minipage}{.87\textwidth}
-%  \FCA offers an elegant way to determine the congruence relations of a
-%  complete lattice: The congruence lattice of a doubly founded concept lattice
-%  $\CLGMI$ is   isomorphic to $\CL(G,M,\NDDArrow)$.
+%  \begin{minipage}{.88\textwidth}
+%  \FCA provides an elegant way to determine the congruence relations of a
+%  complete lattice. The congruence lattice of a doubly founded concept lattice
+%  $\CLGMI$ is isomorphic to $\CL(G,M,\NDDArrow)$.
 %  \end{minipage}
 % \end{center}
 %
+% \section{About the current version of \env{fca.sty}}
+% \subsection{Compatibility with earlier versions}\label{subsec:compat}
 %
-% \section{To do}
-% \begin{itemize}
-% \item Improve the placement of the dotted lines connecting nodes with
-%  attribute- and object names.
-% \item Allow half-shaded nodes in diagrams, and make them
-%  (optionally) automatic for object- and attribute concepts.
-% \item Improve the code to avoid unwanted blanks.
-% \end{itemize}
+% In order to reduce incompatibilities with other packages,
+% since version 2.2 of |fca.sty| nearly all macros of |fca.sty|
+% belong to a so called namespace. That means most of them start with
+% |\fca...|. Only within |cxt| and |diagram| environments this rule is
+% relaxed.
+%
+% \DescribeOption{compat}
+% There is a package option |compat| that also defines the old names
+% which have been used before version 2.2.
+%
+% \watchout The current implementation of |compat| should be only used
+% to compile unmodified \LaTeX\ code written before version~2.2. It
+% maps the new macros to use the old ones. As soon as the new
+% macros are redefined, the old ones are ignored. So make sure to replace all
+% occurrences of the old macros by the corresponding new ones at once.
+%
+% \DescribeOption{nocompat}
+% This option reverts the effect of |compat|.
+%
+% \subsection{Error messages}
+% Package error messages are not yet implemented.
+%
+% \subsection{Some warning about future implementations}
+%
+% Currently |\unitlength| is used inside in the \env{diagram}
+% environment. However, since PGF already comes with support for
+% coordinate and canvas transformations, a future version might
+% completely rely on them and abandon the usage of |\unitlength|.
+% Then, |\unitlength| may be used only to initially set up the
+% coordinate system and ignored later. So it is strongly discouraged
+% to change |\unitlength| inside the \env{diagram} diagram
+% environment.
+%
+% Thus, it is recommended to use Euclidian coordinate systems for
+% diagrams. Other coordinate systems should work, too. However, the
+% output may change in that case using future versions of this
+% package. In particular the algorithm for the calculation of the node
+% radius may change, and changes to |\unitlength| inside the
+% environment will have no effect.
+%
+% The newly added option to encapsulate a \env{diagram} environment
+% inside a \env{tikzpicture} or \env{pgfpicture} already goes into
+% that direction. In this usage the |\unitlength| register is set to
+% the sum of the horizontal unit lengths of the x and the y
+% coordinates as provided by the surrounding environment.
+%
+% \subsection{Fine tuning}
+% You can change certain layout parameters either permanently (by modifying the
+% file \texttt{fca.sty}) or temporarily using the following commands:
+% \begin{description}
+% \ItemDescribeMacro{\fcaCircleSize}\marg{size} Default: 4\qquad
+% (times |\unitlength|)
+% \ItemDescribeMacro {\NodeColor}\marg{color}   Default: white
+% \ItemDescribeMacro {\fcaNodeThickness}\marg{thickness}  \qquad
+% Default: 1.2pt
+% \ItemDescribeMacro {\fcaEdgeThickness}\marg{thickness}  \qquad
+% Default: .8pt
+% \ItemDescribeMacro {\NodeThickness}\marg{thickness} an alias to
+% \cs{fcaNodeThickness} inside a \env{diagram} environment
+% \ItemDescribeMacro {\EdgeThickness}\marg{thickness} an alias to
+% \cs{fcaEdgeThickness} inside a \env{diagram} environment
+% \ItemDescribeMacro {\fcaNoDots}
+% \ItemDescribeMacro {\fcaObjectLabelStyle} can be redefined to set the
+% style of object labels,
+% \ItemDescribeMacro {\fcaAttributeLabelStyle} can be redefined to set
+% the style of attribute labels,
+% \ItemDescribeMacro {\fcaLabelBoxWidth} can be redefined to a width,
+% which will be used to set the width of the object and attribute boxes.
+% \end{description}
+% Except for the first three, these commands can be focussed to single instances,
+% using braces. For example,
+% \begin{center}
+% |{\fcaNoDots\centerObjbox{nodenumber}{xoffset}{yoffset}{labeltext}}|
+% \end{center}
+% generates a single centered object label without dotted line.
 %
 %
 %

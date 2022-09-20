@@ -705,7 +705,8 @@ Formal Concept Analysis macros]
 % The impatient reader my infer some of the possibilities from the
 % next example.
 %
-% \begin{dtxexample}{A \env{diagram} with some optional parameters}
+% \iffcatikzdoc
+% \begin{dtxexample}{A \env{diagram} with some optional \TikZ{} parameters}
 % {\unitlength 1.2mm
 % \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
 % \begin{diagram}
@@ -727,6 +728,7 @@ Formal Concept Analysis macros]
 %   \rightObjbox(4){Hamilton}
 % \end{diagram}}
 % \end{dtxexample}
+% \fi
 %
 % \subsubsection{Global parameters}
 %
@@ -1292,7 +1294,11 @@ Formal Concept Analysis macros]
 % Package error messages are not yet implemented.
 %
 %
-% \subsection{A caveat  for future implementators}
+% \iffalse
+%   \subsection{A caveat  for future implementators}
+% \else
+%   \subsection{Some warning about future implementations}
+% \fi
 %
 % Currently |\unitlength| is used inside in the \env{diagram}
 % environment. However, since PGF already comes with support for
@@ -1303,7 +1309,12 @@ Formal Concept Analysis macros]
 % discouraged to change |\unitlength| inside the \env{diagram} diagram
 % environment.
 %
-% Instead it is recommended to use Euclidian coordinate systems for
+% \iffalse
+%   Instead
+% \else
+%   For the same reason
+% \if
+% it is recommended to use Euclidian coordinate systems for
 % diagrams. Other coordinate systems should work, too. However, the
 % output may change in that case using future versions of this
 % package. In particular the algorithm for the calculation of the node

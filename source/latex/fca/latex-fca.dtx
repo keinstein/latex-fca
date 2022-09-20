@@ -282,10 +282,11 @@ Formal Concept Analysis macros]
 \usepackage[numbered]{hypdoc}
 \hypersetup{
    pdfauthor = {Bernhard Ganter, Tobias Schlemmer},
-   pdfkeywords = {FCA LaTeX sytle diagrame context},
+   pdfkeywords = {FCA LaTeX style diagram context},
    pdftitle = {fca.sty – LaTeX macros for Formal Concept Analysis},
    pdfsubject = {LaTeX style file for typesetting formal contexts and
-     concept lattices}
+     concept lattices},
+   linkcolor = blue
 }
 \EnableCrossrefs
 \CodelineIndex
@@ -318,14 +319,14 @@ Formal Concept Analysis macros]
 % \begin{abstract}
 % \FCA is a field of mathematics based on the theory of ordered sets and complete lattices, with applications to data analysis and knowledge processing.
 % To simplify typesetting of FCA-related text, \fcastyle  provides two
-% environments and some simple macros. The two environments are
+% environments and some simple text macros. The two environments are
 % \begin{description}
 % \item[cxt] for typesetting small formal contexts as cross-tables, and
 % \item[diagram] for making line diagrams of concept lattices. This environment
 %   may be of some interest for other purposes as well, since it can also be
 %   used for ordered sets and graphs.
 % \end{description}
-% A list of \textbf{macros} is given in Section~\ref{sec:macros}
+% A list of \textbf{text macros} is given in Section~\ref{sec:macros}
 % below.
 % \medbreak\par\noindent
 % A recent version of \texttt{fca.sty} should be available from
@@ -569,8 +570,8 @@ Formal Concept Analysis macros]
 % with a small example (for which we set |\unitlength 1.2mm|):
 %
 % \begin{dtxexample}{A lattice diagram}
-% {\unitlength 1.2mm
-% \begin{diagram}
+%   {\unitlength 1.2mm
+%   \begin{diagram}
 %   \Node(1)(20,10)
 %   \Node(2)(35,20)
 %   \Node(3)(5,30)
@@ -594,7 +595,7 @@ Formal Concept Analysis macros]
 % \DescribeEnv{diagram}
 %
 % \DescribeMacro{\begin\{diagram\}} begins a PGF-picture.
-% Unlike the previous versions, the width and height of the diagram no
+% Unlike the previous versions, width and height of the diagram no
 % longer need to be specified. The old syntax
 %
 % |\begin{diagram}{width}{height}|
@@ -602,7 +603,7 @@ Formal Concept Analysis macros]
 % is still supported and determines the bounding box, which is                %
 % otherwise calculated automatically.
 %
-% A major advantage of using PGF-pictures is that we can use the many
+% A major advantage of using PGF-pictures is that one can use the many
 % possibilities offered by PGF, even without knowing much about PGF.
 % The |diagram| environment and its macros allow  optional parameters,
 % e.g. for color, line thickness, etc. These will be described in
@@ -612,7 +613,8 @@ Formal Concept Analysis macros]
 %
 % \DescribeMacro{\Node}\parg{nodenumber}\parg{xpos,ypos}
 % Puts a circle at position \texttt{(xpos,ypos)} of the picture.
-% These circles are drawn when |\end{diagram}| is invoked. The default
+% \textcolor{red}{These circles are drawn when} |\end{diagram}|
+% \textcolor{red}{is invoked.} The default 
 % diameter of the circles is 4 (times |\unitlength|). It can be changed
 % (for all circles) with |\fcaCircleSize{}|. The argument must be an integer.
 % The node numbers must be different, consecutive between 0 and 51, but need not
@@ -643,7 +645,7 @@ Formal Concept Analysis macros]
 % |\rightObjbox(4)(3,5){Hamilton}|
 %
 % moves the object label ``Hamilton'' at node number 4 by
-% 3~|\unitlegth| in x-direction and by 5~|\unitlength| in y-direction.
+% 3\,|\unitlength| in x-direction and by 5\,|\unitlength| in y-direction.
 %
 % The old syntax |\rightObjbox{nodenumber}{xoffset}{yoffset}{labeltext}|
 % is also supported. However, there is a small difference: while in
@@ -697,7 +699,7 @@ Formal Concept Analysis macros]
 %
 % |\Node[draw=red, fill=blue](4)(20,10)|
 %
-% which specified that a red circle, filled with blue, is to be drawn
+% which specifies that a red circle, filled with blue, is to be drawn
 % at position (20,10), representing the node with nodenumber 4.
 %
 % The impatient reader my infer some of the possibilities from the
@@ -707,13 +709,13 @@ Formal Concept Analysis macros]
 % {\unitlength 1.2mm
 % \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
 % \begin{diagram}
-%  \Node[draw=red, fill=green](1)(20,10)
+%  \Node[draw=red, fill=green,/tikz/line width=.5mm](1)(20,10)
 %  \Node[fill=black, radius=2mm](2)(35,20)
-%  \Node[/tikz/opacity=0.3,fill=red](3)(5,30)
+%  \Node[opacity=0.3,fill=red](3)(5,30)
 %  \Node[fill=darkgreen](4)(35,40)
-%  \Node(5)(20,50)
+%  \Node[/tikz/rectangle](5)(20,50)
 %  {\color{red}\Edge(1)(2)}
-%  \Edge[draw=blue,dotted](1)(3)
+%  \Edge[draw=blue,dotted,/tikz/line width=1mm](1)(3)
 %  \Edge(2)(4)
 %  \Edge[draw=green](3)(5)
 %  \Edge(4)(5)
@@ -746,7 +748,7 @@ Formal Concept Analysis macros]
 %
 %   |\fcaset{text width=6mm}|
 %
-% or for single nodes only, again as an optional parameter.
+% or for single labels only, again as an optional parameter.
 %
 % Label boxes are framed with the \texttt{draw} option, which may also
 % be used to set a color for the text and the frame. Their
@@ -842,6 +844,7 @@ Formal Concept Analysis macros]
 % }
 % \end{dtxexample}
 %
+% \iffalse
 % \textcolor{red}{\bf Bernhards Arbeitsende}
 %
 %
@@ -1141,8 +1144,10 @@ Formal Concept Analysis macros]
 %     \end{pgfscope}%
 %   \end{diagram}
 % \end{dtxexample}
-% }
+% }\fi
+%
 % \section{Some macros for text}
+% \label{sec:macros}
 % Abbreviating macros are defined for some strings that occur
 % regularly in FCA texts. See Figure~\ref{fig:macros} for quick
 % overview.
@@ -1165,18 +1170,16 @@ Formal Concept Analysis macros]
 % $\notI$   &|\notI| & \\
 % $\bigtimes$   &|\bigtimes| & \\
 % $\Semi$   &|\Semi| & \\
-% $\Runterpfeil$   &|\DownArrow|&|\Runterpfeil| \\
-% $\Hochpfeil$   &|\UpArrow| &|\Hochpfeil| \\
-% $\Doppelpfeil$   &|\DoubleArrow| &|\Doppelpfeil| \\
-% $\IRunterpfeil$   &|\IDownArrow| &|\IRunterpfeil| \\
-% $\IHochpfeil$   &|\IUpArrow| &|\IHochpfeil| \\
-% $\DDPfeil$   &|\DDArrow| &|\DDPfeil| \\
-% $\NDDPfeil$   &|\NDDArrow| &|\NDDPfeil| \\
+% $\DownArrow$   &|\DownArrow|&|\Runterpfeil| \\
+% $\UpArrow$   &|\UpArrow| &|\Hochpfeil| \\
+% $\DoubleArrow$   &|\DoubleArrow| &|\Doppelpfeil| \\
+% $\DDArrow$   &|\DDArrow| &|\DDPfeil| \\
+% $\NDDArrow$   &|\NDDArrow| &|\NDDPfeil| \\
 % \FCA   &|\FCA| & \\
 % \FBA   & &|\FBA| \\
 % \FnBA   & &|\FnBA| \\\hline
 %      \end{tabular}
-% \caption{Table of \texttt{fca.sty} textmacros.}\label{fig:macros}
+% \caption{Table of \texttt{fca.sty} text macros.}\label{fig:macros}
 %  \end{center}
 % \end{figure}
 % \begin{figure}[p]
@@ -1232,14 +1235,10 @@ Formal Concept Analysis macros]
 % \item[]|\Hochpfeil|\quad   Same as |\UpArrow|.
 % \item[]|\DoubleArrow|\quad  The $\Doppelpfeil$ of the arrow relations.
 % \item[]|\Doppelpfeil|\quad   Same as |\DoubleArrow|.
-% \item[]|\IUpArrow|\quad  Gives $\IHochpfeil$, which is has the same
-%  meaning as $\UpArrow$,  but is drawn in the other direction. This is needed
-%  in the  definition of $\DPfeil$.
-% \item[]|\IHochpfeil|\quad  Same as |\IUpArrow|.
-% \item[]|\DDArrow|\quad Gives $\DDPfeil$, the symbol for the transitive
+% \item[]|\DDArrow|\quad Gives $\DDArrow$, the symbol for the transitive
 %  closure of the arrow relations.
 % \item[]|\DDPfeil|\quad  Same as |\DDArrow|.
-% \item[]|\NDDArrow|\quad Gives $\NDDPfeil$ the symbol for the negation of
+% \item[]|\NDDArrow|\quad Gives $\NDDArrow$ the symbol for the negation of
 %  $\DDPfeil$.
 % \item[]|\NDDPfeil|\quad  Same as |\NDDArrow|.
 % \item[]|\Semi|\quad Gives $\Semi$, the symbol for the semi-product.
@@ -1292,18 +1291,19 @@ Formal Concept Analysis macros]
 % \subsection{Error messages}
 % Package error messages are not yet implemented.
 %
-% \subsection{Some warning about future implementations}
+%
+% \subsection{A caveat  for future implementators}
 %
 % Currently |\unitlength| is used inside in the \env{diagram}
 % environment. However, since PGF already comes with support for
 % coordinate and canvas transformations, a future version might
 % completely rely on them and abandon the usage of |\unitlength|.
 % Then, |\unitlength| may be used only to initially set up the
-% coordinate system and ignored later. So it is strongly discouraged
-% to change |\unitlength| inside the \env{diagram} diagram
+% coordinate system and be ignored later. It is therefore strongly
+% discouraged to change |\unitlength| inside the \env{diagram} diagram
 % environment.
 %
-% Thus, it is recommended to use Euclidian coordinate systems for
+% Instead it is recommended to use Euclidian coordinate systems for
 % diagrams. Other coordinate systems should work, too. However, the
 % output may change in that case using future versions of this
 % package. In particular the algorithm for the calculation of the node

@@ -32,6 +32,7 @@
 Formal Concept Analysis macros]
 \expandafter\newif\csname iffcatikzdoc\endcsname
   \fcatikzdocfalse
+\newcommand\VertStroke{|}
 \edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|\relax}%
 \documentclass[a4paper]{ltxdoc}
 \def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
@@ -109,10 +110,11 @@ Formal Concept Analysis macros]
 \usepackage[numbered]{hypdoc}
 \hypersetup{
    pdfauthor = {Bernhard Ganter, Tobias Schlemmer},
-   pdfkeywords = {FCA LaTeX sytle diagrame context},
+   pdfkeywords = {FCA LaTeX style diagram context},
    pdftitle = {fca.sty – LaTeX macros for Formal Concept Analysis},
    pdfsubject = {LaTeX style file for typesetting formal contexts and
-     concept lattices}
+     concept lattices},
+   linkcolor = blue
 }
 \EnableCrossrefs
 \CodelineIndex

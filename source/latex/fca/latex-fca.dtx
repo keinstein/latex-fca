@@ -2986,10 +2986,28 @@ Formal Concept Analysis macros]
   \pgfkeyssetvalue{/fca/#1}{#3}%
 }
 %    \end{macrocode}
-%   \paragraph{Options that are directly forwarded to \TikZ{}} If they
-%   are not documented somewhere else, their implementation needs
-%   \filenm{fca.sty} fröm the \TikZ{library} \filenm{fca}.
-%   \begin{description}
+% \subsection{Backports and bugfixes for \TikZ{}}
+%    \begin{macrocode}
+\@ifpackagelater{pgf}{2019/11/04}{}{%
+  \PackageWarning{fca}{Your TikZ version does not fully support fca
+    name spaces.^^J
+    I'm trying to fix that...}
+  \def\tikz@calc@anchor#1.#2\tikz@stop{%
+    % Check if a shape with name prefix exists, otherwise try the global name
+    % without prefix.
+    \ifcsname pgf@sh@ns@\tikz@pp@name{#1}\endcsname%
+      \pgfpointanchor{\tikz@pp@name{#1}}{#2}%
+    \else
+      \pgfpointanchor{#1}{#2}%
+    \fi
+  }%
+}%
+%    \end{macrocode}
+% 
+% \paragraph{Options that are directly forwarded to \TikZ{}} If they
+% are not documented somewhere else, their implementation needs
+% \filenm{fca.sty} fröm the \TikZ{library} \filenm{fca}.
+% \begin{description}
 % \ItemDescribeOption{shape} shape of the node
 % \ItemDescribeOption{text ragged} node text is ragged right with hyphenation%
 % \ItemDescribeOption{text badly ragged} node text is ragged right

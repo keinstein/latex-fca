@@ -52,6 +52,20 @@
   \pgfkeysdef{/fca/#1}{\pgfkeys{/tikz/#1=##1}}
   \pgfkeyssetvalue{/fca/#1}{#3}%
 }
+\@ifpackagelater{pgf}{2019/11/04}{}{%
+  \PackageWarning{fca}{Your TikZ version does not fully support fca
+    name spaces.^^J
+    I'm trying to fix that...}
+  \def\tikz@calc@anchor#1.#2\tikz@stop{%
+    % Check if a shape with name prefix exists, otherwise try the global name
+    % without prefix.
+    \ifcsname pgf@sh@ns@\tikz@pp@name{#1}\endcsname%
+      \pgfpointanchor{\tikz@pp@name{#1}}{#2}%
+    \else
+      \pgfpointanchor{#1}{#2}%
+    \fi
+  }%
+}%
 \fca@generate@tikz@parameters
 \@for \@tempa:=%
 shape,

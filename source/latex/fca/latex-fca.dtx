@@ -390,13 +390,13 @@ Formal Concept Analysis macros]
 % |tabular|-environment. It is therefore possible to mix  |\obj|
 % commands with usual  |tabular|-commands.
 %
-% \DescribeMacro{\begin\{cxt\}} Completes typesetting the context table.
+% \DescribeMacro{\end\{cxt\}} Completes typesetting the context table.
 %
 % \texttt{cxt} can handle an arbitrary number of attributes.
 %
 % \subsubsection{Other predefined entries}
 % An incidence vector for an object consists of dots and crosses
-% (``\texttt{x}'' of ``\texttt{X}'').
+% (``\texttt{x}'' or ``\texttt{X}'').
 % The arrow relations may also be noted. Instead of \texttt{x} and \texttt{.},
 % type \texttt{d} (for ``down''), \texttt{u} (``up''), or \texttt{b} (``both'').
 % In the following example, we also change the colour of these symbols:
@@ -447,6 +447,7 @@ Formal Concept Analysis macros]
 % \end{cxt}
 % \end{dtxexample}
 %
+% \DescribeMacro{\freeobj}{\marg{text}}
 % There are other possibilities. You may define a marker with a single
 % argument that typesets its argument. There also is a macro
 % |\freeobj| that takes a tabular row  as argument instead of the
@@ -531,10 +532,10 @@ Formal Concept Analysis macros]
 %
 % \subsubsection{Including Burmeister context files}
 %
-% The package |fca| allows to use context files in Burmeister format
-% (which usually have the \texttt{.cxt} file name extension) to be
-% included directly in a \LaTeX{} document. Its usage is as simple as
-% possible.
+% \DescribeMacro{\cxtinput}\marg{filname.cxt} The package |fca| allows
+% to use context files in Burmeister format (which usually have the
+% \texttt{.cxt} file name extension) to be included directly in a
+% \LaTeX{} document. Its usage is as simple as possible.
 %
 % \begin{dtxexample}{Including a Burmeister context file}
 % \begin{cxt}%
@@ -594,7 +595,7 @@ Formal Concept Analysis macros]
 % \subsection{Basic usage of the \env{diagram} environment}
 % \DescribeEnv{diagram}
 %
-% \DescribeMacro{\begin\{diagram\}} begins a PGF-picture.
+% \DescribeMacro{\begin\{diagram\}} begins a \PGF{}-picture.
 % Unlike the previous versions, width and height of the diagram no
 % longer need to be specified. The old syntax
 %
@@ -603,10 +604,10 @@ Formal Concept Analysis macros]
 % is still supported and determines the bounding box, which is                %
 % otherwise calculated automatically.
 %
-% A major advantage of using PGF-pictures is that one can use the many
-% possibilities offered by PGF, even without knowing much about PGF.
+% A major advantage of using \PGF{}-pictures is that one can use the many
+% possibilities offered by \PGF, even without knowing much about \PGF.
 % The |diagram| environment and its macros allow  optional parameters,
-% e.g. for color, line thickness, etc. These will be described in
+% e.g. for colour, line thickness, etc. These will be described in
 % Section~\ref{subsec:diagram-adv}.
 %
 % The commands within a \env{diagram} environment (in their basic form) are
@@ -652,9 +653,10 @@ Formal Concept Analysis macros]
 % to the diagram. This means that, e.g., |\leftAttbox{4}{3}{5}{text}|
 % corresponds to |\leftAttbox(4)(-3,5){text}|.
 %
-% \DescribeMacro{\end\{diagram\}} This concludes the diagram. The circles
+% \DescribeMacro{\end\{diagram\}} This concludes the
+% diagram. \textcolor{red}{The circles 
 %  representing the nodes are drawn and filled with white, unless
-%  specified otherwise.
+%  specified otherwise.}
 %
 % A helpful command when fine tuning a diagram is
 %
@@ -683,7 +685,7 @@ Formal Concept Analysis macros]
 %
 % \subsection{Advanced usage of the \env{diagram} environment}
 % \label{subsec:diagram-adv}
-% The connection with PGF and TikZ results in many design tools that
+% The connection with \PGF\  and \TikZ\ results in many design tools that
 % cannot be presented in detail here. We will discuss three simple
 % possibilities, although not in all details: The use of optional
 % parameters, setting global parameters and defining own styles for
@@ -700,7 +702,7 @@ Formal Concept Analysis macros]
 % which specifies that a red circle, filled with blue, is to be drawn
 % at position (20,10), representing the node with nodenumber 4.
 %
-% The impatient reader my infer some of the possibilities from the
+% The impatient reader may infer some of the possibilities from the
 % next example.
 %
 % \iffcatikzdoc
@@ -777,7 +779,7 @@ Formal Concept Analysis macros]
 % These values can be changed with |\renewcommand|.
 %
 % \subsubsection{Defining a diagram style}
-% With some knowledge about PGF and TikZ you can define your own style
+% With some knowledge about \PGF\ and \TikZ\ you can define your own style
 % for concept lattice diagrams. For multiple use such definitions can
 % be outsourced using the  |\fcaset{}| macro.
 %
@@ -834,12 +836,12 @@ Formal Concept Analysis macros]
 %   \Edge(2)(4)
 %   \Edge(3)(5)
 %   \Edge(4)(5)
-%   \leftAttbox(3)(-2,2){1}
-%   \rightAttbox(2)(2,2){disqualified}
-%   \rightAttbox(4)(2,2){2.}
-%   \leftObjbox(3)(-2,2){Verstappen}
-%   \rightObjbox(2)(2,2){Leclerc}
-%   \rightObjbox(4)(2,2){Hamilton}
+%   \leftAttbox(3)(-1,1){1}
+%   \rightAttbox(2)(1,1){disqualified}
+%   \rightAttbox(4)(1,1){2.}
+%   \leftObjbox(3)(-1,-1){Verstappen}
+%   \rightObjbox(2)(1,-1){Leclerc}
+%   \rightObjbox(4)(1,-1){Hamilton}
 % \end{diagram}
 % }
 % \end{dtxexample}
@@ -994,11 +996,11 @@ Formal Concept Analysis macros]
 %   \end{tikzpicture}
 % \end{dtxexample}
 %
-% The same diagram can be typeset using PGF:
+% The same diagram can be typeset using \PGF:
 % \fi
 %
 % {\unitlength 1.2mm\relax
-% \begin{dtxexample}*{A PGF enhanced diagram}
+% \begin{dtxexample}*{A \PGF\  enhanced diagram}
 %   \begin{diagram}[
 %     every attributes/.append style={
 %       label concept/.append style={
@@ -1299,7 +1301,7 @@ Formal Concept Analysis macros]
 % \fi
 %
 % Currently |\unitlength| is used inside in the \env{diagram}
-% environment. However, since PGF already comes with support for
+% environment. However, since \PGF\  already comes with support for
 % coordinate and canvas transformations, a future version might
 % completely rely on them and abandon the usage of |\unitlength|.
 % Then, |\unitlength| may be used only to initially set up the

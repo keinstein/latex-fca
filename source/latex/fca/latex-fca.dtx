@@ -654,7 +654,7 @@ Formal Concept Analysis macros]
 % corresponds to |\leftAttbox(4)(-3,5){text}|.
 %
 % \DescribeMacro{\end\{diagram\}} This concludes the
-% diagram. \textcolor{red}{The circles 
+% diagram. \textcolor{red}{The circles
 %  representing the nodes are drawn and filled with white, unless
 %  specified otherwise.}
 %
@@ -1328,8 +1328,11 @@ Formal Concept Analysis macros]
 % coordinates as provided by the surrounding environment.
 %
 % \subsection{Fine tuning}
-% You can change certain layout parameters either permanently (by modifying the
-% file \texttt{fca.sty}) or temporarily using the following commands:
+% In version 2.1 and before some macros that allow you to change
+% certain parameters of the diagrams. For compatibility reasons these
+% still do work in digarams that use bare \PGF (i.e. that are not
+% inside the argument to the \cs{tikz} macro or one of the
+% environments \env{tikzpicture} or \env{tikzdiagram}.
 % \begin{description}
 % \ItemDescribeMacro{\fcaCircleSize}\marg{size} Default: 4\qquad
 % (times |\unitlength|)
@@ -1353,10 +1356,13 @@ Formal Concept Analysis macros]
 % Except for the first three, these commands can be focussed to single instances,
 % using braces. For example,
 % \begin{center}
-% |{\fcaNoDots\centerObjbox{nodenumber}{xoffset}{yoffset}{labeltext}}|
+% |{\fcaNoDots\centerObjbox(node){labeltext}}|
 % \end{center}
 % generates a single centered object label without dotted line.
 %
+% \watchout These macros do not work reliably inside the \env{tikzpicture}
+% and  \env{tikzdiagram} envronments. Please use the key/value syntax,
+% there.
 %
 %
 %
@@ -2607,7 +2613,7 @@ Formal Concept Analysis macros]
 \newcommand*{\fca@usepath}{}%
 \newcommand*{\fca@node@number@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
 \newcommand*{\fca@node@number@suffix}{\space number}%
-\newcommand*{\fca@label@edge@thickness}{\@wholewidth}%
+\newcommand*{\fca@label@edge@width}{\@wholewidth}%
 \newcommand*{\fca@label@at}{center}% anchor of node
 \newcommand*{\fca@label@shift@x}{0pt}%
 \newcommand*{\fca@label@shift@y}{0pt}%
@@ -3003,7 +3009,7 @@ Formal Concept Analysis macros]
   }%
 }%
 %    \end{macrocode}
-% 
+%
 % \paragraph{Options that are directly forwarded to \TikZ{}} If they
 % are not documented somewhere else, their implementation needs
 % \filenm{fca.sty} fröm the \TikZ{library} \filenm{fca}.
@@ -3043,7 +3049,8 @@ Formal Concept Analysis macros]
 % between the dots%
 % \ItemDescribeOption{densely dotted} draw lines dotted with less space
 % between the dots%
-%   \end{description}
+% \end{description}
+%
 %    \begin{macrocode}
 \fca@generate@tikz@parameters
 \@for \@tempa:=%
@@ -3066,7 +3073,9 @@ solid,%
 dotted,%
 loosely dotted,%
 densely dotted,%
-line width
+line width,%
+x,%
+y%
 \do {
   \edef\@tempb{%
     \noexpand\pgfkeysdef{/fca/\@tempa}{\noexpand\pgfqkeys{/tikz}{\@tempa={##1}}}%
@@ -3161,8 +3170,9 @@ line width
   \ignorespaces
 }
 %    \end{macrocode}
+%
 % \begin{dtxexample}{Testing lines with \TikZ{}}
-% \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
+%   \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
 % \begin{tikzdiagram}[x=1.2mm,y=1.2mm]
 %  \Node(1)(20,10)
 %  \Node(2)(35,20)
@@ -3759,9 +3769,9 @@ line width
   fill/.value required,
   text width/.store in=\fca@label@text@width,
   text width/.value required,
-  node font/.store in=\fca@label@node@font,
+  node font/.initial={},
   node font/.value required,
-  edge width/.store in=\fca@label@edge@thickness,
+  edge width/.store in=\fca@label@edge@width,
   edge width/.value required,
   at/.store in=\fca@label@at,
   at/.value required,
@@ -3869,10 +3879,6 @@ line width
   \def\NoDots{\fcaNoDots}
   \def\Dots{\fcaDots}
 \fi
-\pgfqkeys{/fca/edge}{%
-  width/.code=\fcaEdgeThickness
-  layer/.code=\fcaLayer{edge}%
-}%
 %    \end{macrocode}
 % \begin{dtxexample}{Testing node  parameters}
 % {\unitlength 1.2mm
@@ -4412,10 +4418,38 @@ line width
 %   \rightObjbox(4)(20,-2){Hamilton}
 % \end{diagram}
 %
+% \begin{dtxexample}{testing label lines}
+% \unitlength=1.2mm
+% \begin{diagram}[conexpstyle]
+%   \Node(1)(20,10)
+%   \Node(2)(35,20)
+%   \Node(3)(5,30)
+%   \Node(4)(35,40)
+%   \Node(5)(20,50)
+%   \Edge(1)(2)
+%   \Edge(1)(3)
+%   \Edge(2)(4)
+%   \Edge(3)(5)
+%   \Edge(4)(5)
+%   \leftAttbox(3)(-20,20){1}
+%   \rightAttbox[draw,line width=1mm](2)(20,20){disqualified}
+%   \rightAttbox[label/edge width=1mm](4)(20,20){2.}
+%   \leftObjbox(3)(-20,-2){Verstappen}
+%   \rightObjbox[draw](2)(2,-2){Leclerc}
+%   \fcaset{label/edge width=2mm}
+%   \rightObjbox[draw](4)(20,-2){Hamilton}
+% \end{diagram}
+% \end{dtxexample}
+% Notice the dependency between the connector lines and the
+% border of the attribute and object concepts. These are the reason
+% why the macros from
+%
 %    \begin{macrocode}
 \newcommand\fca@@labelBox[1]{%
   \begin{pgfscope}%
-    \fcaset{every node/.try,every label/.try,#1}%
+    \fcaset{every node/.try,
+      node font=\pgfkeysvalueof{/fca/label/node font},
+      every label/.try,#1}%
     \fca@labelslayer
     \pgfkeysvalueof{/fca/node font}%
     \fca@options
@@ -4450,6 +4484,9 @@ line width
       \fca@connectorslayer
       \pgftransformreset
       \let\fca@options\fca@defaultoptions
+      \fcaset{%
+        line width=\fca@label@edge@width
+      }
       \fcaset{every label edge/.try}%
       \fcaset{#1}%
       \fca@options

@@ -3758,6 +3758,7 @@ y%
   radius/.style={
     /pgf/inner sep=#1
   },
+  color/.initial={},
   layer/.code=\fcalayer{node},%
   numbers/.is if=fca@CircledNumbers,
   number prefix/.store in=\fca@node@number@prefix,
@@ -3876,7 +3877,10 @@ y%
   \fcaset{line width={#1}}%
   \ignorespaces
 }
-\newcommand*{\fcaNodeColor}[1]{\fcaset{node/color={#1}}}% %
+\newcommand*{\fcaNodeColor}[1]{%
+  \pgfkeyssetvalue{/fca/node/color}{#1}%
+  \ignorespaces
+}%
 \newcommand*{\fcaNumbers}{%
   \setboolean{fca@CircledNumbers}{true}%
 }%
@@ -3911,6 +3915,7 @@ y%
 %  \Node[opacity=0.3,fill=red](3)(5,30)
 %  \fcaset{node/line width=2mm}
 %  \Node[fill=darkgreen](4)(35,40)
+%  \fcaNodeColor{orange}
 %  \Node[/tikz/rectangle](5)(20,50)
 % \end{diagram}}
 % \end{dtxexample}
@@ -3956,6 +3961,15 @@ y%
     \fcaset{shape=circle,
       line width=\fca@node@thickness}%
     \fcaset{every node/.try}%
+    \pgfkeysgetvalue{/fca/node/color}{\fca@node@color}%
+    \expandafter\fca@testoption\expandafter{\fca@node@color}{%
+      \fca@append\fca@options{%
+        \expandafter\pgfsetfillcolor\expandafter{\fca@node@color}%
+      }%
+      \fca@append\fca@usepath{fill,}%
+    }{% none
+    }{% empty or \pgfkeysnovalue
+    }%
     \fcaset{every concept/.try}%
     \fcaset{#1}%
     \fca@nodeslayer

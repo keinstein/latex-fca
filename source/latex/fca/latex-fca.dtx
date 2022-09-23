@@ -3856,8 +3856,14 @@ y%
 }
 
 
-\newcommand*{\fcaNodeThickness}[1]{\fcaset{node/line width={#1}}}% %
-\newcommand*{\fcaEdgeThickness}[1]{\fcaset{line width={#1}}}
+\newcommand*{\fcaNodeThickness}[1]{%
+  \fcaset{node/line width={#1}}%
+  \ignorespaces
+}% %
+\newcommand*{\fcaEdgeThickness}[1]{%
+  \fcaset{line width={#1}}%
+  \ignorespaces
+}
 \newcommand*{\fcaNodeColor}[1]{\fcaset{node/color={#1}}}% %
 \newcommand*{\fcaNumbers}{%
   \setboolean{fca@CircledNumbers}{true}%
@@ -3936,7 +3942,7 @@ y%
 \newcommand\fca@oldnode[4]{%
   \begin{pgfscope}%
     \fcaset{shape=circle,
-    line width=\fca@node@thickness}%
+      line width=\fca@node@thickness}%
     \fcaset{every node/.try}%
     \fcaset{every concept/.try}%
     \fcaset{#1}%

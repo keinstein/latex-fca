@@ -771,10 +771,18 @@ Formal Concept Analysis macros]
 %
 % The style of the lables is given by
 % \begin{description}
-% \item[]|\fcaObjectLabelStyle|\hspace*{3.5ex}\quad
-% Default: |\small\baselineskip6pt\rm|
-% \item[]|\fcaAttributeLabelStyle|\quad
-% Default: |\small\baselineskip6pt\it|.
+%   \ItemDescribeMacro{\fcaObjectLabelStyle} Used to define the font
+%   of object labels \emph{outside} of \env{diagram} environments.
+%   Default: |\small\baselineskip1em\rmfamily\upshape|
+%   \ItemDescribeMacro{\fcaAttributeLabelStyle} Used to define the font
+%   of object labels \emph{outside} of \env{diagram} environments.
+%   Default: |\small\baselineskip1em\rmfamily\itshape|.
+%   \ItemDescribeMacro{\ObjectLabelStyle} Used to define the font
+%   of object labels \emph{inside} of \env{diagram} environments.
+%   Default: |\fcaObjectLabelStyle|
+%   \ItemDescribeMacro{\AttributeLabelStyle} Used to define the font
+%   of object labels \emph{inside} of \env{diagram} environments.
+%   Default: |\fcaAttributeLabelStyle|.
 % \end{description}
 % These values can be changed with |\renewcommand|.
 %
@@ -2569,15 +2577,19 @@ Formal Concept Analysis macros]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
 \newcommand{\fca@Defaults}{% Do not change this line!  %
-  \newcommand{\fcaObjectLabelStyle}{\small\baselineskip6pt\rmfamily\upshape}% %
-  \newcommand{\fcaAttributeLabelStyle}{\small\baselineskip6pt\itshape}% %
+  \newcommand{\fcaObjectLabelStyle}{%
+    \small\baselineskip1em\rmfamily\upshape%
+  }% %
+  \newcommand{\fcaAttributeLabelStyle}{%
+    \small\baselineskip1em\rmfamily\itshape
+  }% %
   \newcommand{\fcaLabelBoxWidth}{40mm}%
   \let\Node\fca@node
   \let\Edge\fca@edge
   \iffca@compat@macros
   \else
-    \let\fcaObjectLabelStyle\fcaObjectLabelStyle
-    \let\AttributeLabelStyle\fcaAttributeLabelStyle
+    \def\ObjectLabelStyle{\fcaObjectLabelStyle}%
+    \def\AttributeLabelStyle{\fcaAttributeLabelStyle}%
     \let\LabelBoxWidth\fcaLabelBoxWidth
     \let\EdgeThickness\fcaEdgeThickness
     \let\NodeThickness\fcaNodeThickness
@@ -3618,10 +3630,10 @@ y%
     draw=black
   },
   every attributes/.style = {
-    font=\small\baselineskip1em\rmfamily\itshape
+    font=\AttributeLabelStyle
   },%\newcommand*{\fca@node@fill}{white}%%\newcommand*{\fca@node@fill}{white}%
   every objects/.style = {
-    font=\small\baselineskip1em\rmfamily\upshape
+    font=\ObjectLabelStyle
   },
   every edge/.style = {},
   every label edge/.style = { dotted, draw=black },

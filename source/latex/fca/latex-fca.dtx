@@ -3865,7 +3865,10 @@ y%
 \newcommand*{\fcaNoNumbers}{%
   \setboolean{fca@CircledNumbers}{false}%
 }%
-\newcommand*{\fcaCircleSize}[1]{\pgfqset{/pgf/node}{inner sep=(#1)*0.5\unitsize}}%
+\newcommand*{\fcaCircleSize}[1]{%
+  \fcaset{every concept/.append style={radius=(#1)*0.5\unitlength}}%
+  \ignorespaces
+}%
 \iffca@compat@macros
   \def\fcaObjectLabelStyle{\fcaObjectLabelStyle}%
   \def\fcaAttributeLabelStyle{\AttributeLabelStyle}%
@@ -3886,6 +3889,7 @@ y%
 % \begin{diagram}
 %  \Node[draw=red, fill=green,/tikz/line width=.5mm](1)(20,10)
 %  \Node[fill=black, radius=2mm](2)(35,20)
+%  \fcaCircleSize{10}%
 %  \Node[opacity=0.3,fill=red](3)(5,30)
 %  \fcaset{node/line width=2mm}
 %  \Node[fill=darkgreen](4)(35,40)

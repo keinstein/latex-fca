@@ -3065,7 +3065,8 @@ rotate,%
 solid,%
 dotted,%
 loosely dotted,%
-densely dotted%
+densely dotted,%
+line width
 \do {
   \edef\@tempb{%
     \noexpand\pgfkeysdef{/fca/\@tempa}{\noexpand\pgfqkeys{/tikz}{\@tempa={##1}}}%
@@ -3159,9 +3160,28 @@ densely dotted%
   \end{pgfscope}%
   \ignorespaces
 }
+%    \end{macrocode}
+% \begin{dtxexample}{Testing lines with \TikZ{}}
+% \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
+% \begin{tikzdiagram}[x=1.2mm,y=1.2mm]
+%  \Node(1)(20,10)
+%  \Node(2)(35,20)
+%  \Node(3)(5,30)
+%  \Node(4)(35,40)
+%  \Node(5)(20,50)
+%  {\color{red}\Edge(1)(2)}
+%  \Edge[draw=blue,dotted,line width=1mm](1)(3)
+%  \Edge(2)(4)
+%  \EdgeThickness{2mm}
+%  \Edge[draw=green](3)(5)
+%  \Edge(4)(5)
+% \end{tikzdiagram}
+% \end{dtxexample}
+%
+%    \begin{macrocode}
 \newcommand{\fca@tikz@oldedge}[3]{%
   \fca@edgeslayer
-  \path[draw,/fca/.cd,#1] (#2) -- (#3);%
+  \path[draw,/fca/.cd,every edge/.try,#1] (#2) -- (#3);%
   \fca@endedgeslayer
   \ignorespaces
 }
@@ -3460,7 +3480,7 @@ densely dotted%
 % }
 % \end{verbatim}
 %
-% \ItemDescribeOption{/fca/node/thickness} line width of the nodes
+% \ItemDescribeOption{/fca/node/line width} line width of the nodes
 %   \textbf{value required}
 % \ItemDescribeOption{/fca/node/radius} Node radius
 %  \ItemDescribeOption{/fca/node/layer} Layer where the node shall be
@@ -3498,7 +3518,7 @@ densely dotted%
 % \ItemDescribeOption{/fca/label/node font}
 %   \textbf{value required}, Font macros to be applied to the label content
 %   before the size of the node is calculated.
-% \ItemDescribeOption{/fca/label/edge thickness}
+% \ItemDescribeOption{/fca/label/edge width}
 %   \textbf{value required}, thickness of the edge of the label node
 %   (typically the border size)
 % \ItemDescribeOption{/fca/label/at}
@@ -3615,7 +3635,11 @@ densely dotted%
   % anchor/.store in=\fca@label@anchor,
   % anchor/.value required,
   node number/.style = { node font=\tiny, font=\tiny },
-  color/.code={\fca@append\fca@options{#1}},
+  color/.code={\fca@append\fca@options{\color{#1}}},
+  line width/.code={%
+    \fca@append\fca@options{\pgfsetlinewidth{#1}}%
+    \pgfmathsetlength\pgflinewidth{#1}%
+  },
   stroke/.code={%
     \fca@testoption{#1}{%
       \fca@append\fca@options{%
@@ -3707,8 +3731,8 @@ densely dotted%
 }
 
 \pgfqkeys{/fca/node}{%
-  thickness/.store in=\fca@node@thickness,
-  thickness/.value required,
+  line width/.store in=\fca@node@thickness,
+  line width/.value required,
   radius/.style={
     /pgf/inner sep=#1
   },
@@ -3737,8 +3761,8 @@ densely dotted%
   text width/.value required,
   node font/.store in=\fca@label@node@font,
   node font/.value required,
-  edge thickness/.store in=\fca@label@edge@thickness,
-  edge thickness/.value required,
+  edge width/.store in=\fca@label@edge@thickness,
+  edge width/.value required,
   at/.store in=\fca@label@at,
   at/.value required,
   type/.store in=\fca@label@type,
@@ -3822,9 +3846,9 @@ densely dotted%
 }
 
 
-\newcommand*{\fcaNodeThickness}[1]{\pgfkeyssetvalue{/fca/node/thickness}{#1}}% %
-\newcommand*{\fcaEdgeThickness}[1]{\def\fca@edge@thickness{#1}}% %
-\newcommand*{\fcaNodeColor}[1]{\pgfkeyssetvalue{/fca/node/color}{#1}}% %
+\newcommand*{\fcaNodeThickness}[1]{\fcaset{node/line width={#1}}}% %
+\newcommand*{\fcaEdgeThickness}[1]{\fcaset{line width={#1}}}
+\newcommand*{\fcaNodeColor}[1]{\fcaset{node/color={#1}}}% %
 \newcommand*{\fcaNumbers}{%
   \setboolean{fca@CircledNumbers}{true}%
 }%
@@ -3846,12 +3870,23 @@ densely dotted%
   \def\Dots{\fcaDots}
 \fi
 \pgfqkeys{/fca/edge}{%
-  thickness/.code=\fcaEdgeThickness
+  width/.code=\fcaEdgeThickness
   layer/.code=\fcaLayer{edge}%
 }%
 %    \end{macrocode}
-%                                                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{dtxexample}{Testing node  parameters}
+% {\unitlength 1.2mm
+% \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
+% \begin{diagram}
+%  \Node[draw=red, fill=green,/tikz/line width=.5mm](1)(20,10)
+%  \Node[fill=black, radius=2mm](2)(35,20)
+%  \Node[opacity=0.3,fill=red](3)(5,30)
+%  \fcaset{node/line width=2mm}
+%  \Node[fill=darkgreen](4)(35,40)
+%  \Node[/tikz/rectangle](5)(20,50)
+% \end{diagram}}
+% \end{dtxexample}
+%
 %    \begin{macrocode}
 \newcounter{fca@minNode}%
 \newcounter{fca@maxNode}%
@@ -3890,7 +3925,8 @@ densely dotted%
 }
 \newcommand\fca@oldnode[4]{%
   \begin{pgfscope}%
-    \fcaset{shape=circle}%
+    \fcaset{shape=circle,
+    line width=\fca@node@thickness}%
     \fcaset{every node/.try}%
     \fcaset{every concept/.try}%
     \fcaset{#1}%
@@ -3946,13 +3982,32 @@ densely dotted%
 \newcommand\fca@new@dge[2]{%
   \fca@parse@parenlabel{\fca@oldedge{#1}{#2}}%
 }
+%    \end{macrocode}
+% \begin{dtxexample}{Testing lines}
+% {\unitlength 1.2mm
+% \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
+% \begin{diagram}
+%  \Node(1)(20,10)
+%  \Node(2)(35,20)
+%  \Node(3)(5,30)
+%  \Node(4)(35,40)
+%  \Node(5)(20,50)
+%  {\color{red}\Edge(1)(2)}
+%  \Edge[draw=blue,dotted,line width=1mm](1)(3)
+%  \Edge(2)(4)
+%  \EdgeThickness{2mm}
+%  \Edge[draw=green](3)(5)
+%  \Edge(4)(5)
+% \end{diagram}}
+% \end{dtxexample}
+%    \begin{macrocode}
 \newcommand{\fca@oldedge}[3]{%
   \begin{pgfscope}%
     \fca@edgeslayer
-    \fcaset{#1}%
+    \fcaset{every edge/.try,#1}%
     \fca@options
     \fca@transform
-    \pgfsetlinewidth{\fca@edge@thickness}%
+    %\pgfsetlinewidth{\pgfkeysgetvalue{/fca/line width}}%
     \pgfpathmoveto{%
       \pgfpointshapeborder{%
         \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name suffix}%%
@@ -4399,7 +4454,7 @@ densely dotted%
       \fcaset{#1}%
       \fca@options
       \fca@transform
-      \pgfsetlinewidth{\fca@edge@thickness}%
+      %\pgfsetlinewidth{\pgfkeysgetvalue{/fca/line width}}%
       \fca@prepare@node\fca@temp@start@point\fca@temp@start@point@{}{}{\pgfkeysvalueof{/fca/pgfnode}}%
       \fca@prepare@node\fca@temp@end@point\fca@temp@end@point@
       {\pgfkeysvalueof{/fca/label/name prefix}}%

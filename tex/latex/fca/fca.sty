@@ -455,15 +455,19 @@ Formal Concept Analysis macros]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\fca@Defaults}{% Do not change this line!  %
-  \newcommand{\fcaObjectLabelStyle}{\small\baselineskip6pt\rmfamily\upshape}% %
-  \newcommand{\fcaAttributeLabelStyle}{\small\baselineskip6pt\itshape}% %
+  \newcommand{\fcaObjectLabelStyle}{%
+    \small\baselineskip1em\rmfamily\upshape%
+  }% %
+  \newcommand{\fcaAttributeLabelStyle}{%
+    \small\baselineskip1em\rmfamily\itshape
+  }% %
   \newcommand{\fcaLabelBoxWidth}{40mm}%
   \let\Node\fca@node
   \let\Edge\fca@edge
   \iffca@compat@macros
   \else
-    \let\fcaObjectLabelStyle\fcaObjectLabelStyle
-    \let\AttributeLabelStyle\fcaAttributeLabelStyle
+    \def\ObjectLabelStyle{\fcaObjectLabelStyle}%
+    \def\AttributeLabelStyle{\fcaAttributeLabelStyle}%
     \let\LabelBoxWidth\fcaLabelBoxWidth
     \let\EdgeThickness\fcaEdgeThickness
     \let\NodeThickness\fcaNodeThickness
@@ -499,7 +503,7 @@ Formal Concept Analysis macros]
 \newcommand*{\fca@usepath}{}%
 \newcommand*{\fca@node@number@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
 \newcommand*{\fca@node@number@suffix}{\space number}%
-\newcommand*{\fca@label@edge@thickness}{\@wholewidth}%
+\newcommand*{\fca@label@edge@width}{\@wholewidth}%
 \newcommand*{\fca@label@at}{center}% anchor of node
 \newcommand*{\fca@label@shift@x}{0pt}%
 \newcommand*{\fca@label@shift@y}{0pt}%
@@ -687,10 +691,10 @@ Formal Concept Analysis macros]
     draw=black
   },
   every attributes/.style = {
-    font=\small\baselineskip1em\rmfamily\itshape
+    font=\AttributeLabelStyle
   },%\newcommand*{\fca@node@fill}{white}%%\newcommand*{\fca@node@fill}{white}%
   every objects/.style = {
-    font=\small\baselineskip1em\rmfamily\upshape
+    font=\ObjectLabelStyle
   },
   every edge/.style = {},
   every label edge/.style = { dotted, draw=black },
@@ -714,7 +718,11 @@ Formal Concept Analysis macros]
   % anchor/.store in=\fca@label@anchor,
   % anchor/.value required,
   node number/.style = { node font=\tiny, font=\tiny },
-  color/.code={\fca@append\fca@options{#1}},
+  color/.code={\fca@append\fca@options{\color{#1}}},
+  line width/.code={%
+    \fca@append\fca@options{\pgfsetlinewidth{#1}}%
+    \pgfmathsetlength\pgflinewidth{#1}%
+  },
   stroke/.code={%
     \fca@testoption{#1}{%
       \fca@append\fca@options{%
@@ -806,11 +814,12 @@ Formal Concept Analysis macros]
 }
 
 \pgfqkeys{/fca/node}{%
-  thickness/.store in=\fca@node@thickness,
-  thickness/.value required,
+  line width/.store in=\fca@node@thickness,
+  line width/.value required,
   radius/.style={
     /pgf/inner sep=#1
   },
+  color/.initial={},
   layer/.code=\fcalayer{node},%
   numbers/.is if=fca@CircledNumbers,
   number prefix/.store in=\fca@node@number@prefix,
@@ -830,10 +839,10 @@ Formal Concept Analysis macros]
   fill/.value required,
   text width/.store in=\fca@label@text@width,
   text width/.value required,
-  node font/.store in=\fca@label@node@font,
+  node font/.initial={},
   node font/.value required,
-  edge thickness/.store in=\fca@label@edge@thickness,
-  edge thickness/.value required,
+  edge width/.store in=\fca@label@edge@width,
+  edge width/.value required,
   at/.store in=\fca@label@at,
   at/.value required,
   type/.store in=\fca@label@type,
@@ -916,16 +925,28 @@ Formal Concept Analysis macros]
   \@ifundefined{tikz@color}{}{\fca@tikz@without@library}
 }
 
-\newcommand*{\fcaNodeThickness}[1]{\pgfkeyssetvalue{/fca/node/thickness}{#1}}% %
-\newcommand*{\fcaEdgeThickness}[1]{\def\fca@edge@thickness{#1}}% %
-\newcommand*{\fcaNodeColor}[1]{\pgfkeyssetvalue{/fca/node/color}{#1}}% %
+\newcommand*{\fcaNodeThickness}[1]{%
+  \fcaset{node/line width={#1}}%
+  \ignorespaces
+}% %
+\newcommand*{\fcaEdgeThickness}[1]{%
+  \fcaset{line width={#1}}%
+  \ignorespaces
+}
+\newcommand*{\fcaNodeColor}[1]{%
+  \pgfkeyssetvalue{/fca/node/color}{#1}%
+  \ignorespaces
+}%
 \newcommand*{\fcaNumbers}{%
   \setboolean{fca@CircledNumbers}{true}%
 }%
 \newcommand*{\fcaNoNumbers}{%
   \setboolean{fca@CircledNumbers}{false}%
 }%
-\newcommand*{\fcaCircleSize}[1]{\pgfqset{/pgf/node}{inner sep=(#1)*0.5\unitsize}}%
+\newcommand*{\fcaCircleSize}[1]{%
+  \fcaset{every concept/.append style={radius=(#1)*0.5\unitlength}}%
+  \ignorespaces
+}%
 \iffca@compat@macros
   \def\fcaObjectLabelStyle{\fcaObjectLabelStyle}%
   \def\fcaAttributeLabelStyle{\AttributeLabelStyle}%
@@ -939,11 +960,6 @@ Formal Concept Analysis macros]
   \def\NoDots{\fcaNoDots}
   \def\Dots{\fcaDots}
 \fi
-\pgfqkeys{/fca/edge}{%
-  thickness/.code=\fcaEdgeThickness
-  layer/.code=\fcaLayer{edge}%
-}%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcounter{fca@minNode}%
 \newcounter{fca@maxNode}%
 \newcounter{fca@runNode}%
@@ -980,8 +996,18 @@ Formal Concept Analysis macros]
 }
 \newcommand\fca@oldnode[4]{%
   \begin{pgfscope}%
-    \fcaset{shape=circle}%
+    \fcaset{shape=circle,
+      line width=\fca@node@thickness}%
     \fcaset{every node/.try}%
+    \pgfkeysgetvalue{/fca/node/color}{\fca@node@color}%
+    \expandafter\fca@testoption\expandafter{\fca@node@color}{%
+      \fca@append\fca@options{%
+        \expandafter\pgfsetfillcolor\expandafter{\fca@node@color}%
+      }%
+      \fca@append\fca@usepath{fill,}%
+    }{% none
+    }{% empty or \pgfkeysnovalue
+    }%
     \fcaset{every concept/.try}%
     \fcaset{#1}%
     \fca@nodeslayer
@@ -1038,10 +1064,10 @@ Formal Concept Analysis macros]
 \newcommand{\fca@oldedge}[3]{%
   \begin{pgfscope}%
     \fca@edgeslayer
-    \fcaset{#1}%
+    \fcaset{every edge/.try,#1}%
     \fca@options
     \fca@transform
-    \pgfsetlinewidth{\fca@edge@thickness}%
+    %\pgfsetlinewidth{\pgfkeysgetvalue{/fca/line width}}%
     \pgfpathmoveto{%
       \pgfpointshapeborder{%
         \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name suffix}%%
@@ -1214,7 +1240,9 @@ Formal Concept Analysis macros]
 }
 \newcommand\fca@@labelBox[1]{%
   \begin{pgfscope}%
-    \fcaset{every node/.try,every label/.try,#1}%
+    \fcaset{every node/.try,
+      node font=\pgfkeysvalueof{/fca/label/node font},
+      every label/.try,#1}%
     \fca@labelslayer
     \pgfkeysvalueof{/fca/node font}%
     \fca@options
@@ -1249,11 +1277,14 @@ Formal Concept Analysis macros]
       \fca@connectorslayer
       \pgftransformreset
       \let\fca@options\fca@defaultoptions
+      \fcaset{%
+        line width=\fca@label@edge@width
+      }
       \fcaset{every label edge/.try}%
       \fcaset{#1}%
       \fca@options
       \fca@transform
-      \pgfsetlinewidth{\fca@edge@thickness}%
+      %\pgfsetlinewidth{\pgfkeysgetvalue{/fca/line width}}%
       \fca@prepare@node\fca@temp@start@point\fca@temp@start@point@{}{}{\pgfkeysvalueof{/fca/pgfnode}}%
       \fca@prepare@node\fca@temp@end@point\fca@temp@end@point@
       {\pgfkeysvalueof{/fca/label/name prefix}}%

@@ -206,7 +206,7 @@ Formal Concept Analysis macros]
   \ifLuaTeX
     \usetikzlibrary{luamath}
   \fi
-  \usetikzlibrary{fca}
+  \usetikzlibrary{fca,calc}
 \else
   \ifLuaTeX
     \usepgflibrary{luamath}
@@ -319,7 +319,7 @@ Formal Concept Analysis macros]
 % \begin{abstract}
 % \FCA is a field of mathematics based on the theory of ordered sets
 % and complete lattices, with applications to data analysis and
-% knowledge processing. 
+% knowledge processing.
 % To simplify typesetting of FCA-related text, \fcastyle  provides two
 % environments and some simple text macros. The two environments are
 % \begin{description}
@@ -431,7 +431,7 @@ Formal Concept Analysis macros]
 % size. We give two examples. The first introduces a single new
 % context character for so-called ``tight'' incidences. These are
 % indicated by a boldface cross (for which the \texttt{bm} package was
-% used). 
+% used).
 % The second example is discussed below.
 %
 % \begin{dtxexample}{(Re-)defining context characters.}
@@ -470,7 +470,7 @@ Formal Concept Analysis macros]
 % except that no error message is given when the context character was
 % already defined. Instead, the command will then be ignored. If you
 % want to force the redefinition of a context character, you should use
-% |\fcaRenewContextChar|. 
+% |\fcaRenewContextChar|.
 %
 % \DescribeMacro{\freeobj}{\marg{text}}
 % There are other possibilities. You may define a marker with a single
@@ -704,7 +704,7 @@ Formal Concept Analysis macros]
 % ready. In most cases it is not a good idea to put text inside the
 % nodes of a diagram.
 %
-% {\color{red} |\Numbers| sollte den Radius vergrößern.} 
+% {\color{red} |\Numbers| sollte den Radius vergrößern.}
 %
 % \DescribeMacro{\NoNumbers} can be used to exclude individual nodes
 % from the numbering.
@@ -712,7 +712,7 @@ Formal Concept Analysis macros]
 % \subsection{Changes to the graphics}
 % \label{subsec:diagram-adv}
 % The connection with \PGF\  and \TikZ\ results in many design tools,
-% some of which will be presented in Section~\ref{sec:advanced}. 
+% some of which will be presented in Section~\ref{sec:advanced}.
 % Before that we show how to change colour and other graphics
 % parameters in simple diagrams.
 %
@@ -727,7 +727,7 @@ Formal Concept Analysis macros]
 % at position (20,10), representing the node with nodenumber 4.
 %
 % The impatient reader may infer some of the possibilities from
-% Example~10. For details see Subsection~\ref{subsec:fine}. 
+% Example~10. For details see Subsection~\ref{subsec:fine}.
 %
 % \iffcatikzdoc
 % \begin{dtxexample}{A \env{diagram} with some optional \TikZ{}
@@ -760,7 +760,7 @@ Formal Concept Analysis macros]
 % nodes. By default, the label text is put into a one-line box
 % (i.e. hbox), the width of which is automatically detected. To allow
 % for line breaks, the parameter |text width| can be used. It affects
-% the type and size of the label boxes. 
+% the type and size of the label boxes.
 %
 % When |text width| is set to a length, then the text of the label is put
 % in a |\parbox|. It can be broken into several lines using |\\|. The
@@ -783,7 +783,7 @@ Formal Concept Analysis macros]
 % background color can be set with \texttt{fill}.
 %
 % {\unitlength .7mm
-% \begin{dtxexample}{Concept node labels}
+% \begin{dtxexample}{Concept node labels\label{ex:concept node labels}}
 %   \begin{diagram}[text width=3.4cm]
 %     \Node(0)(20,10)
 %     \leftAttbox[draw](0)(-1,1){left\\ attribute\\ label}
@@ -865,7 +865,9 @@ Formal Concept Analysis macros]
 %
 % These \watchout macros do not work reliably inside the \env{tikzpicture}
 % and  \env{tikzdiagram} envronments. Please use the key/value syntax
-% there. 
+% there.
+%
+%
 %
 % \section{Some macros for text}
 % \label{sec:macros}
@@ -987,7 +989,7 @@ Formal Concept Analysis macros]
 % \end{center}
 %
 % \section{Advanced usage of the \env{diagram}
-% environment} \label{sec:advanced} 
+% environment} \label{sec:advanced}
 % \subsection{Make your own diagram style}
 % With some knowledge about \PGF\ and \TikZ\ you can define your own style
 % for concept lattice diagrams. For multiple use such definitions can
@@ -1116,7 +1118,7 @@ Formal Concept Analysis macros]
 %     \begin{pgfscope}%
 %       \edef\tempa{%
 %       \noexpand\pgftransformshift{%
-%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%  
+%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%
 %     }%
 %       \tempa
 %       \pgfmoveto{\pgfpoint{0pt}{0pt}}%
@@ -1358,7 +1360,7 @@ Formal Concept Analysis macros]
 %
 % The \watchout current implementation of |compat| should be only used
 % to compile unmodified \LaTeX\ code written before Version~2.2. It
-% maps the new macros to use the old ones. As soon as the new 
+% maps the new macros to use the old ones. As soon as the new
 % macros are redefined, the old ones are ignored. So make sure to replace all
 % occurrences of the old macros by the corresponding new ones at once.
 %
@@ -1382,7 +1384,7 @@ Formal Concept Analysis macros]
 % coordinate and canvas transformations, a future version might
 % completely rely on them and abandon the usage of |\unitlength|.
 % Then, |\unitlength| may be used only to initially set up the
-% coordinate system and be ignored later.  
+% coordinate system and be ignored later.
 %
 % For the same reason, it is recommended to use only Euclidean
 % coordinates for diagrams. Other coordinate systems should work,
@@ -1397,6 +1399,281 @@ Formal Concept Analysis macros]
 % the sum of the horizontal unit lengths of the x and the y
 % coordinates as provided by the surrounding environment.
 %
+%
+% \subsection{Which environment to choose?}
+% There are several options how to start and end a \env{diagram}
+% environment. Table~\ref{tab:diagram-environments} gives a short
+% overview ofer \TeX nical differences between them.
+%
+% You can put your \env{diagram} into a \env{pgfpicture} or a
+% \env{tikzpicture}. In that case the diagram is drawn in a new scope
+% in order to prevent bleeding of options into later graphics
+% operations. This option also allows to put several diagrams into one
+% picture. You can keep each of the diagrams in its own namespace by
+% setting the \optn{namespace=\meta{name}} option for each
+% \env{diagram} environment to a different \meta{name}.
+%
+% When you don't need any of \TikZ{}'s special features, you can
+% slightly increase the processing speed when you load
+% \filenm{fca.sty} directly instead through \TikZ{}.
+%
+% When \TikZ{} is unsed elsewhere in your document (or if you need
+% some of \TikZ{} special features in your diagram), you have still
+% the choice whether \env{diagram} should access \PGF{} directly or
+% via \TikZ{}. Direct access to \PGF{} is probably faster and provides
+% more compatibility to prior versions of \filenm{fca.sty}. When
+% \TikZ{} is loaded, implementation uses some \TikZ{} internals, so
+% that some improvements of \TikZ{} are also accessible in the when \PGF{}
+% is directly accessed.
+%
+% When put into a \TikZ{} graphics a \env{diagram} acesses \PGF{}
+% through the \TikZ{} frontend layer. The environment
+% \env{tikzdiagram} behaves in the same way. This provides even deeper
+% integration with \TikZ{} graphics. As a drawback the macros from
+% Section~\ref{subsec:fine} do not work reliably anymore. So you must
+% use options and styles for fine tunging the diagram.
+%
+% Due to the way \watchout\TikZ{} is internally implemented, a
+% \env{diagram} or a \env{pgfpicture} environment inside the argument
+% to \cs{tikz} or inside a \env{tikzpicture} environment is always
+% processd as \TikZ{} graphics, independent from whether the graphics
+% has been interrupted or not.
+%
+% \begin{table}[htbp]
+%   \centering\footnotesize
+%   \begin{tabular}{p{3cm}p{3cm}p{3cm}p{3cm}}
+%       &\centering\env{diagram} environment with
+%           \cs{usepackage\{fca\}}
+%       &\centering\env{diagram} environment with
+%           \cs{usetikzlibrary\{fca\} outside of \cs{tikz} or
+%           \env{tikzpicture} environments}
+%       &\centering\env{diagram} environment with
+%           \cs{usetikzlibrary\{fca\}} inside \cs{tikz}
+%           or a \env{tikzpicture} environment, or \env{tikzdiagram}\tabularnewline\hline
+%      \raggedright Main command in~\cs{Node}
+%         &\centering\cs{pgfnode}
+%         &\centering\cs{pgfnode}
+%         &\centering\cs{node} \tabularnewline
+%       \raggedright Main command(s) in~\cs{Edge}
+%         &\centering\cs{pgfmoveto},
+%             \cs{pgflineto},
+%             \cs{pgfusepath}
+%         &\centering\cs{pgfmoveto},
+%             \cs{pgflineto},
+%             \cs{pgfusepath}
+%         &\centering\cs{draw(...) -- (...);}\tabularnewline
+%       \raggedright Available options
+%         &\centering all \optn{/fca/...}
+%         &\centering all \optn{/fca/...} and some \optn{/tikz/...}
+%             \footnote{options for \cs{pgfusepath} are limited to those from
+%             \filenm{fca.sty}}
+%         &\centering all \optn{/fca/...} and all \optn{/tikz/...}\tabularnewline
+%       \raggedright Macros from Section~\ref{subsec:fine}
+%         &\centering working
+%         &\centering working
+%       &\centering not supported\tabularnewline
+%           Compatibility with version 2.1 and below
+%       &\centering yes
+%       & \centering yes
+%           &\centering partial
+%     \end{tabular}
+%   \caption[diagram environments]{Comparison of the different diagram
+%   environments}
+%   \label{tab:diagram-environments}
+% \end{table}
+%
+% \section{Some demonstrations}
+% % \begin{dtxexample}{Changes of the bounding box with big numbers}
+%   \fbox{\unitlength .7mm
+%   \begin{diagram}
+%     \Numbers
+%     \Node[node number/.style={font=\huge\color{red},node font=\huge,
+%     fill=orange},opacity=0.5]{5}{20}{10}
+%     \Node[font=\color{red}]{6}{35}{20}
+%     \Node{4}{5}{30}
+%     \Node{8}{35}{40}
+%     \Node{7}{20}{50}
+%   \end{diagram}}
+%   \fbox{\unitlength .7mm
+%   \begin{diagram}
+%     \Node{5}{20}{10}
+%     \Node{6}{35}{20}
+%     \Node{4}{5}{30}
+%     \Node{8}{35}{40}
+%     \Node{7}{20}{50}
+%   \end{diagram}}
+% \end{dtxexample}
+%
+%
+% \begin{figure}[htbp]
+%   \centering
+% \fcaset{conexp style/.style={%
+%     every attributes/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=blue,
+%         anchor=south,
+%         outer sep=0pt,
+%         minimum height=0.2\unitlength,
+%         label/name suffix=attribute concept,
+%         label/at=center,
+%         solid
+%       }
+%     },
+%     every objects/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=black,
+%         anchor=south,
+%         outer sep=0pt,
+%         minimum height=0.2\unitlength,
+%         label/name suffix=attribute concept,
+%         label/at=center,
+%         solid,
+%         rotate=180
+%       }
+%       }}}
+%    \begin{tikzdiagram}[
+%       conexp style,
+%       every concept/.append style={%
+%         radius=0.2
+%       },
+%       /tikz/documentation/.style={
+%         color=red,
+%         font=\tiny,
+%         outer sep=0pt,
+%         inner sep=0pt,
+%         anchor=east,
+%         ->
+%       }
+%     ]
+%     \Node(top)(0,2)
+%     \Node(join)(0,1)
+%     \Node(left)(-1,0)
+%     \Node(right)(1,0)
+%     \Node(meet)(0,-1)
+%     \Node(bottom)(0,-2)
+%     \Edge(join)(left)
+%     \Edge(join)(top)
+%     \Edge(left)(meet)
+%     \Edge(join)(right)
+%     \Edge(right)(meet)
+%     \Edge(meet)(bottom)
+%     \centerAttbox(top){top Attribute}
+%     \leftAttbox(left){left Attribute}
+%     \rightAttbox(right){right Attribute}
+%     \centerObjbox(bottom){bottom object}
+%     \leftObjbox(left){left object}
+%     \rightObjbox(right){right object}
+%     %     documentation
+%     \draw[documentation,<-] (fca node join) -- +(6,0.25)
+%       node[anchor=south west] (doku)
+%       {\textbackslash Node(join)(0,-1)};
+%     %     Other nodes are right aligned to the first docu node
+%     \draw[documentation]
+%       (fca node top attributes center -| doku.east)
+%       node(centerAttBox)
+%       {\textbackslash centerAttBox(join)\{top Attribute\}}
+%       (centerAttBox) -- (fca node top attributes center);
+%     \draw[documentation]
+%       (fca node left attributes left -| doku.east) + (0,0.5)
+%       node(leftAttBox)
+%       {\textbackslash leftAttBox(join)\{left Attribute\}}
+%       (leftAttBox.west) -- (fca node left attributes left.north east);
+%     \draw[documentation] (fca node right attributes right -| doku.east)
+%     node(rightAttBox){\textbackslash rightAttBox(join)\{right Attribute\}}
+%     (rightAttBox) -- (fca node right attributes right);
+%     \draw[documentation] (fca node left objects left -| doku.east) + (0,-0.5)
+%     node(leftObjBox)
+%     {\textbackslash leftObjBox(join)\{left Object\}}
+%     (leftObjBox.west) -- (fca node left objects left.south east);
+%     \draw[documentation] (fca node right objects right -| doku.east)
+%     node(rightObjBox){\textbackslash rightObjBox(join)\{right
+%     Object\}} (rightObjBox) -- (fca node right objects right);
+%     \draw[documentation] (fca node bottom objects center -|
+%     doku.east) node(centerObjBox){\textbackslash
+%     centerObjBox(meet)\{bottom Object\}} (centerObjBox) -- (fca node
+%     bottom objects center) ; \coordinate (edgepoint) at
+%     ($(bottom)!0.5!(meet)$); \draw[documentation] (edgepoint -|
+%     doku.east) node(centerObjBox){\textbackslash Edge(meet)(bottom)}
+%     (centerObjBox) -- (edgepoint) ;
+%   \end{tikzdiagram}
+%   \caption[diagram elements]{Elements of a  \env{diagram}
+%   environment.}\label{fig:diagram-elements}
+% \end{figure}
+%
+% \begin{fsourceverb}
+% \begin{tikzdiagram}[
+%     conexp style,
+%     every concept/.append style={%
+%       radius=0.2
+%     },
+%     /tikz/documentation/.style={
+%       color=red,
+%       font=\tiny,
+%       outer sep=0pt,
+%       inner sep=0pt,
+%       anchor=east,
+%       ->
+%     }
+%   ]
+%   \Node(top)(0,2)
+%   \Node(join)(0,1)
+%   \Node(left)(-1,0)
+%   \Node(right)(1,0)
+%   \Node(meet)(0,-1)
+%   \Node(bottom)(0,-2)
+%   \Edge(join)(left)%
+%   \Edge(join)(top)
+%   \Edge(left)(meet)
+%   \Edge(join)(right)
+%   \Edge(right)(meet)
+%   \Edge(meet)(bottom)
+%   \centerAttbox(top){top Attribute}
+%   \leftAttbox(left){left Attribute}
+%   \rightAttbox(right){right Attribute}
+%   \centerObjbox(bottom){bottom object}
+%   \leftObjbox(left){left object}
+%   \rightObjbox(right){right object}
+%   %   documentation
+%   \draw[documentation,<-] (fca node join) -- +(6,0.25)
+%     node[anchor=south west] (doku)
+%     {\textbackslash Node(join)(0,-1)};
+%   %     Other nodes are right aligned to the first docu node
+%     \draw[documentation]
+%     (fca node top attributes center -| doku.east)
+%     node(centerAttBox){%
+%     \textbackslash centerAttBox(join)\{top Attribute\}%
+%   } (centerAttBox) -- (fca node top attributes center);
+%     \draw[documentation]
+%     (fca node left attributes left -| doku.east) + (0,0.5)
+%     node(leftAttBox){%
+%     \textbackslash leftAttBox(join)\{left Attribute\}%
+%   } (leftAttBox.west) -- (fca node left attributes left.north east);
+%   \draw[documentation]
+%     (fca node right attributes right -| doku.east)
+%     node(rightAttBox){\textbackslash rightAttBox(join)\{right Attribute\}}
+%     (rightAttBox) -- (fca node right attributes right);
+%   \draw[documentation]
+%     (fca node left objects left -| doku.east) + (0,-0.5)
+%     node(leftObjBox){\textbackslash leftObjBox(join)\{left Object\}}
+%     (leftObjBox.west) -- (fca node left objects left.south east);
+%   \draw[documentation]
+%     (fca node right objects right -| doku.east)
+%     node(rightObjBox){\textbackslash rightObjBox(join)\{right Object\}}
+%     (rightObjBox) -- (fca node right objects right);
+%   \draw[documentation]
+%     (fca node bottom objects center -| doku.east)
+%     node(centerObjBox){%
+%       \textbackslash centerObjBox(meet)\{bottom Object\}}
+%     (centerObjBox) -- (fca node bottom objects center) ;
+%   \coordinate (edgepoint) at ($(bottom)!0.5!(meet)$);
+%   \draw[documentation] (edgepoint -| doku.east)
+%     node(centerObjBox){%
+%       \textbackslash Edge(meet)(bottom)}
+%     (centerObjBox) -- (edgepoint) ;
+%   \end{tikzdiagram}
+% \end{fsourceverb}
 %
 % \StopEventually{\PrintChanges}
 % \clearpage

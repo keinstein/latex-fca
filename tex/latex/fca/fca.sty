@@ -475,6 +475,8 @@ Formal Concept Analysis macros]
     \let\noNumbers\fcaNoNumbers
     \let\NodeColor\fcaNodeColor
     \let\ColorNode\fcaColorNode
+    \let\NoDots\fcaNoDots
+    \let\Dots\fcaDots
   \fi
   \let\leftAttbox\fca@leftAttbox
   \let\centerAttbox\fca@centerAttbox
@@ -1097,6 +1099,7 @@ Formal Concept Analysis macros]
   \addtocounter{fca@BuxCounter}{#2}\def#3{\value{fca@BuxCounter}}}%
 \newcommand{\fcaNoDots}{\setboolean{fca@connectors}{false}}
 \newcommand{\fcaDots}{\setboolean{fca@connectors}{true}}
+
 \def\fca@parse@parenlabel#1(#2){#1{#2}}
 \def\fca@parse@paren@vector#1#2#3(#4,#5){%
   \fca@parse@brace@vector{#1}{#2}{#3}{#4}{#5}%

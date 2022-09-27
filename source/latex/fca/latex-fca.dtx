@@ -828,8 +828,10 @@ Formal Concept Analysis macros]
 % Can be changed for single nodes by specifying the radius
 % as an optional parameter (e.g., |[radius=3mm]|).
 %
-% {\color{red}
-% \ItemDescribeMacro {\NodeColor}\marg{color}   Default: white}
+% \textcolor{red}{
+% \ItemDescribeMacro {\fcaNodeColor}\marg{color}   Default: white
+% \ItemDescribeMacro {\NodeColor}\marg{color} is an alias to
+% \cs{fcaNodeColor} inside the \env{diagram} environment}
 % \ItemDescribeMacro {\fcaNodeThickness}\marg{thickness}
 % The width of the annulus representing the circumferential line of a
 % concept node. The default is 1.2pt.
@@ -3933,7 +3935,8 @@ y%
 %  \fcaCircleSize{10}%
 %  \Node[opacity=0.3,fill=red](3)(5,30)
 %  \fcaset{node/line width=2mm}
-%  \Node[fill=darkgreen](4)(35,40)
+%  \NodeColor{darkgreen}
+%  \Node(4)(35,40)
 %  \fcaNodeColor{orange}
 %  \Node[/tikz/rectangle](5)(20,50)
 % \end{diagram}}

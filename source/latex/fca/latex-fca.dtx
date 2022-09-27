@@ -317,7 +317,9 @@ Formal Concept Analysis macros]
 % \fi
 % \maketitle
 % \begin{abstract}
-% \FCA is a field of mathematics based on the theory of ordered sets and complete lattices, with applications to data analysis and knowledge processing.
+% \FCA is a field of mathematics based on the theory of ordered sets
+% and complete lattices, with applications to data analysis and
+% knowledge processing. 
 % To simplify typesetting of FCA-related text, \fcastyle  provides two
 % environments and some simple text macros. The two environments are
 % \begin{description}
@@ -701,7 +703,9 @@ Formal Concept Analysis macros]
 % We recommend to remove the |\Numbers|--command when the diagram is
 % ready. In most cases it is not a good idea to put text inside the
 % nodes of a diagram.
-%                                                                   %
+%
+% {\color{red} |\Numbers| sollte den Radius vergrößern.} 
+%
 % \DescribeMacro{\NoNumbers} can be used to exclude individual nodes
 % from the numbering.
 %
@@ -732,7 +736,7 @@ Formal Concept Analysis macros]
 % \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
 % \begin{diagram}
 %  \Node[draw=red, fill=green,/tikz/line width=.5mm](1)(20,10)
-%  \Node[fill=black, radius=2mm](2)(35,20)
+%  \Node[fill=black, radius=1.5mm](2)(35,20)
 %  \Node[opacity=0.3,fill=red](3)(5,30)
 %  \Node[fill=darkgreen](4)(35,40)
 %  \Node[/tikz/rectangle](5)(20,50)
@@ -779,7 +783,7 @@ Formal Concept Analysis macros]
 % background color can be set with \texttt{fill}.
 %
 % {\unitlength .7mm
-% \begin{dtxexample}{Node labels}
+% \begin{dtxexample}{Concept node labels}
 %   \begin{diagram}[text width=3.4cm]
 %     \Node(0)(20,10)
 %     \leftAttbox[draw](0)(-1,1){left\\ attribute\\ label}
@@ -810,8 +814,10 @@ Formal Concept Analysis macros]
 %
 % \subsection{Fine tuning}\label{subsec:fine}
 % In version 2.1 and before some macros that allow you to change
-% certain parameters of the diagrams. For compatibility reasons these
-% still do work in digarams that use bare \PGF\ (i.e., that are not
+% certain parameters of the diagrams.
+% {\color{red}
+% For compatibility reasons these
+% still do work in diagrams that use bare \PGF\ }(i.e., that are not
 % inside the argument to the \cs{tikz} macro or one of the
 % environments \env{tikzpicture} or \env{tikzdiagram}).
 % \begin{description}
@@ -822,9 +828,6 @@ Formal Concept Analysis macros]
 % Can be changed for single nodes by specifying the radius
 % as an optional parameter (e.g., |[radius=3mm]|).
 %
-% {\color{red} |\CircleSize| funktioniert nicht.
-%
-% Die Positionierung der Labels berücksichtigt CircleSize nicht.}
 % {\color{red}
 % \ItemDescribeMacro {\NodeColor}\marg{color}   Default: white}
 % \ItemDescribeMacro {\fcaNodeThickness}\marg{thickness}
@@ -841,7 +844,7 @@ Formal Concept Analysis macros]
 % \ItemDescribeMacro {\fcaNoDots} Causes no dotted line to be drawn
 % from the concept node to the label boxes. 
 %
-% {\color{red} |\NoDots| geht nicht}.
+% {\color{red} |\NoDots| geht nicht. Ist nur für compat definiert.}
 % \ItemDescribeMacro {\fcaObjectLabelStyle} can be redefined to set the
 % style of object labels,
 % \ItemDescribeMacro {\fcaAttributeLabelStyle} can be redefined to set
@@ -856,9 +859,9 @@ Formal Concept Analysis macros]
 % \end{center}
 % generates a single centered object label without dotted line.
 %
-% \watchout These macros do not work reliably inside the \env{tikzpicture}
-% and  \env{tikzdiagram} envronments. Please use the key/value syntax,
-% there.
+% These \watchout macros do not work reliably inside the \env{tikzpicture}
+% and  \env{tikzdiagram} envronments. Please use the key/value syntax
+% there. 
 %
 % \section{Some macros for text}
 % \label{sec:macros}
@@ -1109,7 +1112,7 @@ Formal Concept Analysis macros]
 %     \begin{pgfscope}%
 %       \edef\tempa{%
 %       \noexpand\pgftransformshift{%
-%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%
+%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%  
 %     }%
 %       \tempa
 %       \pgfmoveto{\pgfpoint{0pt}{0pt}}%
@@ -1347,11 +1350,11 @@ Formal Concept Analysis macros]
 %
 % \DescribeOption{compat}
 % There is a package option |compat| that also defines the old names
-% which have been used before version 2.2.
+% which have been used before Version 2.2 of \fcastyle.
 %
-% \watchout The current implementation of |compat| should be only used
-% to compile unmodified \LaTeX\ code written before version~2.2. It
-% maps the new macros to use the old ones. As soon as the new
+% The \watchout current implementation of |compat| should be only used
+% to compile unmodified \LaTeX\ code written before Version~2.2. It
+% maps the new macros to use the old ones. As soon as the new 
 % macros are redefined, the old ones are ignored. So make sure to replace all
 % occurrences of the old macros by the corresponding new ones at once.
 %
@@ -1362,43 +1365,33 @@ Formal Concept Analysis macros]
 % Package error messages are not yet implemented.
 %
 %
-% \iffalse
-%   \subsection{A caveat  for future implementators}
+% \iftrue
+%   \subsection{A caveat  for future implementations}
 % \else
 %   \subsection{Some warning about future implementations}
 % \fi
 %
+% It is  discouraged to change |\unitlength| inside the \env{diagram}
+% environment.
 % Currently |\unitlength| is used inside in the \env{diagram}
 % environment. However, since \PGF\  already comes with support for
 % coordinate and canvas transformations, a future version might
 % completely rely on them and abandon the usage of |\unitlength|.
 % Then, |\unitlength| may be used only to initially set up the
-% coordinate system and be ignored later. It is therefore strongly
-% discouraged to change |\unitlength| inside the \env{diagram} diagram
-% environment.
+% coordinate system and be ignored later.  
 %
-% \iffalse
-%   Instead
-% \else
-%   For the same reason
-% \fi
-% it is recommended to use Euclidian coordinate systems for
-% diagrams. Other coordinate systems should work, too. However, the
-% output may change in that case using future versions of this
-% package. In particular the algorithm for the calculation of the node
-% radius may change, and changes to |\unitlength| inside the
-% environment will have no effect.
+% For the same reason, it is recommended to use only Euclidean
+% coordinates for diagrams. Other coordinate systems should work,
+% too. However, in that case the output may change with future
+% versions of this package. In particular the algorithm for the
+% calculation of the node radius may change, and changes to
+% |\unitlength| inside the environment will have no effect.
 %
 % The newly added option to encapsulate a \env{diagram} environment
 % inside a \env{tikzpicture} or \env{pgfpicture} already goes into
 % that direction. In this usage the |\unitlength| register is set to
 % the sum of the horizontal unit lengths of the x and the y
 % coordinates as provided by the surrounding environment.
-%
-%
-%
-%
-%
 %
 %
 % \StopEventually{\PrintChanges}

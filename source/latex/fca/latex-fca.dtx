@@ -278,7 +278,7 @@ Formal Concept Analysis macros]
 %   breaklinks=true,
 %   ]{hyperref}
 
-\RequirePackage{stmaryrd}
+\RequirePackage{stmaryrd,bm}
 \usepackage[numbered]{hypdoc}
 \hypersetup{
    pdfauthor = {Bernhard Ganter, Tobias Schlemmer},
@@ -404,10 +404,10 @@ Formal Concept Analysis macros]
 % \begin{dtxexample}{Some predefined context characters, colour changed.}
 % \begin{cxt}%
 % \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}%
-% \cxtName{Formula 1}%
-% \att{1.}%
-% \att{2.}%
-% \atr{disqualified}%
+% \cxtName{Formula 1}
+% \att{1.}
+% \att{2.}
+% \atr{disqualified}
 % \obj{xbd}{Verstappen}
 % \obj{uxb}{Hamilton}
 % \obj{bxx}{Leclerc}
@@ -426,26 +426,49 @@ Formal Concept Analysis macros]
 % You can define your own markers using |\fcaNewContextChar|. It
 % works like |\newcommand| but defines a single character. For
 % single signs use |\cxtrlap| in order to give it an apropriate
-% size as in the following example:
-% \bigbreak
-% \textcolor{red}{Die Zeile
-% \texttt{$\backslash$fcaProvideContextChar\{.\}\{ignored\}\%}\ im
-% folgenden Beispiel verstehe ich nicht.}
+% size. We give two examples. The first introduces a single new
+% context character for so-called ``tight'' incidences. These are
+% indicated by a boldface cross (for which the \texttt{bm} package was
+% used). 
+% The second example is discussed below.
+%
 % \begin{dtxexample}{(Re-)defining context characters.}
-% \begin{cxt}%
-% \fcaNewContextChar{v}{\cxtrlap{$\vee$}}%
-% \fcaProvideContextChar{\wedge}{\cxtrlap{$\wedge$}}%
-% \fcaProvideContextChar{.}{ignored}%
-% \fcaRenewContextChar{x}{\cxtrlap{$i$}}%
-% \cxtName{Formula 1}%
-% \att{1.}%
-% \att{2.}%
-% \atr{disqualified}%
-% \obj{xuv}{Verstappen}
+% \begin{cxt}
+% \fcaNewContextChar{t}{\cxtrlap{$\bm{\times}$}}
+% \cxtName{cxt 1}
+% \att{1.}
+% \att{2.}
+% \atr{disqualified}
+% \obj{t..}{Verstappen}
+% \obj{.t.}{Hamilton}
+% \obj{.xt}{Leclerc}
+% \end{cxt}
+% \qquad
+% \begin{cxt}
+% \fcaNewContextChar{v}{\cxtrlap{$\vee$}}
+% \fcaProvideContextChar{\wedge}{\cxtrlap{$\wedge$}}
+% \fcaProvideContextChar{d}{ -- ignored -- }
+% \fcaRenewContextChar{d}{\cxtrlap{$i$}}
+% \cxtName{cxt 2}
+% \att{1.}
+% \att{2.}
+% \atr{disqualified}
+% \obj{x.v}{Verstappen}
 % \obj{\wedge xb}{Hamilton}
-% \obj{dx.}{Leclerc}
+% \obj{dxx}{Leclerc}
 % \end{cxt}
 % \end{dtxexample}
+%
+% The second example (with context name ``cxt 2'') shows different ways
+% to define context characters. First |\fcaNewContextChar| is used so that
+% the symbol |$\vee$| is inserted whenever the letter ``v'' occurs in
+% the the incidence vector of an object. The next line associates the
+% ``token'' |\wedge| to the symbol |$\wedge$|, using
+% |\fcaProvideContextChar|, which does the same as |\fcaNewContextChar|,
+% except that no error message is given when the context character was
+% already defined. Instead, the command will then be ignored. If you
+% want to force the redefinition of a context character, you should use
+% |\fcaRenewContextChar|. 
 %
 % \DescribeMacro{\freeobj}{\marg{text}}
 % There are other possibilities. You may define a marker with a single
@@ -456,12 +479,12 @@ Formal Concept Analysis macros]
 % \noindent\begin{minipage}[t]{.45\textwidth}
 % \textit{\footnotesize \ Code:}
 % \begin{verbatim}
-% \begin{cxt}%
-% \fcaNewContextChar{w}[1]{#1}%
-% \cxtName{Formula 1}%
-% \att{1.}%
-% \att{2.}%
-% \atr{disqualified}%
+% \begin{cxt}
+% \fcaNewContextChar{w}[1]{#1}
+% \cxtName{Formula 1}
+% \att{1.}
+% \att{2.}
+% \atr{disqualified}
 % \obj{5bw1}{Verstappen}
 % \obj{w2xw{77}}{Hamilton}
 % \freeobj{1&2&3}{Leclerc}
@@ -538,8 +561,8 @@ Formal Concept Analysis macros]
 % \LaTeX{} document. Its usage is as simple as possible.
 %
 % \begin{dtxexample}{Including a Burmeister context file}
-% \begin{cxt}%
-% \cxtinput{formula1.cxt}%
+% \begin{cxt}
+% \cxtinput{formula1.cxt}
 % \end{cxt}
 % \end{dtxexample}
 %
@@ -624,7 +647,7 @@ Formal Concept Analysis macros]
 % \DescribeMacro{\Edge}\marg{nodenumber1}\marg{nodenumber2}
 % Puts a line between the two nodes with the given numbers. These must
 % have been declared earlier with a |\Node|--command.
-% The |\Edge|--command is executed immediately.
+% {\color{red}The |\Edge|--command is executed immediately.}
 %
 % \DescribeMacro{\leftAttbox}\parg{nodenumber}\marg{text}\\
 % \DescribeMacro{\centerAttbox}\parg{nodenumber}\marg{text}\\
@@ -654,7 +677,7 @@ Formal Concept Analysis macros]
 % corresponds to |\leftAttbox(4)(-3,5){text}|.
 %
 % \DescribeMacro{\end\{diagram\}} This concludes the
-% diagram. \textcolor{red}{The circles 
+% diagram. \textcolor{red}{The circles
 %  representing the nodes are drawn and filled with white, unless
 %  specified otherwise.}
 %
@@ -682,31 +705,29 @@ Formal Concept Analysis macros]
 % \DescribeMacro{\NoNumbers} can be used to exclude individual nodes
 % from the numbering.
 %
-%
-% \subsection{Advanced usage of the \env{diagram} environment}
+% \subsection{Changes to the graphics}
 % \label{subsec:diagram-adv}
-% The connection with \PGF\  and \TikZ\ results in many design tools that
-% cannot be presented in detail here. We will discuss three simple
-% possibilities, although not in all details: The use of optional
-% parameters, setting global parameters and defining own styles for
-% diagrams.
+% The connection with \PGF\  and \TikZ\ results in many design tools,
+% some of which will be presented in Section~\ref{sec:advanced}. 
+% Before that we show how to change colour and other graphics
+% parameters in simple diagrams.
 %
 % \subsubsection{Optional parameters}
-%
 % All macros of the \env{diagram} environment, except for
-% |\end{diagram}|, allow optional parameter. These must be specified
-% within square brackets, as in the following example,
+% |\end{diagram}|, allow optional parameter. These can be specified
+% within square brackets. For example,
 %
 % |\Node[draw=red, fill=blue](4)(20,10)|
 %
-% which specifies that a red circle, filled with blue, is to be drawn
+% specifies that a red circle, filled with blue, is to be drawn
 % at position (20,10), representing the node with nodenumber 4.
 %
-% The impatient reader may infer some of the possibilities from the
-% next example.
+% The impatient reader may infer some of the possibilities from
+% Example~10. For details see Subsection~\ref{subsec:fine}. 
 %
 % \iffcatikzdoc
-% \begin{dtxexample}{A \env{diagram} with some optional \TikZ{} parameters}
+% \begin{dtxexample}{A \env{diagram} with some optional \TikZ{}
+% parameters}
 % {\unitlength 1.2mm
 % \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
 % \begin{diagram}
@@ -716,9 +737,9 @@ Formal Concept Analysis macros]
 %  \Node[fill=darkgreen](4)(35,40)
 %  \Node[/tikz/rectangle](5)(20,50)
 %  {\color{red}\Edge(1)(2)}
-%  \Edge[draw=blue,dotted,/tikz/line width=1mm](1)(3)
+%  \Edge[draw=blue,dotted,line width=1.5pt](1)(3)
 %  \Edge(2)(4)
-%  \Edge[draw=green](3)(5)
+%  \Edge[draw=green,/tikz/line width=1mm](3)(5)
 %  \Edge(4)(5)
 %   \leftAttbox(3){1.}
 %   \rightAttbox(2){disqualified}
@@ -730,16 +751,17 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 % \fi
 %
-% \subsubsection{Global parameters}
-%
-% An example of a parameter for \texttt{fca.sty} is \texttt{text
-% width}. It affects the type and size of the label boxes.
+% \subsubsection{Line breaks in labels}
+% The |\**box(){}|-commands are used to write labels to concept
+% nodes. By default, the label text is put into a one-line box
+% (i.e. hbox), the width of which is automatically detected. To allow
+% for line breaks, the parameter |text width| can be used. It affects
+% the type and size of the label boxes. 
 %
 % When |text width| is set to a length, then the text of the label is put
 % in a |\parbox|. It can be broken into several lines using |\\|. The
-% width of the |\parbox| is the value of the |text width| parameter.
-% It is unset by default, resulting in a one-line box (i.e. hbox) for
-% the label. In this case the width of the box is automatically detected.
+% width of the |\parbox| is the value of the |text width|
+% parameter. It is unset by default.
 %
 % Setting |text width| to a length can either be done as an optional
 % parameter to the diagram, such as
@@ -752,7 +774,7 @@ Formal Concept Analysis macros]
 %
 % or for single labels only, again as an optional parameter.
 %
-% Label boxes are framed with the \texttt{draw} option, which may also
+% Label boxes may be framed with the \texttt{draw} option, which may also
 % be used to set a color for the text and the frame. Their
 % background color can be set with \texttt{fill}.
 %
@@ -771,14 +793,195 @@ Formal Concept Analysis macros]
 %
 % The style of the lables is given by
 % \begin{description}
-% \item[]|\fcaObjectLabelStyle|\hspace*{3.5ex}\quad
-% Default: |\small\baselineskip6pt\rm|
-% \item[]|\fcaAttributeLabelStyle|\quad
-% Default: |\small\baselineskip6pt\it|.
+%   \ItemDescribeMacro{\fcaObjectLabelStyle} Used to define the font
+%   of object labels \emph{outside} of \env{diagram} environments.
+%   Default: |\small\baselineskip1em\rmfamily\upshape|
+%   \ItemDescribeMacro{\fcaAttributeLabelStyle} Used to define the font
+%   of object labels \emph{outside} of \env{diagram} environments.
+%   Default: |\small\baselineskip1em\rmfamily\itshape|.
+%   \ItemDescribeMacro{\ObjectLabelStyle} Used to define the font
+%   of object labels \emph{inside} of \env{diagram} environments.
+%   Default: |\fcaObjectLabelStyle|
+%   \ItemDescribeMacro{\AttributeLabelStyle} Used to define the font
+%   of object labels \emph{inside} of \env{diagram} environments.
+%   Default: |\fcaAttributeLabelStyle|.
 % \end{description}
 % These values can be changed with |\renewcommand|.
 %
-% \subsubsection{Defining a diagram style}
+% \subsection{Fine tuning}\label{subsec:fine}
+% In version 2.1 and before some macros that allow you to change
+% certain parameters of the diagrams. For compatibility reasons these
+% still do work in digarams that use bare \PGF\ (i.e., that are not
+% inside the argument to the \cs{tikz} macro or one of the
+% environments \env{tikzpicture} or \env{tikzdiagram}).
+% \begin{description}
+%   \ItemDescribeMacro{\fcaCircleSize}\marg{size}
+%
+% The diameter of the circles that represent the concept nodes.
+% The default is 4~(times |\unitlength|).
+% Can be changed for single nodes by specifying the radius
+% as an optional parameter (e.g., |[radius=3mm]|).
+%
+% {\color{red} |\CircleSize| funktioniert nicht.
+%
+% Die Positionierung der Labels berücksichtigt CircleSize nicht.}
+% {\color{red}
+% \ItemDescribeMacro {\NodeColor}\marg{color}   Default: white}
+% \ItemDescribeMacro {\fcaNodeThickness}\marg{thickness}
+% The width of the annulus representing the circumferential line of a
+% concept node. The default is 1.2pt.
+% Can be changed for single nodes by specifying the line width
+% as an optional parameter (e.g., |[line width=3pt]|).
+% \ItemDescribeMacro {\NodeThickness}\marg{thickness} an alias to
+% \cs{fcaNodeThickness} inside a \env{diagram} environment.
+% \ItemDescribeMacro {\fcaEdgeThickness}\marg{thickness}  \qquad
+% Default: .8pt
+% \ItemDescribeMacro {\EdgeThickness}\marg{thickness} an alias to
+% \cs{fcaEdgeThickness} inside a \env{diagram} environment
+% \ItemDescribeMacro {\fcaNoDots} Causes no dotted line to be drawn
+% from the concept node to the label boxes. 
+%
+% {\color{red} |\NoDots| geht nicht}.
+% \ItemDescribeMacro {\fcaObjectLabelStyle} can be redefined to set the
+% style of object labels,
+% \ItemDescribeMacro {\fcaAttributeLabelStyle} can be redefined to set
+% the style of attribute labels,
+% \ItemDescribeMacro {\fcaLabelBoxWidth} can be redefined to a width,
+% which will be used to set the width of the object and attribute boxes.
+% \end{description}
+% Except for the first three, these commands can be focussed to single instances,
+% using braces. For example,
+% \begin{center}
+% |{\fcaNoDots\centerObjbox(node){labeltext}}|
+% \end{center}
+% generates a single centered object label without dotted line.
+%
+% \watchout These macros do not work reliably inside the \env{tikzpicture}
+% and  \env{tikzdiagram} envronments. Please use the key/value syntax,
+% there.
+%
+% \section{Some macros for text}
+% \label{sec:macros}
+% Abbreviating macros are defined for some strings that occur
+% regularly in FCA texts. See Figure~\ref{fig:macros} for quick
+% overview.
+% \begin{figure}[p]
+%   \begin{center}
+%    \begin{tabular}{\VertStroke c\VertStroke l\VertStroke l\VertStroke}\hline
+% Result&command& German variant\\\hline
+% $\GMI$&|\GMI|&\\
+% $\context$&|\context|&\\
+% $\context[L]$&|\context[L]|&\\
+% $\CL$ &|\CL| &|\BV| \\
+% $\BVGMI$  &|\CLGMI| &|\BVGMI| \\
+% $\BGMI$  & |\CGMI|& |\BGMI|\\
+% $\extent{}$&|\extent{}|&\\
+% $\intent{}$&|\intent{}|&\\
+% $\extents{}$&|\extents{}|&\\
+% $\intents{}$&|\intents{}|&\\
+% $\HNI$   &|\HNI| & \\
+% $\relI$   &|\relI| & \\
+% $\notI$   &|\notI| & \\
+% $\bigtimes$   &|\bigtimes| & \\
+% $\Semi$   &|\Semi| & \\
+% $\DownArrow$   &|\DownArrow|&|\Runterpfeil| \\
+% $\UpArrow$   &|\UpArrow| &|\Hochpfeil| \\
+% $\DoubleArrow$   &|\DoubleArrow| &|\Doppelpfeil| \\
+% $\DDArrow$   &|\DDArrow| &|\DDPfeil| \\
+% $\NDDArrow$   &|\NDDArrow| &|\NDDPfeil| \\
+% \FCA   &|\FCA| & \\
+% \FBA   & &|\FBA| \\
+% \FnBA   & &|\FnBA| \\\hline
+%      \end{tabular}
+% \caption{Table of \texttt{fca.sty} text macros.}\label{fig:macros}
+%  \end{center}
+% \end{figure}
+% \begin{figure}[p]
+%  \begin{center}
+%      \begin{tabular}{\VertStroke l\VertStroke l\VertStroke l\VertStroke }\hline
+% Symbol&command&package required\\\hline
+% $\vee$&|\vee|&\\
+% $\wedge$&|\wedge|&\\
+% $\bigvee$&|\bigvee|&\\
+% $\bigwedge$&|\bigwedge|&\\
+% $\sqcup$&|\sqcup|&\\
+% $\sqcap$&|\sqcap|&\\
+% $\bigsqcup$&|\bigsqcup|&\\
+% $\bigsqcap$&|\bigsqcap|&stmaryrd\\\hline
+% \end{tabular}
+% \caption{Other symbols that are used in \FCA, and the commands that generate
+%  them.}\label{fig:2}\end{center}
+% \end{figure}
+%
+% \begin{description}
+% \item[]|\GMI|\quad The formal context $\GMI$.
+% \item[]|\context|\quad The symbol $\context$, a frequently used name for
+%  a formal context.
+% \item[]|\context[S]|\quad Other letters, such as $\context[S]$, may also
+%  be used.
+% \item[]|\CL|\quad The symbol $\CL$ for the concept lattice operator. If
+%  ${\mathbb K}$ is a formal context, then $\CL({\mathbb K})$ denotes its
+%  concept lattice.
+% \item[]|\BV|\quad same as |\CL|.
+% \item[]|\CLGMI|\quad The concept lattice $\CLGMI$ of the formal context
+%  $(G,M,I)$.
+% \item[]|\BVGMI|\quad Same as |\CLGMI|.
+% \item[]|\CGMI|\quad The set $\CGMI$ of all formal concepts of the formal
+%  context   $(G,M,I)$.
+% \item[]|\BGMI|\quad Same as |\CGMI|.
+% \item[]|\extent|\quad The extent $\extent{\mathfrak{c}}$ of the formal
+%  concept $\mathfrak{c}:=(A,B)$ is  $A$.
+% \item[]|\intent|\quad The intent $\intent{\mathfrak{c}}$ of the formal
+%  concept $\mathfrak{c}:=(A,B)$ is  $B$.
+% \item[]|\extents|\quad The set $\extents{\context}$ of extents of the
+%  formal context $\context$.
+% \item[]|\intents|\quad The set $\intents{\context}$ of intents of the
+%  formal context $\context$.
+% \item[]|\HNI|\quad The subcontext $\HNI$.
+% \item[]|\relI|\quad The incidence relation $\relI$.
+% {\color{red}\item[]|\notI|\quad The negation $\notI$ of the incidence
+%  relation.}
+% \item[]|\bigtimes|\quad The product symbol $\bigtimes$.
+% \item[]|\DownArrow|\quad The $\Runterpfeil$ of the arrow relations.
+% \item[]|\Runterpfeil|\quad Same as |\DownArrow|.
+% \item[]|\UpArrow|\quad The $\Hochpfeil$ of the arrow relations.
+% \item[]|\Hochpfeil|\quad   Same as |\UpArrow|.
+% \item[]|\DoubleArrow|\quad  The $\Doppelpfeil$ of the arrow relations.
+% \item[]|\Doppelpfeil|\quad   Same as |\DoubleArrow|.
+% \item[]|\DDArrow|\quad Gives $\DDArrow$, the symbol for the transitive
+%  closure of the arrow relations.
+% \item[]|\DDPfeil|\quad  Same as |\DDArrow|.
+% \item[]|\NDDArrow|\quad Gives $\NDDArrow$ the symbol for the negation of
+%  $\DDPfeil$.
+% \item[]|\NDDPfeil|\quad  Same as |\NDDArrow|.
+% \item[]|\Semi|\quad Gives $\Semi$, the symbol for the semi-product.
+% \item[]|\FCA|\quad Prints ``\FCA''.  In most cases, this command does not
+%  eat the space following it (thanks to |\xspace|).
+% \item[]|\FBA, \FnBA|\quad Print ``Formale(n) Begriffsanalyse''. These
+%  commands also use |\xspace| so that blanks are preserved.
+% \item[]Some symbols that are provided by \LaTeX\ are listed in
+%  Figure~\ref{fig:2}.
+% \end{description}
+%
+% \par\noindent
+% Here is a sample text:
+% \begin{verbatim}
+% \FCA provides an elegant way to determine the congruence relations of
+% a complete lattice. The congruence lattice of a doubly founded
+% concept lattice $\CLGMI$ is isomorphic to $\CL(G,M,\NDDArrow)$.
+% \end{verbatim}
+% This translates to:
+% \begin{center}
+%  \begin{minipage}{.88\textwidth}
+%  \FCA provides an elegant way to determine the congruence relations of a
+%  complete lattice. The congruence lattice of a doubly founded concept lattice
+%  $\CLGMI$ is isomorphic to $\CL(G,M,\NDDArrow)$.
+%  \end{minipage}
+% \end{center}
+%
+% \section{Advanced usage of the \env{diagram}
+% environment} \label{sec:advanced} 
+% \subsection{Make your own diagram style}
 % With some knowledge about \PGF\ and \TikZ\ you can define your own style
 % for concept lattice diagrams. For multiple use such definitions can
 % be outsourced using the  |\fcaset{}| macro.
@@ -851,21 +1054,6 @@ Formal Concept Analysis macros]
 %
 %
 % \section {weiter im normalen Text}
-%
-% \textcolor{red}{All this can be modified with the |shift| option.}
-%
-% \iffalse
-% The offsets increase the placement effect. A |\rightObjbox|, which is
-% placed to the lower right of the corresponding node, will be moved even
-% further to the lower right if the offsets are positive. Similarly, positive
-% offsets will push a |\leftAttbox| even more to the upper left, etc.
-% \fi
-%
-% When |text width| is set to a length, the text of the label is put
-% in a |\parbox|. It can be broken into several lines using |\\|. The
-% width of the |\parbox| is the value of the |text width| parameter.
-% It is unset by default, resulting in a one-line box (i.e. hbox) for
-% the label. In this case the width of the box is automatically detected.
 %
 %
 % \iffcatikzdoc
@@ -1148,126 +1336,6 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 % }\fi
 %
-% \section{Some macros for text}
-% \label{sec:macros}
-% Abbreviating macros are defined for some strings that occur
-% regularly in FCA texts. See Figure~\ref{fig:macros} for quick
-% overview.
-% \begin{figure}[p]
-%   \begin{center}
-%    \begin{tabular}{\VertStroke c\VertStroke l\VertStroke l\VertStroke}\hline
-% Result&command& German variant\\\hline
-% $\GMI$&|\GMI|&\\
-% $\context$&|\context|&\\
-% $\context[L]$&|\context[L]|&\\
-% $\CL$ &|\CL| &|\BV| \\
-% $\BVGMI$  &|\CLGMI| &|\BVGMI| \\
-% $\BGMI$  & |\CGMI|& |\BGMI|\\
-% $\extent{}$&|\extent{}|&\\
-% $\intent{}$&|\intent{}|&\\
-% $\extents{}$&|\extents{}|&\\
-% $\intents{}$&|\intents{}|&\\
-% $\HNI$   &|\HNI| & \\
-% $\relI$   &|\relI| & \\
-% $\notI$   &|\notI| & \\
-% $\bigtimes$   &|\bigtimes| & \\
-% $\Semi$   &|\Semi| & \\
-% $\DownArrow$   &|\DownArrow|&|\Runterpfeil| \\
-% $\UpArrow$   &|\UpArrow| &|\Hochpfeil| \\
-% $\DoubleArrow$   &|\DoubleArrow| &|\Doppelpfeil| \\
-% $\DDArrow$   &|\DDArrow| &|\DDPfeil| \\
-% $\NDDArrow$   &|\NDDArrow| &|\NDDPfeil| \\
-% \FCA   &|\FCA| & \\
-% \FBA   & &|\FBA| \\
-% \FnBA   & &|\FnBA| \\\hline
-%      \end{tabular}
-% \caption{Table of \texttt{fca.sty} text macros.}\label{fig:macros}
-%  \end{center}
-% \end{figure}
-% \begin{figure}[p]
-%  \begin{center}
-%      \begin{tabular}{\VertStroke l\VertStroke l\VertStroke l\VertStroke }\hline
-% Symbol&command&package required\\\hline
-% $\vee$&|\vee|&\\
-% $\wedge$&|\wedge|&\\
-% $\bigvee$&|\bigvee|&\\
-% $\bigwedge$&|\bigwedge|&\\
-% $\sqcup$&|\sqcup|&\\
-% $\sqcap$&|\sqcap|&\\
-% $\bigsqcup$&|\bigsqcup|&\\
-% $\bigsqcap$&|\bigsqcap|&stmaryrd\\\hline
-% \end{tabular}
-% \caption{Other symbols that are used in \FCA, and the commands that generate
-%  them.}\label{fig:2}\end{center}
-% \end{figure}
-%
-%
-% \begin{description}
-% \item[]|\GMI|\quad The formal context $\GMI$.
-% \item[]|\context|\quad The symbol $\context$, a frequently used name for
-%  a formal context.
-% \item[]|\context[S]|\quad Other letters, such as $\context[S]$, may also
-%  be used.
-% \item[]|\CL|\quad The symbol $\CL$ for the concept lattice operator. If
-%  ${\mathbb K}$ is a formal context, then $\CL({\mathbb K})$ denotes its
-%  concept lattice.
-% \item[]|\BV|\quad same as |\CL|.
-% \item[]|\CLGMI|\quad The concept lattice $\CLGMI$ of the formal context
-%  $(G,M,I)$.
-% \item[]|\BVGMI|\quad Same as |\CLGMI|.
-% \item[]|\CGMI|\quad The set $\CGMI$ of all formal concepts of the formal
-%  context   $(G,M,I)$.
-% \item[]|\BGMI|\quad Same as |\CGMI|.
-% \item[]|\extent|\quad The extent $\extent{\mathfrak{c}}$ of the formal
-%  concept $\mathfrak{c}:=(A,B)$ is  $A$.
-% \item[]|\intent|\quad The intent $\intent{\mathfrak{c}}$ of the formal
-%  concept $\mathfrak{c}:=(A,B)$ is  $B$.
-% \item[]|\extents|\quad The set $\extents{\context}$ of extents of the
-%  formal context $\context$.
-% \item[]|\intents|\quad The set $\intents{\context}$ of intents of the
-%  formal context $\context$.
-% \item[]|\HNI|\quad The subcontext $\HNI$.
-% \item[]|\relI|\quad The incidence relation $\relI$.
-% \item[]|\notI|\quad The negation $\notI$ of the incidence
-%  relation.
-% \item[]|\bigtimes|\quad The product symbol $\bigtimes$.
-% \item[]|\DownArrow|\quad The $\Runterpfeil$ of the arrow relations.
-% \item[]|\Runterpfeil|\quad Same as |\DownArrow|.
-% \item[]|\UpArrow|\quad The $\Hochpfeil$ of the arrow relations.
-% \item[]|\Hochpfeil|\quad   Same as |\UpArrow|.
-% \item[]|\DoubleArrow|\quad  The $\Doppelpfeil$ of the arrow relations.
-% \item[]|\Doppelpfeil|\quad   Same as |\DoubleArrow|.
-% \item[]|\DDArrow|\quad Gives $\DDArrow$, the symbol for the transitive
-%  closure of the arrow relations.
-% \item[]|\DDPfeil|\quad  Same as |\DDArrow|.
-% \item[]|\NDDArrow|\quad Gives $\NDDArrow$ the symbol for the negation of
-%  $\DDPfeil$.
-% \item[]|\NDDPfeil|\quad  Same as |\NDDArrow|.
-% \item[]|\Semi|\quad Gives $\Semi$, the symbol for the semi-product.
-% \item[]|\FCA|\quad Prints ``\FCA''.  In most cases, this command does not
-%  eat the space following it (thanks to |\xspace|).
-% \item[]|\FBA, \FnBA|\quad Print ``Formale(n) Begriffsanalyse''. These
-%  commands also use |\xspace| so that blanks are preserved.
-% \item[]Some symbols that are provided by \LaTeX\ are listed in
-%  Figure~\ref{fig:2}.
-% \end{description}
-%
-% \par\noindent
-% Here is a sample text:
-% \begin{verbatim}
-% \FCA provides an elegant way to determine the congruence relations of
-% a complete lattice. The congruence lattice of a doubly founded
-% concept lattice $\CLGMI$ is isomorphic to $\CL(G,M,\NDDArrow)$.
-% \end{verbatim}
-% This translates to:
-% \begin{center}
-%  \begin{minipage}{.88\textwidth}
-%  \FCA provides an elegant way to determine the congruence relations of a
-%  complete lattice. The congruence lattice of a doubly founded concept lattice
-%  $\CLGMI$ is isomorphic to $\CL(G,M,\NDDArrow)$.
-%  \end{minipage}
-% \end{center}
-%
 % \section{About the current version of \env{fca.sty}}
 % \subsection{Compatibility with earlier versions}\label{subsec:compat}
 %
@@ -1326,38 +1394,6 @@ Formal Concept Analysis macros]
 % that direction. In this usage the |\unitlength| register is set to
 % the sum of the horizontal unit lengths of the x and the y
 % coordinates as provided by the surrounding environment.
-%
-% \subsection{Fine tuning}
-% You can change certain layout parameters either permanently (by modifying the
-% file \texttt{fca.sty}) or temporarily using the following commands:
-% \begin{description}
-% \ItemDescribeMacro{\fcaCircleSize}\marg{size} Default: 4\qquad
-% (times |\unitlength|)
-% \ItemDescribeMacro {\NodeColor}\marg{color}   Default: white
-% \ItemDescribeMacro {\fcaNodeThickness}\marg{thickness}  \qquad
-% Default: 1.2pt
-% \ItemDescribeMacro {\fcaEdgeThickness}\marg{thickness}  \qquad
-% Default: .8pt
-% \ItemDescribeMacro {\NodeThickness}\marg{thickness} an alias to
-% \cs{fcaNodeThickness} inside a \env{diagram} environment
-% \ItemDescribeMacro {\EdgeThickness}\marg{thickness} an alias to
-% \cs{fcaEdgeThickness} inside a \env{diagram} environment
-% \ItemDescribeMacro {\fcaNoDots}
-% \ItemDescribeMacro {\fcaObjectLabelStyle} can be redefined to set the
-% style of object labels,
-% \ItemDescribeMacro {\fcaAttributeLabelStyle} can be redefined to set
-% the style of attribute labels,
-% \ItemDescribeMacro {\fcaLabelBoxWidth} can be redefined to a width,
-% which will be used to set the width of the object and attribute boxes.
-% \end{description}
-% Except for the first three, these commands can be focussed to single instances,
-% using braces. For example,
-% \begin{center}
-% |{\fcaNoDots\centerObjbox{nodenumber}{xoffset}{yoffset}{labeltext}}|
-% \end{center}
-% generates a single centered object label without dotted line.
-%
-%
 %
 %
 %
@@ -1546,7 +1582,7 @@ Formal Concept Analysis macros]
 % \end{macro}
 % \end{macro}
 %
-% \subsubsection{The main structure of a context}
+% \subsubsection{The main structure of a formal context}
 %
 % Typically a context is created in the following way:
 % \begin{enumerate}
@@ -2563,15 +2599,19 @@ Formal Concept Analysis macros]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
 \newcommand{\fca@Defaults}{% Do not change this line!  %
-  \newcommand{\fcaObjectLabelStyle}{\small\baselineskip6pt\rmfamily\upshape}% %
-  \newcommand{\fcaAttributeLabelStyle}{\small\baselineskip6pt\itshape}% %
+  \newcommand{\fcaObjectLabelStyle}{%
+    \small\baselineskip1em\rmfamily\upshape%
+  }% %
+  \newcommand{\fcaAttributeLabelStyle}{%
+    \small\baselineskip1em\rmfamily\itshape
+  }% %
   \newcommand{\fcaLabelBoxWidth}{40mm}%
   \let\Node\fca@node
   \let\Edge\fca@edge
   \iffca@compat@macros
   \else
-    \let\fcaObjectLabelStyle\fcaObjectLabelStyle
-    \let\AttributeLabelStyle\fcaAttributeLabelStyle
+    \def\ObjectLabelStyle{\fcaObjectLabelStyle}%
+    \def\AttributeLabelStyle{\fcaAttributeLabelStyle}%
     \let\LabelBoxWidth\fcaLabelBoxWidth
     \let\EdgeThickness\fcaEdgeThickness
     \let\NodeThickness\fcaNodeThickness
@@ -2607,7 +2647,7 @@ Formal Concept Analysis macros]
 \newcommand*{\fca@usepath}{}%
 \newcommand*{\fca@node@number@prefix}{\pgfkeysvalueof{/fca/namespace}\space node\space}%
 \newcommand*{\fca@node@number@suffix}{\space number}%
-\newcommand*{\fca@label@edge@thickness}{\@wholewidth}%
+\newcommand*{\fca@label@edge@width}{\@wholewidth}%
 \newcommand*{\fca@label@at}{center}% anchor of node
 \newcommand*{\fca@label@shift@x}{0pt}%
 \newcommand*{\fca@label@shift@y}{0pt}%
@@ -3003,7 +3043,7 @@ Formal Concept Analysis macros]
   }%
 }%
 %    \end{macrocode}
-% 
+%
 % \paragraph{Options that are directly forwarded to \TikZ{}} If they
 % are not documented somewhere else, their implementation needs
 % \filenm{fca.sty} fröm the \TikZ{library} \filenm{fca}.
@@ -3043,7 +3083,8 @@ Formal Concept Analysis macros]
 % between the dots%
 % \ItemDescribeOption{densely dotted} draw lines dotted with less space
 % between the dots%
-%   \end{description}
+% \end{description}
+%
 %    \begin{macrocode}
 \fca@generate@tikz@parameters
 \@for \@tempa:=%
@@ -3065,7 +3106,10 @@ rotate,%
 solid,%
 dotted,%
 loosely dotted,%
-densely dotted%
+densely dotted,%
+line width,%
+x,%
+y%
 \do {
   \edef\@tempb{%
     \noexpand\pgfkeysdef{/fca/\@tempa}{\noexpand\pgfqkeys{/tikz}{\@tempa={##1}}}%
@@ -3159,9 +3203,29 @@ densely dotted%
   \end{pgfscope}%
   \ignorespaces
 }
+%    \end{macrocode}
+%
+% \begin{dtxexample}{Testing lines with \TikZ{}}
+%   \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
+% \begin{tikzdiagram}[x=1.2mm,y=1.2mm]
+%  \Node(1)(20,10)
+%  \Node(2)(35,20)
+%  \Node(3)(5,30)
+%  \Node(4)(35,40)
+%  \Node(5)(20,50)
+%  {\color{red}\Edge(1)(2)}
+%  \Edge[draw=blue,dotted,line width=1mm](1)(3)
+%  \Edge(2)(4)
+%  \EdgeThickness{2mm}
+%  \Edge[draw=green](3)(5)
+%  \Edge(4)(5)
+% \end{tikzdiagram}
+% \end{dtxexample}
+%
+%    \begin{macrocode}
 \newcommand{\fca@tikz@oldedge}[3]{%
   \fca@edgeslayer
-  \path[draw,/fca/.cd,#1] (#2) -- (#3);%
+  \path[draw,/fca/.cd,every edge/.try,#1] (#2) -- (#3);%
   \fca@endedgeslayer
   \ignorespaces
 }
@@ -3460,7 +3524,7 @@ densely dotted%
 % }
 % \end{verbatim}
 %
-% \ItemDescribeOption{/fca/node/thickness} line width of the nodes
+% \ItemDescribeOption{/fca/node/line width} line width of the nodes
 %   \textbf{value required}
 % \ItemDescribeOption{/fca/node/radius} Node radius
 %  \ItemDescribeOption{/fca/node/layer} Layer where the node shall be
@@ -3498,7 +3562,7 @@ densely dotted%
 % \ItemDescribeOption{/fca/label/node font}
 %   \textbf{value required}, Font macros to be applied to the label content
 %   before the size of the node is calculated.
-% \ItemDescribeOption{/fca/label/edge thickness}
+% \ItemDescribeOption{/fca/label/edge width}
 %   \textbf{value required}, thickness of the edge of the label node
 %   (typically the border size)
 % \ItemDescribeOption{/fca/label/at}
@@ -3588,10 +3652,10 @@ densely dotted%
     draw=black
   },
   every attributes/.style = {
-    font=\small\baselineskip1em\rmfamily\itshape
+    font=\AttributeLabelStyle
   },%\newcommand*{\fca@node@fill}{white}%%\newcommand*{\fca@node@fill}{white}%
   every objects/.style = {
-    font=\small\baselineskip1em\rmfamily\upshape
+    font=\ObjectLabelStyle
   },
   every edge/.style = {},
   every label edge/.style = { dotted, draw=black },
@@ -3615,7 +3679,11 @@ densely dotted%
   % anchor/.store in=\fca@label@anchor,
   % anchor/.value required,
   node number/.style = { node font=\tiny, font=\tiny },
-  color/.code={\fca@append\fca@options{#1}},
+  color/.code={\fca@append\fca@options{\color{#1}}},
+  line width/.code={%
+    \fca@append\fca@options{\pgfsetlinewidth{#1}}%
+    \pgfmathsetlength\pgflinewidth{#1}%
+  },
   stroke/.code={%
     \fca@testoption{#1}{%
       \fca@append\fca@options{%
@@ -3707,11 +3775,12 @@ densely dotted%
 }
 
 \pgfqkeys{/fca/node}{%
-  thickness/.store in=\fca@node@thickness,
-  thickness/.value required,
+  line width/.store in=\fca@node@thickness,
+  line width/.value required,
   radius/.style={
     /pgf/inner sep=#1
   },
+  color/.initial={},
   layer/.code=\fcalayer{node},%
   numbers/.is if=fca@CircledNumbers,
   number prefix/.store in=\fca@node@number@prefix,
@@ -3735,10 +3804,10 @@ densely dotted%
   fill/.value required,
   text width/.store in=\fca@label@text@width,
   text width/.value required,
-  node font/.store in=\fca@label@node@font,
+  node font/.initial={},
   node font/.value required,
-  edge thickness/.store in=\fca@label@edge@thickness,
-  edge thickness/.value required,
+  edge width/.store in=\fca@label@edge@width,
+  edge width/.value required,
   at/.store in=\fca@label@at,
   at/.value required,
   type/.store in=\fca@label@type,
@@ -3822,16 +3891,28 @@ densely dotted%
 }
 
 
-\newcommand*{\fcaNodeThickness}[1]{\pgfkeyssetvalue{/fca/node/thickness}{#1}}% %
-\newcommand*{\fcaEdgeThickness}[1]{\def\fca@edge@thickness{#1}}% %
-\newcommand*{\fcaNodeColor}[1]{\pgfkeyssetvalue{/fca/node/color}{#1}}% %
+\newcommand*{\fcaNodeThickness}[1]{%
+  \fcaset{node/line width={#1}}%
+  \ignorespaces
+}% %
+\newcommand*{\fcaEdgeThickness}[1]{%
+  \fcaset{line width={#1}}%
+  \ignorespaces
+}
+\newcommand*{\fcaNodeColor}[1]{%
+  \pgfkeyssetvalue{/fca/node/color}{#1}%
+  \ignorespaces
+}%
 \newcommand*{\fcaNumbers}{%
   \setboolean{fca@CircledNumbers}{true}%
 }%
 \newcommand*{\fcaNoNumbers}{%
   \setboolean{fca@CircledNumbers}{false}%
 }%
-\newcommand*{\fcaCircleSize}[1]{\pgfqset{/pgf/node}{inner sep=(#1)*0.5\unitsize}}%
+\newcommand*{\fcaCircleSize}[1]{%
+  \fcaset{every concept/.append style={radius=(#1)*0.5\unitlength}}%
+  \ignorespaces
+}%
 \iffca@compat@macros
   \def\fcaObjectLabelStyle{\fcaObjectLabelStyle}%
   \def\fcaAttributeLabelStyle{\AttributeLabelStyle}%
@@ -3845,13 +3926,22 @@ densely dotted%
   \def\NoDots{\fcaNoDots}
   \def\Dots{\fcaDots}
 \fi
-\pgfqkeys{/fca/edge}{%
-  thickness/.code=\fcaEdgeThickness
-  layer/.code=\fcaLayer{edge}%
-}%
 %    \end{macrocode}
-%                                                                             %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{dtxexample}{Testing node  parameters}
+% {\unitlength 1.2mm
+% \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
+% \begin{diagram}
+%  \Node[draw=red, fill=green,/tikz/line width=.5mm](1)(20,10)
+%  \Node[fill=black, radius=2mm](2)(35,20)
+%  \fcaCircleSize{10}%
+%  \Node[opacity=0.3,fill=red](3)(5,30)
+%  \fcaset{node/line width=2mm}
+%  \Node[fill=darkgreen](4)(35,40)
+%  \fcaNodeColor{orange}
+%  \Node[/tikz/rectangle](5)(20,50)
+% \end{diagram}}
+% \end{dtxexample}
+%
 %    \begin{macrocode}
 \newcounter{fca@minNode}%
 \newcounter{fca@maxNode}%
@@ -3890,8 +3980,18 @@ densely dotted%
 }
 \newcommand\fca@oldnode[4]{%
   \begin{pgfscope}%
-    \fcaset{shape=circle}%
+    \fcaset{shape=circle,
+      line width=\fca@node@thickness}%
     \fcaset{every node/.try}%
+    \pgfkeysgetvalue{/fca/node/color}{\fca@node@color}%
+    \expandafter\fca@testoption\expandafter{\fca@node@color}{%
+      \fca@append\fca@options{%
+        \expandafter\pgfsetfillcolor\expandafter{\fca@node@color}%
+      }%
+      \fca@append\fca@usepath{fill,}%
+    }{% none
+    }{% empty or \pgfkeysnovalue
+    }%
     \fcaset{every concept/.try}%
     \fcaset{#1}%
     \fca@nodeslayer
@@ -3946,13 +4046,32 @@ densely dotted%
 \newcommand\fca@new@dge[2]{%
   \fca@parse@parenlabel{\fca@oldedge{#1}{#2}}%
 }
+%    \end{macrocode}
+% \begin{dtxexample}{Testing lines}
+% {\unitlength 1.2mm
+% \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
+% \begin{diagram}
+%  \Node(1)(20,10)
+%  \Node(2)(35,20)
+%  \Node(3)(5,30)
+%  \Node(4)(35,40)
+%  \Node(5)(20,50)
+%  {\color{red}\Edge(1)(2)}
+%  \Edge[draw=blue,dotted,line width=1mm](1)(3)
+%  \Edge(2)(4)
+%  \EdgeThickness{2mm}
+%  \Edge[draw=green](3)(5)
+%  \Edge(4)(5)
+% \end{diagram}}
+% \end{dtxexample}
+%    \begin{macrocode}
 \newcommand{\fca@oldedge}[3]{%
   \begin{pgfscope}%
     \fca@edgeslayer
-    \fcaset{#1}%
+    \fcaset{every edge/.try,#1}%
     \fca@options
     \fca@transform
-    \pgfsetlinewidth{\fca@edge@thickness}%
+    %\pgfsetlinewidth{\pgfkeysgetvalue{/fca/line width}}%
     \pgfpathmoveto{%
       \pgfpointshapeborder{%
         \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name suffix}%%
@@ -4357,10 +4476,38 @@ densely dotted%
 %   \rightObjbox(4)(20,-2){Hamilton}
 % \end{diagram}
 %
+% \begin{dtxexample}{testing label lines}
+% \unitlength=1.2mm
+% \begin{diagram}[conexpstyle]
+%   \Node(1)(20,10)
+%   \Node(2)(35,20)
+%   \Node(3)(5,30)
+%   \Node(4)(35,40)
+%   \Node(5)(20,50)
+%   \Edge(1)(2)
+%   \Edge(1)(3)
+%   \Edge(2)(4)
+%   \Edge(3)(5)
+%   \Edge(4)(5)
+%   \leftAttbox(3)(-20,20){1}
+%   \rightAttbox[draw,line width=1mm](2)(20,20){disqualified}
+%   \rightAttbox[label/edge width=1mm](4)(20,20){2.}
+%   \leftObjbox(3)(-20,-2){Verstappen}
+%   \rightObjbox[draw](2)(2,-2){Leclerc}
+%   \fcaset{label/edge width=2mm}
+%   \rightObjbox[draw](4)(20,-2){Hamilton}
+% \end{diagram}
+% \end{dtxexample}
+% Notice the dependency between the connector lines and the
+% border of the attribute and object concepts. These are the reason
+% why the macros from
+%
 %    \begin{macrocode}
 \newcommand\fca@@labelBox[1]{%
   \begin{pgfscope}%
-    \fcaset{every node/.try,every label/.try,#1}%
+    \fcaset{every node/.try,
+      node font=\pgfkeysvalueof{/fca/label/node font},
+      every label/.try,#1}%
     \fca@labelslayer
     \pgfkeysvalueof{/fca/node font}%
     \fca@options
@@ -4395,11 +4542,14 @@ densely dotted%
       \fca@connectorslayer
       \pgftransformreset
       \let\fca@options\fca@defaultoptions
+      \fcaset{%
+        line width=\fca@label@edge@width
+      }
       \fcaset{every label edge/.try}%
       \fcaset{#1}%
       \fca@options
       \fca@transform
-      \pgfsetlinewidth{\fca@edge@thickness}%
+      %\pgfsetlinewidth{\pgfkeysgetvalue{/fca/line width}}%
       \fca@prepare@node\fca@temp@start@point\fca@temp@start@point@{}{}{\pgfkeysvalueof{/fca/pgfnode}}%
       \fca@prepare@node\fca@temp@end@point\fca@temp@end@point@
       {\pgfkeysvalueof{/fca/label/name prefix}}%

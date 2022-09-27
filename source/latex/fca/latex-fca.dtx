@@ -842,9 +842,11 @@ Formal Concept Analysis macros]
 % \ItemDescribeMacro {\EdgeThickness}\marg{thickness} an alias to
 % \cs{fcaEdgeThickness} inside a \env{diagram} environment
 % \ItemDescribeMacro {\fcaNoDots} Causes no dotted line to be drawn
-% from the concept node to the label boxes. 
+% from the concept node to the label boxes.
 %
-% {\color{red} |\NoDots| geht nicht. Ist nur für compat definiert.}
+% \textcolor{red}{ \cs{NoDots} geht nicht. Ist nur für compat
+% definiert.}
+% \textcolor{green}{\cs{NoDots} geht siehe Example \ref{ex:concept node labels}}
 % \ItemDescribeMacro {\fcaObjectLabelStyle} can be redefined to set the
 % style of object labels,
 % \ItemDescribeMacro {\fcaAttributeLabelStyle} can be redefined to set
@@ -2612,6 +2614,8 @@ Formal Concept Analysis macros]
     \let\noNumbers\fcaNoNumbers
     \let\NodeColor\fcaNodeColor
     \let\ColorNode\fcaColorNode
+    \let\NoDots\fcaNoDots
+    \let\Dots\fcaDots
   \fi
   \let\leftAttbox\fca@leftAttbox
   \let\centerAttbox\fca@centerAttbox
@@ -4096,6 +4100,20 @@ y%
 \newcommand{\fcaNoDots}{\setboolean{fca@connectors}{false}}
 \newcommand{\fcaDots}{\setboolean{fca@connectors}{true}}
 %    \end{macrocode}
+%\begin{dtxexample}{Testing nodots}
+%   \begin{diagram}[text width=3.4cm]
+%     \Node(0)(20,10)
+%     \NoDots
+%     \leftAttbox[draw](0)(-5,1){left\\ attribute\\ label}
+%     \Dots
+%     \rightAttbox[fill=red!50!blue!20](0)(10,10){right
+%     attri-\\ bute label}
+%     \fcaNoDots\centerObjbox(0)(0,-10){centered\\ object label}
+%     \fcaDots
+%     \rightObjbox[draw=brown](0)(20,5){right\\ object\\ label}
+%   \end{diagram}
+% \end{dtxexample}
+
 %    \begin{macrocode}
 \def\fca@parse@parenlabel#1(#2){#1{#2}}
 \def\fca@parse@paren@vector#1#2#3(#4,#5){%

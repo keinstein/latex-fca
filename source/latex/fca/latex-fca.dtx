@@ -592,8 +592,12 @@ Formal Concept Analysis macros]
 %
 % \section{Drawing lattices with \env{diagram}}
 % The \texttt{diagram} environment helps typesetting diagrams of concept
-% lattices, but can be used for ordered sets and graphs as well. Again we start
-% with a small example (for which we set |\unitlength 1.2mm|):
+% lattices, but can be used for ordered sets and graphs as well.
+% As of version 3.0, the \env{diagram} environment uses the
+% \emph{Portable Graphics Format} \PGF\ and, if loaded, its
+% user-friendly syntax layer called \TikZ.
+%
+% Again we start with a small example (for which we set |\unitlength 1.2mm|):
 %
 % \begin{dtxexample}{A lattice diagram}
 %   {\unitlength 1.2mm
@@ -604,10 +608,10 @@ Formal Concept Analysis macros]
 %   \Node(4)(35,40)
 %   \Node(5)(20,50)
 %   \Edge(1)(2)
-%   \Edge{1}{3}
-%   \Edge{2}{4}
-%   \Edge{3}{5}
-%   \Edge{4}{5}
+%   \Edge(1)(3)
+%   \Edge(2)(4)
+%   \Edge(3)(5)
+%   \Edge(4)(5)
 %   \leftAttbox(3){1.}
 %   \rightAttbox(2){disqualified}
 %   \rightAttbox(4){2.}
@@ -633,7 +637,7 @@ Formal Concept Analysis macros]
 % possibilities offered by \PGF, even without knowing much about \PGF.
 % The |diagram| environment and its macros allow  optional parameters,
 % e.g. for colour, line thickness, etc. These will be described in
-% Section~\ref{subsec:diagram-adv}.
+% Section~\ref{subsec:fine}.
 %
 % The commands within a \env{diagram} environment (in their basic form) are
 %
@@ -709,7 +713,7 @@ Formal Concept Analysis macros]
 % \DescribeMacro{\NoNumbers} can be used to exclude individual nodes
 % from the numbering.
 %
-% \subsection{Changes to the graphics}
+% \subsection{Changes to the style of the graphics}
 % \label{subsec:diagram-adv}
 % The connection with \PGF\  and \TikZ\ results in many design tools,
 % some of which will be presented in Section~\ref{sec:advanced}.
@@ -1000,6 +1004,10 @@ Formal Concept Analysis macros]
 % \texttt{Concept Explorer}, in which object and attribute concepts
 % are color-coded, by a black lower semicircle and a blue upper
 % semicircle, respectively.
+%
+% {\color{red}Der hier definierte Conexp Style verträgt sich nicht gut
+% mit |\fcaCircleSize{}|. Man sollte den Halbkreisradius in
+% Abhängigkeit von |CircleSize| setzen, nicht einfach auf |2\unitlength|.}
 %
 % \begin{dtxexample}{Defining a \env{diagram} style}
 % \fcaset{conexp style/.style={%

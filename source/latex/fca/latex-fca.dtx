@@ -3304,10 +3304,11 @@ Formal Concept Analysis macros]
 %    \end{macrocode}
 % \subsection{Backports and bugfixes for \TikZ{}}
 %    \begin{macrocode}
-\@ifpackagelater{pgf}{2019/11/04}{}{%
+\@ifpackagelater{tikz}{2019/11/04}{}{%
   \PackageWarning{fca}{Your TikZ version does not fully support fca
     name spaces.^^J
-    I'm trying to fix that...}
+    I'm trying to fix that..., trying to apply^^J
+    patch 88951be592b558b94b14a97aaffe9df6c1ce61ee from TikZ}
   \def\tikz@calc@anchor#1.#2\tikz@stop{%
     % Check if a shape with name prefix exists, otherwise try the global name
     % without prefix.
@@ -3317,6 +3318,103 @@ Formal Concept Analysis macros]
       \pgfpointanchor{#1}{#2}%
     \fi
   }%
+\def\tikz@subpicture@handle@#1{
+  \pgfkeys{/tikz/pics/.cd,#1}%
+  \tikz@node@transformations%
+  \let\tikz@transform=\relax%
+  \let\tikz@picmode\tikz@mode%
+  \tikzset{name prefix ../.style/.expanded={/tikz/name prefix=\pgfkeysvalueof{/tikz/name prefix}}}%
+  \ifx\tikz@fig@name\pgfutil@empty\else%
+    \tikzset{name prefix/.expanded=\tikz@fig@name}%
+  \fi%
+  \pgfkeysvalueof{/tikz/pics/setup code}%
+  \pgfkeysgetvalue{/tikz/pics/code}{\tikz@pic@code}
+  \ifx\tikz@pic@code\pgfutil@empty\else%
+  \setbox\tikz@whichbox=\hbox\bgroup%
+    \unhbox\tikz@whichbox%
+      \hbox\bgroup
+      \bgroup%
+      \pgfinterruptpath%
+      \pgfscope%
+      \tikz@options%
+      \setbox\tikz@figbox=\box\pgfutil@voidb@x%
+      \setbox\tikz@figbox@bg=\box\pgfutil@voidb@x%
+      \tikz@atbegin@scope%
+      \scope[every pic/.try]%
+      \tikz@pic@code%
+      \endscope%
+      \tikz@atend@scope%
+      \endpgfscope%
+      \endpgfinterruptpath%
+      \egroup
+      \egroup%
+      \egroup%
+    \fi%
+    \pgfkeysgetvalue{/tikz/pics/foreground code}{\tikz@pic@code}
+    \ifx\tikz@pic@code\pgfutil@empty\else%
+      \setbox\tikz@figbox=\hbox\bgroup%
+      \unhbox\tikz@figbox%
+      \hbox\bgroup
+      \bgroup%
+      \pgfinterruptpath%
+      \pgfscope%
+      \tikz@options%
+      \setbox\tikz@figbox=\box\pgfutil@voidb@x%
+      \setbox\tikz@figbox@bg=\box\pgfutil@voidb@x%
+      \tikz@atbegin@scope%
+      \scope[every front pic/.try]%
+      \tikz@pic@code%
+      \endscope%
+      \tikz@atend@scope%
+      \endpgfscope%
+      \endpgfinterruptpath%
+      \egroup
+      \egroup%
+      \egroup%
+    \fi%
+    \pgfkeysgetvalue{/tikz/pics/background code}{\tikz@pic@code}
+    \ifx\tikz@pic@code\pgfutil@empty\else%
+      \setbox\tikz@figbox@bg=\hbox\bgroup%
+      \unhbox\tikz@figbox@bg%
+      \hbox\bgroup
+      \bgroup%
+      \pgfinterruptpath%
+      \pgfscope%
+      \tikz@options%
+      \setbox\tikz@figbox=\box\pgfutil@voidb@x%
+      \setbox\tikz@figbox@bg=\box\pgfutil@voidb@x%
+      \tikz@atbegin@scope%
+      \scope[every behind pic/.try]%
+      \tikz@pic@code%
+      \endscope%
+      \tikz@atend@scope%
+      \endpgfscope%
+      \endpgfinterruptpath%
+      \egroup
+      \egroup%
+      \egroup%
+    \fi%
+    \tikz@node@finish%
+  }%
+\def\tikz@parse@node#1(#2){%
+  \pgfutil@in@.{#2}% Ok, flag this
+  \ifpgfutil@in@
+    \tikz@calc@anchor#2\tikz@stop%
+  \else%
+    \tikz@calc@anchor#2.center\tikz@stop% to be on the save side, in
+                                % case iftikz@shapeborder is ignored...
+    \ifcsname pgf@sh@ns@\tikz@pp@name{#2}\endcsname
+      \expandafter\ifx\csname pgf@sh@ns@\tikz@pp@name{#2}\endcsname\tikz@coordinate@text%
+      \else
+        \tikz@shapebordertrue%
+        \def\tikz@shapeborder@name{\tikz@pp@name{#2}}%
+      \fi%
+    \fi
+  \fi%
+  \edef\tikz@marshal{\noexpand#1{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}}%
+  \tikz@marshal%
+}%
+
 }%
 %    \end{macrocode}
 %

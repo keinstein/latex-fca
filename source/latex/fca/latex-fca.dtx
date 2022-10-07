@@ -472,8 +472,10 @@ Formal Concept Analysis macros]
 % want to force the redefinition of a context character, you should use
 % |\fcaRenewContextChar|.
 %
+% There is one more possibility:
+%
 % \DescribeMacro{\freeobj}{\marg{text}}
-% There are other possibilities. You may define a marker with a single
+% You may define a marker with a single
 % argument that typesets its argument. There also is a macro
 % |\freeobj| that takes a tabular row  as argument instead of the
 % usual markers.  The following example illustrates these:
@@ -516,7 +518,7 @@ Formal Concept Analysis macros]
 % environment (see there for further documentation).
 %
 % \begin{dtxexample}{Alignment parameter for a \env{cxt}-environment}
-%   \makebox{%
+%   \makebox{
 %   \begin{cxt}[t]
 %     \cxtName{Formula t}
 %     %
@@ -527,7 +529,7 @@ Formal Concept Analysis macros]
 %     \obj{x..}{Verstappen}
 %     \obj{.x.}{Hamilton}
 %     \obj{.xx}{Leclerc}
-%   \end{cxt}\quad%
+%   \end{cxt}\quad
 %   \begin{cxt}[c]
 %     \cxtName{Formula c}
 %     %
@@ -538,7 +540,7 @@ Formal Concept Analysis macros]
 %     \obj{x..}{Verstappen}
 %     \obj{.x.}{Hamilton}
 %     \obj{.xx}{Leclerc}
-%   \end{cxt}\quad%
+%   \end{cxt}\quad
 %   \begin{cxt}[b]
 %     \cxtName{Formula b}
 %     %
@@ -622,6 +624,7 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 %
 % \subsection{Basic usage of the \env{diagram} environment}
+% \label{subsec:diagram-basic}
 % \DescribeEnv{diagram}
 %
 % \DescribeMacro{\begin\{diagram\}} begins a \PGF{}-picture.
@@ -645,15 +648,15 @@ Formal Concept Analysis macros]
 % Puts a circle at position \texttt{(xpos,ypos)} of the picture. The default
 % diameter of the circles is 4 (times |\unitlength|). It can be changed
 % (for all circles) with |\fcaCircleSize{}|. The argument must be an integer.
-% The node numbers must be different, consecutive between 0 and 51, but need not
-% necessarily be given in ascending order.
+% The node names must be different, but in contrast to previous
+% versions, they do not have to be numbers, although this is
+% recommended for clarity.
 %
 % The old syntax |\Node{nodenumber}{xpos}{ypos}| is also supported.
 %
 % \DescribeMacro{\Edge}\marg{nodenumber1}\marg{nodenumber2}
 % Puts a line between the two nodes with the given numbers. These must
 % have been declared earlier with a |\Node|--command.
-% {\color{red}The |\Edge|--command is executed immediately.}
 %
 % \DescribeMacro{\leftAttbox}\parg{nodenumber}\marg{text}\\
 % \DescribeMacro{\centerAttbox}\parg{nodenumber}\marg{text}\\
@@ -682,10 +685,8 @@ Formal Concept Analysis macros]
 % to the diagram. This means that, e.g., |\leftAttbox{4}{3}{5}{text}|
 % corresponds to |\leftAttbox(4)(-3,5){text}|.
 %
-% \DescribeMacro{\end\{diagram\}} This concludes the
-% diagram. \textcolor{red}{The circles
-%  representing the nodes are drawn and filled with white, unless
-%  specified otherwise.}
+% \DescribeMacro{\end\{diagram\}} This concludes the diagram.
+%
 %
 % A helpful command when fine tuning a diagram is
 %
@@ -760,11 +761,11 @@ Formal Concept Analysis macros]
 % \fi
 %
 % \subsubsection{Fine tuning}\label{subsec:fine}
-% In version 2.1 and before some macros that allow you to change
+% In Version 2.1 and before some macros that allow you to change
 % certain parameters of the diagrams.
-% {\color{red}
+%
 % For compatibility reasons these
-% still do work in diagrams that use bare \PGF\ }(i.e., that are not
+% still do work in diagrams that use bare \PGF\ (i.e., that are not
 % inside the argument to the \cs{tikz} macro or one of the
 % environments \env{tikzpicture} or \env{tikzdiagram}).
 %
@@ -773,7 +774,7 @@ Formal Concept Analysis macros]
 % The default is 4~(times |\unitlength|).
 % Can be changed for single nodes by specifying the radius
 % as an optional parameter (e.g., |[radius=3mm]|).
-% 
+%
 % \DescribeMacro {\fcaNodeColor}\marg{color} The color with which the
 % concept nodes are filled.  The default is \textit{white}. Can be
 % changed for single nodes by using |fill=|\textit{color} as an option.
@@ -790,7 +791,7 @@ Formal Concept Analysis macros]
 % \DescribeMacro {\NodeThickness}\marg{thickness} an alias to
 % \cs{fcaNodeThickness} inside a \env{diagram} environment.
 %
-% \DescribeMacro {\fcaEdgeThickness}\marg{thickness} 
+% \DescribeMacro {\fcaEdgeThickness}\marg{thickness}
 % The default is .8pt. It can be changed for all or for single edges by
 % specifying |line width| as an optional parameter.
 %
@@ -803,15 +804,17 @@ Formal Concept Analysis macros]
 %
 % \subsection{Labels}
 % Some of the nodes in a concept lattice diagram have text labels.
-% Typically, object and attibute concepts are labeled with the   
-% associated object or attibute names. This is done using the  
-% |\**box(){}|-macros. Font size and font colour of such labels can be
+% Typically, object and attibute concepts are labeled with the
+% associated object or attibute names. This is done using the
+% |\**box(){}|-macros, which were introduced in
+% Subsection~\ref{subsec:diagram-basic}.  Font size and font colour of
+% such labels can be
 % changed, and the label boxes as well. By default each label box is
 % connected to the respective concept node by a dotted line. This can
 % be switched off:
 %
 % \DescribeMacro {\fcaNoDots} Causes no dotted line to be drawn  from
-% the concept node to the label boxes. 
+% the concept node to the label boxes.
 %
 % \DescribeMacro {\NoDots} is an alias to
 % \cs{fcaNoDots} inside a \env{diagram} environment.
@@ -850,7 +853,7 @@ Formal Concept Analysis macros]
 %
 % The text properties of the lables are given by the next two
 % commands, which  can be changed with |\renewcommand|.
-% 
+%
 %   \DescribeMacro{\fcaObjectLabelStyle} Used to define the font
 %   of object labels \emph{outside} of \env{diagram} environments.
 %   Default: |\small\baselineskip1em\rmfamily\upshape|
@@ -1011,11 +1014,8 @@ Formal Concept Analysis macros]
 % style called conexp style. It is based on Serhiy Yevtushenko's
 % \texttt{Concept Explorer}, in which object and attribute concepts
 % are color-coded, by a black lower semicircle and a blue upper
-% semicircle, respectively.
-%
-% {\color{red}Der hier definierte Conexp Style verträgt sich nicht gut
-% mit |\fcaCircleSize{}|. Man sollte den Halbkreisradius in
-% Abhängigkeit von |CircleSize| setzen, nicht einfach auf |2\unitlength|.}
+% semicircle, respectively. The version presented in this example does
+% not behave well when the radius of concept nodes is changed.
 %
 % \begin{dtxexample}{Defining a \env{diagram} style}
 % \fcaset{conexp style/.style={%
@@ -1063,6 +1063,7 @@ Formal Concept Analysis macros]
 %   \Edge(1)(3)
 %   \Edge(2)(4)
 %   \Edge(3)(5)
+
 %   \Edge(4)(5)
 %   \leftAttbox(3)(-1,1){1}
 %   \rightAttbox(2)(1,1){disqualified}
@@ -1089,13 +1090,65 @@ Formal Concept Analysis macros]
 % possibilities. The |diagram| environment may be used inside or
 % outside a |tikzpicture| (or a |\tikz| command).
 % Table~\ref{tab:diagram-environments} gives an impression of the
-% differences. 
+% differences.
 %
 % To make sure that you are using |diagram| inside a |tikzpicture|,
-% you may write |begin{tikzdiagram}| \ldots |\end{tikzdiagram}|
-% instead of |\begin{diagram}| \ldots |\end{diagram}|. 
+% you may write |\begin{tikzdiagram}| \ldots |\end{tikzdiagram}|
+% instead of |\begin{diagram}| \ldots |\end{diagram}|.
 %
-% 
+% \begin{table}[htbp]
+%   \centering\footnotesize
+% \newcommand{\Platz}{\rule[0pt]{0pt}{12pt}}
+%   \fbox{\begin{tabular}{p{1.8cm}p{2.3cm}p{3cm}p{3cm}}
+%       &\centering\env{diagram} environment with
+%           \cs{usepackage\{fca\}}
+%       &\centering\env{diagram} environment with
+%           \cs{usetikzlibrary\{fca\} outside of \cs{tikz} or
+%           \env{tikzpicture} environments}
+%       &\centering\env{diagram} environment with
+%           \cs{usetikzlibrary\{fca\}} inside \cs{tikz}
+%           or a \env{tikzpicture} environment, or \env{tikzdiagram}\tabularnewline\hline\Platz
+%      \raggedright Main command in~\cs{Node}
+%         &\centering\cs{pgfnode}
+%         &\centering\cs{pgfnode}
+%         &\centering\cs{node} \tabularnewline\Platz
+%       \raggedright Main command(s) in~\cs{Edge}
+%         &\centering\cs{pgfmoveto},
+%             \cs{pgflineto},
+%             \cs{pgfusepath}
+%         &\centering\cs{pgfmoveto},
+%             \cs{pgflineto},
+%             \cs{pgfusepath}
+%         &\centering\cs{draw(...) -- (...);}\tabularnewline\Platz
+%       \raggedright Available options
+%         &\centering all \optn{/fca/...}
+%             &\centering all \optn{/fca/...} and\\
+%       some \optn{/tikz/...}\footnotemark
+%         &\centering all \optn{/fca/...}\\ and all
+%         \optn{/tikz/...}\tabularnewline\Platz
+%       \raggedright Macros from Section~\ref{subsec:fine}
+%         &\centering working
+%         &\centering working
+%       &\centering not supported\tabularnewline\Platz
+%           Compatibility with version 2.1 and below
+%       &\centering yes
+%       & \centering yes
+%           &\centering partial
+%     \end{tabular}}
+%   \caption[diagram environments]{Comparison of the different diagram
+%   environments}
+%   \label{tab:diagram-environments}
+% \end{table}
+% \footnotetext{options for \cs{pgfusepath} are limited to those from
+%             \filenm{fca.sty}}
+%
+% You can put your \env{diagram} into a \env{pgfpicture} or a
+% \env{tikzpicture}. It will get a new ``scope'' in order to prevent
+% bleeding of options into later graphics operations. Putting more
+% than one diagram into one \env{pgf-} or \env{tikzpicture} may
+% require giving each of these diagrams its own namespace by setting
+% the \optn{namespace=\meta{name}} option for each \env{diagram}
+% environment to a different \meta{name}.
 %
 % \iffalse
 % \textcolor{red}{\bf Bernhards Arbeitsende}
@@ -1231,9 +1284,9 @@ Formal Concept Analysis macros]
 %     \end{diagram}
 %   \end{tikzpicture}
 % \end{dtxexample}
+% \fi
 %
 % The same diagram can be typeset using \PGF:
-% \fi
 %
 % {\unitlength 1.2mm\relax
 % \begin{dtxexample}*{A \PGF\  enhanced diagram}
@@ -1382,7 +1435,7 @@ Formal Concept Analysis macros]
 %     \end{pgfscope}%
 %   \end{diagram}
 % \end{dtxexample}
-% }\fi
+% }
 %
 % \subsection{Which environment to choose?}
 % There are several options how to start and end a \env{diagram}
@@ -1422,58 +1475,14 @@ Formal Concept Analysis macros]
 % to \cs{tikz} or inside a \env{tikzpicture} environment is always
 % processd as \TikZ{} graphics, independent from whether the graphics
 % has been interrupted or not.
-%
-% \begin{table}[htbp]
-%   \centering\footnotesize
-%   \begin{tabular}{p{3cm}p{3cm}p{3cm}p{3cm}}
-%       &\centering\env{diagram} environment with
-%           \cs{usepackage\{fca\}}
-%       &\centering\env{diagram} environment with
-%           \cs{usetikzlibrary\{fca\} outside of \cs{tikz} or
-%           \env{tikzpicture} environments}
-%       &\centering\env{diagram} environment with
-%           \cs{usetikzlibrary\{fca\}} inside \cs{tikz}
-%           or a \env{tikzpicture} environment, or \env{tikzdiagram}\tabularnewline\hline
-%      \raggedright Main command in~\cs{Node}
-%         &\centering\cs{pgfnode}
-%         &\centering\cs{pgfnode}
-%         &\centering\cs{node} \tabularnewline
-%       \raggedright Main command(s) in~\cs{Edge}
-%         &\centering\cs{pgfmoveto},
-%             \cs{pgflineto},
-%             \cs{pgfusepath}
-%         &\centering\cs{pgfmoveto},
-%             \cs{pgflineto},
-%             \cs{pgfusepath}
-%         &\centering\cs{draw(...) -- (...);}\tabularnewline
-%       \raggedright Available options
-%         &\centering all \optn{/fca/...}
-%         &\centering all \optn{/fca/...} and some \optn{/tikz/...}
-%             \footnote{options for \cs{pgfusepath} are limited to those from
-%             \filenm{fca.sty}}
-%         &\centering all \optn{/fca/...} and all
-%         \optn{/tikz/...}\tabularnewline 
-%       \raggedright Macros from Section~\ref{subsec:fine}
-%         &\centering working
-%         &\centering working
-%       &\centering not supported\tabularnewline
-%           Compatibility with version 2.1 and below
-%       &\centering yes
-%       & \centering yes
-%           &\centering partial
-%     \end{tabular}
-%   \caption[diagram environments]{Comparison of the different diagram
-%   environments}
-%   \label{tab:diagram-environments}
-% \end{table}
-%
+%\fi
 % \section{About the current version of \env{fca.sty}}
 % The original version of fca.sty had been written by Bernhard Ganter,
 % mainly for his personal use. With the further development of \TeX,
 % especially the introduction of \TikZ, this package became
 % obsolete. Then, in 2022, Tobias Schlemmer, on behalf of the Ernst
 % Schröder Center, set up the completely revised version that is now
-% available. 
+% available.
 % \subsection{Compatibility with earlier versions}\label{subsec:compat}
 %
 % In order to reduce incompatibilities with other packages,

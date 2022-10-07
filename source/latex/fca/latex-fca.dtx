@@ -601,7 +601,7 @@ Formal Concept Analysis macros]
 %
 % Again we start with a small example (for which we set |\unitlength 1.2mm|):
 %
-% \begin{dtxexample}{A lattice diagram}
+% \begin{dtxexample}{A lattice diagram\label{dtx:diagram}}
 %   {\unitlength 1.2mm
 %   \begin{diagram}
 %   \Node(1)(20,10)
@@ -869,7 +869,8 @@ Formal Concept Analysis macros]
 %   \emph{inside} of \env{diagram} environments.
 %
 % {\unitlength .7mm
-% \begin{dtxexample}{Concept node labels\label{ex:concept node labels}}
+% \begin{dtxexample}{Concept node labels\label{ex:concept node
+%   labels}}
 %   \begin{diagram}[text width=3.4cm]
 %     \Node(0)(20,10)
 %     \leftAttbox[draw](0)(-1,1){left\\ attribute\\ label}
@@ -1063,7 +1064,6 @@ Formal Concept Analysis macros]
 %   \Edge(1)(3)
 %   \Edge(2)(4)
 %   \Edge(3)(5)
-
 %   \Edge(4)(5)
 %   \leftAttbox(3)(-1,1){1}
 %   \rightAttbox(2)(1,1){disqualified}
@@ -1080,7 +1080,9 @@ Formal Concept Analysis macros]
 % necessarily its syntax layer \TikZ. That means that \PGF\ will be
 % loaded automatically with \fcastyle, but \TikZ\ is not.  When you do
 % not need any of \TikZ’s special features, you may slightly increase
-% the processing speed by loading \fcastyle\ without \TikZ.
+% the processing speed by loading \fcastyle\ without \TikZ. Since
+% \TikZ\ is built on \PGF, you can get from \PGF\ whatever you get from
+% \TikZ, though often with difficulty.
 %
 % Most users will load both \fcastyle\ and \TikZ. In that case, and
 % provided that you want to use \TikZ-features, you should also put
@@ -1150,72 +1152,56 @@ Formal Concept Analysis macros]
 % the \optn{namespace=\meta{name}} option for each \env{diagram}
 % environment to a different \meta{name}.
 %
-% \iffalse
-% \textcolor{red}{\bf Bernhards Arbeitsende}
-%
-%
-% \section {weiter im normalen Text}
-%
-%
 % \iffcatikzdoc
-%   {\unitlength 1.2mm\relax
-%   \begin{dtxexample}*{A \protect\TikZ -enhanced diagram}
-%   \begin{diagram}[
-%     every attributes/.append style={
-%       label concept/.append style={
-%         shape=semicircle,
-%         fill=blue,
-%         anchor=south,
-%         minimum height=2\unitlength,
-%         label/name suffix=attribute concept,
-%         label/at=center,
-%         solid
-%       }
-%     },
-%     every objects/.append style={
-%       label concept/.append style={
-%         shape=semicircle,
-%         fill=black,
-%         anchor=south,
-%         minimum height=2\unitlength,
-%         label/name suffix=attribute concept,
-%         label/at=center,
-%         solid,
-%         rotate=180
-%       }
-%       }]%
 %
+% \PGF\ and \TikZ\ may be used inside a \env{diagram} environment, but
+% with some caution.  \PGF\ uses canvas transformations, and these can
+% collide with the \env{diagram} commands. To avoid such collisions,
+% \PGF\ or \TikZ\ command sequences should be encapsulated. The
+% \emph{pgfscope} environment is used for this purpose.
+% Example~\ref{dtx:pgf-diagram} illustrates this. The same diagram is
+% drawn as in our earlier examples (e.g., Example~\ref{dtx:diagram}),
+% but is decorated using \PGF. First a red circle with center
+% $(20,10)$|\unitlength| is drawn around the word ``Example''.  Then a
+% green line is drawn from the north east of Node 1 to the west of
+% Node 5, and finally a blue line bisecting Node 2.
+%
+%   {\unitlength 1.2mm\relax
+%   \begin{dtxexample}*{Using \PGF\ inside a diagram
+%   environment \label{dtx:pgf-diagram}}
+%   \begin{diagram}
 %     \begin{pgfscope}
 %       \color{red}
 %       \pgftransformshift{\pgfpoint{20\unitlength}{30\unitlength}}%
-%       \pgfnode{circle}{center}{\Huge Example}{example
+%       \pgfnode{circle}{center}{\Large Example}{example
 %       text}{\pgfusepath{stroke}}%
 %     \end{pgfscope}
 %     \Node(1)(20,10)
 %     \Node(2)(35,20)
-%     \Node[/tikz/opacity=0.3](3)(5,30)
+%     \Node(3)(5,30)
 %     \Node(4)(35,40)
 %     \Node(5)(20,50)
 %     \Edge(1)(2)
-%     \Edge[/tikz/opacity=0.3](1)(3)
-%     \Edge[/tikz/arrows=<->](2)(4)
-%     \Edge[/tikz/opacity=0.3](3)(5)
+%     \Edge(1)(3)
+%     \Edge(2)(4)
+%     \Edge(3)(5)
 %     \Edge(4)(5)
-%     \leftAttbox[/tikz/opacity=0.3](3){1.}
+%     \leftAttbox(3){1.}
 %     \rightAttbox(2){disqualified}
 %     \rightAttbox(4){2.}
-%     \leftObjbox[/tikz/opacity=0.3](3){Verstappen}
+%     \leftObjbox(3){Verstappen}
 %     \rightObjbox(2){Leclerc}
 %     \rightObjbox(4){Hamilton}
-%     \begin{pgfscope}%
+%     \begin{pgfscope}
 %       \edef\tempa{%
 %       \noexpand\pgftransformshift{%
-%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%
+%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name%
+%       prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%
 %     }%
 %       \tempa
 %       \pgfmoveto{\pgfpoint{0pt}{0pt}}%
 %       \pgflineto{\pgfpoint{4\unitlength}{0pt}}
-%       \pgfsetstrokecolor{red}
+%       \pgfsetstrokecolor{blue}
 %       \pgfusepath{stroke}
 %     \end{pgfscope}%
 %     {
@@ -1228,6 +1214,13 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 % }
 %
+% \fi
+%
+% \textcolor{red}{\bf Bernhards Arbeitsende}
+%
+% \iffalse
+%
+% \section {weiter im normalen Text}
 %
 % \begin{dtxexample}*{A \protect\TikZ diagram}
 %   \begin{tikzpicture}[x=0.1cm, y=0.1cm]
@@ -1284,7 +1277,6 @@ Formal Concept Analysis macros]
 %     \end{diagram}
 %   \end{tikzpicture}
 % \end{dtxexample}
-% \fi
 %
 % The same diagram can be typeset using \PGF:
 %
@@ -1475,7 +1467,8 @@ Formal Concept Analysis macros]
 % to \cs{tikz} or inside a \env{tikzpicture} environment is always
 % processd as \TikZ{} graphics, independent from whether the graphics
 % has been interrupted or not.
-%\fi
+%
+% \fi
 % \section{About the current version of \env{fca.sty}}
 % The original version of fca.sty had been written by Bernhard Ganter,
 % mainly for his personal use. With the further development of \TeX,

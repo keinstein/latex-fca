@@ -280,7 +280,7 @@ y%
 }
 \newcommand{\fca@tikz@oldedge}[3]{%
   \fca@edgeslayer
-  \path[draw,/fca/.cd,every edge/.try,#1] (#2) -- (#3);%
+  \path[draw,/fca/.cd,every edge/.try,#1] (#2) edge (#3);%
   \fca@endedgeslayer
   \ignorespaces
 }

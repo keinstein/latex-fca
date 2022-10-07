@@ -1135,7 +1135,14 @@ Formal Concept Analysis macros]
 %           Compatibility with version 2.1 and below
 %       &\centering yes
 %       & \centering yes
-%           &\centering partial
+%           &\centering partial\tabularnewline\Platz
+%               \raggedright Initial unit lengths
+%           & (\cs{unitlength}, \makebox{{} \cs{unitlength}})
+%           & (\cs{unitlength}, \makebox{{} \cs{unitlength}})
+%           & \centering Current \TikZ{} transformation matrix for coordinates
+%               and
+%             \cs{unitlength} for other sizes (line width, node
+%             radius, etc.)
 %     \end{tabular}}
 %   \caption[diagram environments]{Comparison of the different diagram
 %   environments}

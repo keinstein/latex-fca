@@ -1531,6 +1531,7 @@ Formal Concept Analysis macros]
 %
 %
 % \section{Some demonstrations}
+% \iffcatikzdoc
 % % \begin{dtxexample}{Changes of the bounding box with big numbers}
 %   \fbox{\unitlength .7mm
 %   \begin{diagram}
@@ -1551,8 +1552,7 @@ Formal Concept Analysis macros]
 %     \Node{7}{20}{50}
 %   \end{diagram}}
 % \end{dtxexample}
-%
-%
+% \fi
 % \begin{figure}[htbp]
 %   \centering
 % \fcaset{conexp style/.style={%
@@ -1581,6 +1581,7 @@ Formal Concept Analysis macros]
 %         rotate=180
 %       }
 %       }}}
+% \iffcatikzdoc
 %    \begin{tikzdiagram}[
 %       conexp style,
 %       every concept/.append style={%
@@ -1646,6 +1647,9 @@ Formal Concept Analysis macros]
 %     doku.east) node(centerObjBox){\textbackslash Edge(meet)(bottom)}
 %     (centerObjBox) -- (edgepoint) ;
 %   \end{tikzdiagram}
+% \else
+%   \fbox{This example needs \TikZ}
+% \fi
 %   \caption[diagram elements]{Elements of a  \env{diagram}
 %   environment.}\label{fig:diagram-elements}
 % \end{figure}
@@ -3627,6 +3631,7 @@ y%
 }
 %    \end{macrocode}
 %
+% \iffcatikzdoc
 % \begin{dtxexample}{Testing lines with \TikZ{}}
 %   \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
 % \begin{tikzdiagram}[x=1.2mm,y=1.2mm]
@@ -3643,6 +3648,7 @@ y%
 %  \Edge(4)(5)
 % \end{tikzdiagram}
 % \end{dtxexample}
+% \fi
 %
 %    \begin{macrocode}
 \newcommand{\fca@tikz@oldedge}[3]{%
@@ -4349,6 +4355,7 @@ y%
   \def\Dots{\fcaDots}
 \fi
 %    \end{macrocode}
+% \iffcatikzdoc
 % \begin{dtxexample}{Testing node  parameters}
 % {\unitlength 1.2mm
 % \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
@@ -4364,6 +4371,7 @@ y%
 %  \Node[/tikz/rectangle](5)(20,50)
 % \end{diagram}}
 % \end{dtxexample}
+% \fi
 %
 %    \begin{macrocode}
 \newcounter{fca@minNode}%

@@ -3368,7 +3368,7 @@ Formal Concept Analysis macros]
 %    \end{macrocode}
 % \subsection{Backports and bugfixes for \TikZ{}}
 %    \begin{macrocode}
-\@ifpackagelater{tikz}{2019/11/04}{}{%
+\@ifpackagelater{tikz}{2020/09/28}{}{%
   \PackageWarning{fca}{Your TikZ version does not fully support fca
     name spaces.^^J
     I'm trying to fix that..., trying to apply^^J
@@ -3473,13 +3473,18 @@ Formal Concept Analysis macros]
         \tikz@shapebordertrue%
         \def\tikz@shapeborder@name{\tikz@pp@name{#2}}%
       \fi%
-    \fi
+    \else\ifcsname pgf@sh@ns@#2\endcsname
+      \expandafter\ifx\csname pgf@sh@ns@#2\endcsname\tikz@coordinate@text%
+      \else
+        \tikz@shapebordertrue%
+        \def\tikz@shapeborder@name{#2}%
+      \fi%
+    \fi\fi
   \fi%
   \edef\tikz@marshal{\noexpand#1{\noexpand\pgfqpoint{\the\pgf@x}{\the\pgf@y}}}%
   \tikz@marshal%
 }%
-
-}%
+ }%
 %    \end{macrocode}
 %
 % \paragraph{Options that are directly forwarded to \TikZ{}} If they

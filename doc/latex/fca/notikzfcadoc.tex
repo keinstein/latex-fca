@@ -45,17 +45,17 @@ Formal Concept Analysis macros]
   \usepackage{ifluatex}
 }{}
 \makeatother
+\usepackage{fca}
 \iffcatikzdoc
   \usepackage{tikz}
   \ifLuaTeX
     \usetikzlibrary{luamath}
   \fi
-  \usetikzlibrary{fca,calc}
+  \usetikzlibrary{calc}
 \else
   \ifLuaTeX
     \usepgflibrary{luamath}
   \fi
-  \usepackage{fca}
 \fi
 \let\fcadtxexample\dtxexample
 \makeatletter

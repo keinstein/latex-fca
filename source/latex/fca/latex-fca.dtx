@@ -201,17 +201,17 @@ Formal Concept Analysis macros]
   \usepackage{ifluatex}
 }{}
 \makeatother
+\usepackage{fca}
 \iffcatikzdoc
   \usepackage{tikz}
   \ifLuaTeX
     \usetikzlibrary{luamath}
   \fi
-  \usetikzlibrary{fca,calc}
+  \usetikzlibrary{calc}
 \else
   \ifLuaTeX
     \usepgflibrary{luamath}
   \fi
-  \usepackage{fca}
 \fi
 %
 \let\fcadtxexample\dtxexample
@@ -1785,7 +1785,12 @@ Formal Concept Analysis macros]
 %    \begin{macrocode}
 \RequirePackage{pgf}
 \usepgflibrary{shapes.geometric}
-\RequirePackage{amssymb,graphics,color,ifthen,rotating,xspace}%%
+\RequirePackage{amssymb,graphics,color,ifthen,rotating,xspace,afterpackage}%%
+\@ifpackageloaded{tikzlibraryfca}{}{%
+  \AfterPackage{tikz}{%
+    \usetikzlibrary{fca}%
+  }%
+}
 %    \end{macrocode}
 %
 % \begin{macro}{\fca@parselength}\marg{register}\marg{expression}\marg{default unit}

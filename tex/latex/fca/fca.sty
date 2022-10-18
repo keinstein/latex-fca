@@ -59,12 +59,13 @@ Formal Concept Analysis macros]
 \ProcessOptions\relax
 \RequirePackage{pgf}
 \usepgflibrary{shapes.geometric}
-\RequirePackage{amssymb,graphics,color,ifthen,rotating,xspace,afterpackage}%%
-\@ifpackageloaded{tikzlibraryfca}{}{%
-  \AfterPackage{tikz}{%
-    \usetikzlibrary{fca}%
-  }%
-}
+\RequirePackage{amssymb,graphics,color,ifthen,rotating,xspace}%%
+\@ifundefined{AfterPackage}{%
+  \RequirePackage{afterpackage}%
+}{}%
+\AfterPackage{tikz}{%
+  \usetikzlibrary{fca}%
+}%
 \newcommand*\fca@parselength[3]{%
   \pgfmathparse{#2}%
   \ifpgfmathunitsdeclared

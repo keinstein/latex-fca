@@ -1785,12 +1785,13 @@ Formal Concept Analysis macros]
 %    \begin{macrocode}
 \RequirePackage{pgf}
 \usepgflibrary{shapes.geometric}
-\RequirePackage{amssymb,graphics,color,ifthen,rotating,xspace,afterpackage}%%
-\@ifpackageloaded{tikzlibraryfca}{}{%
-  \AfterPackage{tikz}{%
-    \usetikzlibrary{fca}%
-  }%
-}
+\RequirePackage{amssymb,graphics,color,ifthen,rotating,xspace}%%
+\@ifundefined{AfterPackage}{%
+  \RequirePackage{afterpackage}%
+}{}%
+\AfterPackage{tikz}{%
+  \usetikzlibrary{fca}%
+}%
 %    \end{macrocode}
 %
 % \begin{macro}{\fca@parselength}\marg{register}\marg{expression}\marg{default unit}

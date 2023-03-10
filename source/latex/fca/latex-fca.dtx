@@ -3650,7 +3650,7 @@ y%
     \iffca@draft
       \ifthenelse{\boolean{fca@CircledNumbers}}{%
         \fca@nodenumberslayer
-        \path (#2)
+        \path[overlay] (#2)
         node[
         shape=circle,
         anchor=center,
@@ -4482,22 +4482,22 @@ y%
     }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
     \fca@endnodeslayer
     \ifthenelse{\boolean{fca@CircledNumbers}}{%
-      \fca@nodenumberslayer
-      \def\fca@usepath{}%
-      \fcaset{node number}%
-      \fca@options
-      \pgfnode{\pgfkeysvalueof{/fca/shape}}{center}{%
-        \fca@typeset@node@content
-        {%
-          \centering
-          \pgfkeysvalueof{/fca/font}%
-          #2%
-        }%
-      }{%
-        \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name
-          suffix} number%
-      }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
-      \fca@endnodenumberslayer
+      \begin{pgfscope}
+        \fca@nodenumberslayer
+        \pgf@relevantforpicturesizefalse
+        \def\fca@usepath{}%
+        \fcaset{node number}%
+        \fca@options \pgfnode{\pgfkeysvalueof{/fca/shape}}{center}{%
+          \fca@typeset@node@content {%
+            \centering \pgfkeysvalueof{/fca/font}%
+            #2%
+          }%
+        }{%
+          \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name
+            suffix} number%
+        }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
+        \fca@endnodenumberslayer
+      \end{pgfscope}
     }{}%
   \end{pgfscope}%
   \ignorespaces

@@ -10,13 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Edit here with the names of your latex file and directory (can use ".")
-      DIR: .
-      FILE: latex-fca.dtx
+      DIR: work
+      FILE: ../source/latex/fca/latex-fca.dtx
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install TeXlive
         run: sudo apt-get update && sudo apt-get install texlive texlive-publishers texlive-science latexmk cm-super
+      - name: Make working directory
+        run: mkdir -p ${{ env.DIR }}
       - name: LaTeX compile
         working-directory: ${{ env.DIR }}
         run: TEXMFHOME=${PWD} latexmk -pdf -bibtex ${{ env.FILE }}

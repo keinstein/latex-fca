@@ -11,7 +11,7 @@ jobs:
     env:
       # Edit here with the names of your latex file and directory (can use ".")
       DIR: work
-      FILE: ../source/latex/fca/latex-fca.dtx
+      FILE: source/latex/fca/latex-fca.dtx
     steps:
       - name: Checkout
         uses: actions/checkout@v2

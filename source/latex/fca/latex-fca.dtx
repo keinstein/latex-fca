@@ -192,7 +192,7 @@ Formal Concept Analysis macros]
 \usepackage{dtxdescribe}
 % |\tikz| gets overwritten when we load TikZ later. So we have to save
 % it somehow else
-\newcommand\TikZ{Ti\emph{k}Z}
+\providecommand\TikZ{Ti\emph{k}Z}
 %\let\TikZ\tikz
 \newcommand\PGF{\acro{PGF}}
 \usepackage{iftex}
@@ -201,7 +201,7 @@ Formal Concept Analysis macros]
   \usepackage{ifluatex}
 }{}
 \makeatother
-\usepackage{fca}
+\usepackage[draft]{fca}
 \iffcatikzdoc
   \usepackage{tikz}
   \ifLuaTeX
@@ -213,6 +213,11 @@ Formal Concept Analysis macros]
     \usepgflibrary{luamath}
   \fi
 \fi
+\makeatletter
+\newcommand\fcadocNoDraft{\fca@draftfalse}
+\newcommand\fcadocDraft  {\fca@drafttrue }
+\makeatother
+\fcadocNoDraft
 %
 \let\fcadtxexample\dtxexample
 \makeatletter
@@ -693,6 +698,7 @@ Formal Concept Analysis macros]
 % \DescribeMacro{\Numbers} Puts numbers inside circles.  While working on a
 %  diagram it can be helpful to have a picture with numbered nodes.
 %
+% \fcadocDraft
 % \begin{dtxexample}{Plotting numbers inside of nodes}
 %   \fbox{\unitlength .7mm
 %   \begin{diagram}{40}{55}
@@ -704,6 +710,7 @@ Formal Concept Analysis macros]
 %     \Node{7}{20}{50}
 %   \end{diagram}}
 % \end{dtxexample}
+% \fcadocNoDraft
 %
 % We recommend to remove the |\Numbers|--command when the diagram is
 % ready. In most cases it is not a good idea to put text inside the
@@ -1380,7 +1387,8 @@ Formal Concept Analysis macros]
 %
 %   The old syntax is also supported:
 %
-% {\unitlength 1.2mm\relax
+%   {\unitlength 1.2mm\relax
+% \fcadocDraft
 % \begin{dtxexample}*{A diagram}
 %   \begin{diagram}[
 %     every attributes/.append style={
@@ -1539,6 +1547,7 @@ Formal Concept Analysis macros]
 %
 % \section{Some demonstrations}
 % \iffcatikzdoc
+% \fcadocDraft
 % % \begin{dtxexample}{Changes of the bounding box with big numbers}
 %   \fbox{\unitlength .7mm
 %   \begin{diagram}
@@ -1559,6 +1568,7 @@ Formal Concept Analysis macros]
 %     \Node{7}{20}{50}
 %   \end{diagram}}
 % \end{dtxexample}
+% \fcadocNoDraft
 % \fi
 % \begin{figure}[htbp]
 %   \centering
@@ -1775,6 +1785,16 @@ Formal Concept Analysis macros]
 }
 \DeclareOption{nocompat}{%
   \fca@compat@macrosfalse
+}
+%    \end{macrocode}
+%    \begin{macrocode}
+\newif\iffca@draft
+\fca@draftfalse
+\DeclareOption{draft}{%
+  \fca@drafttrue
+}
+\DeclareOption{final}{%
+  \fca@draftfalse
 }
 %    \end{macrocode}
 %    \begin{macrocode}
@@ -3626,10 +3646,11 @@ y%
       /fca/every concept/.try,
       #1]
       (#2) {} ;%
-    \fca@endnodeslayer
-    \ifthenelse{\boolean{fca@CircledNumbers}}{%
-      \fca@nodenumberslayer
-      \path (#2)
+      \fca@endnodeslayer
+    \iffca@draft
+      \ifthenelse{\boolean{fca@CircledNumbers}}{%
+        \fca@nodenumberslayer
+        \path (#2)
         node[
         shape=circle,
         anchor=center,
@@ -4349,9 +4370,15 @@ y%
   \pgfkeyssetvalue{/fca/node/color}{#1}%
   \ignorespaces
 }%
-\newcommand*{\fcaNumbers}{%
-  \setboolean{fca@CircledNumbers}{true}%
-}%
+\iffca@draft
+  \newcommand*{\fcaNumbers}{%
+    \setboolean{fca@CircledNumbers}{true}%
+  }%
+\else
+  \newcommand*{\fcaNumbers}{%
+    \setboolean{fca@CircledNumbers}{false}%
+  }
+\fi
 \newcommand*{\fcaNoNumbers}{%
   \setboolean{fca@CircledNumbers}{false}%
 }%
@@ -4620,6 +4647,7 @@ y%
 % \begin{macro}{\fca@labelBox}\oarg{options}\parg{label}\parg{xoffset,yoffset}\marg{content}
 % \begin{dtxexample}{Syntax test for labels}
 %   {\unitlength 1.2mm\relax
+%   \fcadocDraft
 %   \begin{diagram}{40}{55}
 %     \Numbers
 %     \Node{1}{20}{10}

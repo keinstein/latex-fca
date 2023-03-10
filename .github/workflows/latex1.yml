@@ -3,15 +3,16 @@
 # https://github.com/dgerosa/reponame/blob/build/filename.pdf
 # Davide Gerosa (2021) https://github.com/dgerosa
 
-name: writeapaper
+name: deployfca
 on: [push]
 jobs:
-  paper:
+  documentation:
     runs-on: ubuntu-latest
     env:
       # Edit here with the names of your latex file and directory (can use ".")
       DIR: work
       FILE: source/latex/fca/latex-fca.dtx
+      PDFFILE: latex-fca.pdf
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -24,15 +25,15 @@ jobs:
         run: TEXMFHOME=${PWD} latexmk -pdf -bibtex $(basename ${{ env.FILE }} )
         #run: pdflatex ${{ env.FILE }}; bibtex ${{ env.FILE }}; pdflatex ${{ env.FILE }}; pdflatex ${{ env.FILE }};
       - name: move
-        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.FILE }}.pdf ./github_artifacts/
+        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }} ./github_artifacts/
       - name: Upload pdf as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.FILE }}.pdf
+          name: ${{ env.PDFFILE }}
           path: ./github_artifacts
   deploy:
     # Edit here if compiling multiple papers
-    needs: [paper]
+    needs: [documentation]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -219,11 +219,11 @@ Formal Concept Analysis macros]
 \makeatother
 \fcadocNoDraft
 %
-\let\fcadtxexample\dtxexample
 \makeatletter
+\let\fca@@dtxexample\dtxexample
 \def\fca@dtxexample#1#2{%
   \typeout{Example: #2}%
-  \tsdtxexample#1{#2}%
+  \fca@@dtxexample#1{#2}%
 }
 \def\fcadtxexample{\@ifstar{\fca@dtxexample*}{\fca@dtxexample{}}}
 \makeatother

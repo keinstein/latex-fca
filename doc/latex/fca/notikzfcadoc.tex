@@ -37,7 +37,7 @@ Formal Concept Analysis macros]
 \documentclass[a4paper]{ltxdoc}
 \def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
 \usepackage{dtxdescribe}
-\newcommand\TikZ{Ti\emph{k}Z}
+\providecommand\TikZ{Ti\emph{k}Z}
 \newcommand\PGF{\acro{PGF}}
 \usepackage{iftex}
 \makeatletter
@@ -45,7 +45,7 @@ Formal Concept Analysis macros]
   \usepackage{ifluatex}
 }{}
 \makeatother
-\usepackage{fca}
+\usepackage[draft]{fca}
 \iffcatikzdoc
   \usepackage{tikz}
   \ifLuaTeX
@@ -57,11 +57,16 @@ Formal Concept Analysis macros]
     \usepgflibrary{luamath}
   \fi
 \fi
-\let\fcadtxexample\dtxexample
 \makeatletter
+\newcommand\fcadocNoDraft{\fca@draftfalse}
+\newcommand\fcadocDraft  {\fca@drafttrue }
+\makeatother
+\fcadocNoDraft
+\makeatletter
+\let\fca@@dtxexample\dtxexample
 \def\fca@dtxexample#1#2{%
   \typeout{Example: #2}%
-  \tsdtxexample#1{#2}%
+  \fca@@dtxexample#1{#2}%
 }
 \def\fcadtxexample{\@ifstar{\fca@dtxexample*}{\fca@dtxexample{}}}
 \makeatother

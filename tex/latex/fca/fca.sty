@@ -56,6 +56,14 @@ Formal Concept Analysis macros]
 \DeclareOption{nocompat}{%
   \fca@compat@macrosfalse
 }
+\newif\iffca@draft
+\fca@draftfalse
+\DeclareOption{draft}{%
+  \fca@drafttrue
+}
+\DeclareOption{final}{%
+  \fca@draftfalse
+}
 \ProcessOptions\relax
 \RequirePackage{pgf}
 \usepgflibrary{shapes.geometric}
@@ -945,9 +953,15 @@ Formal Concept Analysis macros]
   \pgfkeyssetvalue{/fca/node/color}{#1}%
   \ignorespaces
 }%
-\newcommand*{\fcaNumbers}{%
-  \setboolean{fca@CircledNumbers}{true}%
-}%
+\iffca@draft
+  \newcommand*{\fcaNumbers}{%
+    \setboolean{fca@CircledNumbers}{true}%
+  }%
+\else
+  \newcommand*{\fcaNumbers}{%
+    \setboolean{fca@CircledNumbers}{false}%
+  }
+\fi
 \newcommand*{\fcaNoNumbers}{%
   \setboolean{fca@CircledNumbers}{false}%
 }%
@@ -1030,22 +1044,22 @@ Formal Concept Analysis macros]
     }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
     \fca@endnodeslayer
     \ifthenelse{\boolean{fca@CircledNumbers}}{%
-      \fca@nodenumberslayer
-      \def\fca@usepath{}%
-      \fcaset{node number}%
-      \fca@options
-      \pgfnode{\pgfkeysvalueof{/fca/shape}}{center}{%
-        \fca@typeset@node@content
-        {%
-          \centering
-          \pgfkeysvalueof{/fca/font}%
-          #2%
-        }%
-      }{%
-        \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name
-          suffix} number%
-      }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
-      \fca@endnodenumberslayer
+      \begin{pgfscope}
+        \fca@nodenumberslayer
+        \pgf@relevantforpicturesizefalse
+        \def\fca@usepath{}%
+        \fcaset{node number}%
+        \fca@options \pgfnode{\pgfkeysvalueof{/fca/shape}}{center}{%
+          \fca@typeset@node@content {%
+            \centering \pgfkeysvalueof{/fca/font}%
+            #2%
+          }%
+        }{%
+          \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name
+            suffix} number%
+        }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
+        \fca@endnodenumberslayer
+      \end{pgfscope}
     }{}%
   \end{pgfscope}%
   \ignorespaces

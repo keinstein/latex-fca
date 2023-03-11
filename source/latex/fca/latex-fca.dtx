@@ -2939,21 +2939,21 @@ Formal Concept Analysis macros]
 % \end{diagram}
 % \end{verbatim}
 %                                                                             %
-% The circle size can be changed with the |\fcaCircleSize| command.                %
+% The circle size can be changed with the |\fcaCircleSize| command.           %
 % The value must be a positive integer, which will be mutiplied               %
-% by |\unitlength|. The default is                                              %
+% by |\unitlength|. The default is                                            %
 %                                                                             %
-% |\fcaCircleSize{4}|.                                                             %
+% |\fcaCircleSize{4}|.                                                        %
 %                                                                             %
 % A helpful command when fine tuning a diagram is                             %
 %                                                                             %
-% |\Numbers|.                                                                   %
+% |\Numbers|.                                                                 %
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %
 % You may wish to permanently adjust the following values to your             %
 % personal preferences. They can also be changed inside each diagram          %
-% environment using |\renewcommand|.                                            %
+% environment using |\renewcommand|.                                          %
 %                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %    \begin{macrocode}
@@ -3663,8 +3663,8 @@ y%
         draw=none]%
         (#2 number)
         {#2};%
-      \fca@endnodenumberslayer
-    }{}%
+        \fca@endnodenumberslayer
+      }{}%
     \fi
   \end{pgfscope}%
   \ignorespaces

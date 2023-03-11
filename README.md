@@ -1,3 +1,5 @@
+[![deployfca](https://github.com/keinstein/latex-fca/actions/workflows/latex1.yml/badge.svg?branch=master)](https://github.com/keinstein/latex-fca/actions/workflows/latex1.yml)
+
 latex-fca
 =========
 

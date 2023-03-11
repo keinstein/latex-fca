@@ -43,7 +43,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install TeXlive
-        run: sudo apt-get update && sudo apt-get install texlive texlive-publishers texlive-science latexmk cm-super
+        run: apt-get update && apt-get install texlive texlive-publishers texlive-science latexmk cm-super
       - name: Make working directory
         run: mkdir -p ${{ env.DIR }} && cp ${{ env.FILE }} ${{ env.DIR }}
       - name: LaTeX compile

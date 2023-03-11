@@ -31,6 +31,32 @@ jobs:
         with:
           name: ${{ env.PDFFILE }}
           path: ./github_artifacts
+  debian_stable:
+    runs-on: ubuntu-latest
+    container: debian:stable
+    env:
+      # Edit here with the names of your latex file and directory (can use ".")
+      DIR: work
+      FILE: source/latex/fca/latex-fca.dtx
+      PDFFILE: latex-fca.pdf
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install TeXlive
+        run: sudo apt-get update && sudo apt-get install texlive texlive-publishers texlive-science latexmk cm-super
+      - name: Make working directory
+        run: mkdir -p ${{ env.DIR }} && cp ${{ env.FILE }} ${{ env.DIR }}
+      - name: LaTeX compile
+        working-directory: ${{ env.DIR }}
+        run: TEXMFHOME=${PWD} latexmk -pdf -bibtex $(basename ${{ env.FILE }} )
+        #run: pdflatex ${{ env.FILE }}; bibtex ${{ env.FILE }}; pdflatex ${{ env.FILE }}; pdflatex ${{ env.FILE }};
+      - name: move
+        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }} ./github_artifacts/
+      - name: Upload pdf as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PDFFILE }}
+          path: ./github_artifacts
   deploy:
     # Edit here if compiling multiple papers
     needs: [documentation]

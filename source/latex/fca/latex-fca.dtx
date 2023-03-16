@@ -201,6 +201,9 @@ Formal Concept Analysis macros]
   \usepackage{ifluatex}
 }{}
 \makeatother
+\ifdefined\HCode
+  \def\pgfsysdriver{pgfsys-dvisvgm4ht.def}
+\fi
 \usepackage[draft]{fca}
 \iffcatikzdoc
   \usepackage{tikz}
@@ -5233,6 +5236,9 @@ y%
 %    \end{macrocode}
 % \end{environment}
 %
+% \DescribeOption{/fca/copy unitlength}
+% This option copys the value of \cs{unitlength} to the |x| and |y|
+% coordinates of \TikZ.
 %    \begin{macrocode}
 \fcaset{copy unitlength/.style={%
     x=\unitlength,
@@ -5240,6 +5246,7 @@ y%
   }
 }
 %    \end{macrocode}
+% \iffcatikzdoc
 %   \begin{dtxexample}{Using \textbackslash unitlength in \TikZ{} pictures}
 %     \begin{tikzpicture}
 %       \begin{diagram}[copy unitlength]
@@ -5256,7 +5263,24 @@ y%
 %       \end{diagram}
 %     \end{tikzpicture}
 %   \end{dtxexample}
-%   
+%
+% 
+%   \begin{dtxexample}{Using \textbackslash unitlength in \TikZ{} diagrams}
+%     \begin{tikzdiagram}[copy unitlength]
+%         \Node(1)(20,10)
+%         \Node(2)(35,20)
+%         \Node(3)(5,30)
+%         \Node(4)(35,40)
+%         \Node(5)(20,50)
+%         \Edge(1)(2)
+%         \Edge(1)(3)
+%         \Edge(2)(4)
+%         \Edge(3)(5)
+%         \Edge(4)(5)
+%     \end{tikzdiagram}
+%   \end{dtxexample}
+%  \fi
+%
 %   \iffalse
 %</tikz>
 %<*fca.sty>

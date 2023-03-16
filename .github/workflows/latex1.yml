@@ -28,7 +28,7 @@ jobs:
         run: export TEXMFHOME=${PWD}/../../.. ; latexmk -pdf -bibtex notikzfcadoc
         #run: pdflatex ${{ env.FILE }}; bibtex ${{ env.FILE }}; pdflatex ${{ env.FILE }}; pdflatex ${{ env.FILE }};
       - name: move
-        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }} doc/latex/fca/notikzfca.pdf ./github_artifacts/
+        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }} doc/latex/fca/notikzfcadoc.pdf ./github_artifacts/
       - name: Upload pdf as artifact
         uses: actions/upload-artifact@v2
         with:
@@ -57,7 +57,7 @@ jobs:
         run: export TEXMFHOME=${PWD}/../../.. ; latexmk -pdf -bibtex notikzfcadoc
         #run: pdflatex ${{ env.FILE }}; bibtex ${{ env.FILE }}; pdflatex ${{ env.FILE }}; pdflatex ${{ env.FILE }};
       - name: move
-        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }}  doc/latex/fca/notikzfca.pdf ./github_artifacts/
+        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }}  doc/latex/fca/notikzfcadoc.pdf ./github_artifacts/
       - name: Upload pdf as artifact
         uses: actions/upload-artifact@v2
         with:

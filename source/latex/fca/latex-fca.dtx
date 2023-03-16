@@ -784,6 +784,8 @@ Formal Concept Analysis macros]
 % nodes. \meta{size} can be a dimension or a plain number. If the unit
 % is omitted \cs{unitsize} is used.
 % The default is 4\,mm.
+% The old behaviour can be restored by adding |\fcaCircleSize{4}|
+% after loading the package |fca|.
 %
 % Can be changed for single nodes by specifying the radius
 % as an optional parameter (e.g., |[radius=3mm]|).
@@ -1517,6 +1519,11 @@ Formal Concept Analysis macros]
 %
 % \DescribeOption{nocompat}
 % This option reverts the effect of |compat|.
+%
+% \subsection{Other incompatibilities}
+% The default circle size in diagrams has been changed to 4\,mm
+% instead of |4\unitsize|. The old behaviour can be restored by adding
+% |\fcaCircleSize{4}| just after loading the package |fca|.
 %
 % \subsection{Error messages}
 % Package error messages are not yet implemented.

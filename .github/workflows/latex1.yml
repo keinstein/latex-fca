@@ -23,13 +23,16 @@ jobs:
       - name: LaTeX compile
         working-directory: ${{ env.DIR }}
         run: TEXMFHOME=${PWD} latexmk -pdf -bibtex $(basename ${{ env.FILE }} )
+      - name: Compile notikzfca
+        working-directory: doc/latex/fca
+        run: TEXMFHOME=${PWD} latexmk -pdf -bibtex notikzfca
         #run: pdflatex ${{ env.FILE }}; bibtex ${{ env.FILE }}; pdflatex ${{ env.FILE }}; pdflatex ${{ env.FILE }};
       - name: move
-        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }} ./github_artifacts/
+        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }} doc/latex/fca/notikzfca.pdf ./github_artifacts/
       - name: Upload pdf as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PDFFILE }}
+          name: ubuntu_latest_pdfs
           path: ./github_artifacts
   debian_stable:
     runs-on: ubuntu-latest
@@ -45,17 +48,20 @@ jobs:
       - name: Install TeXlive
         run: apt-get -y update && apt-get -y install texlive texlive-publishers texlive-science latexmk cm-super
       - name: Make working directory
-        run: mkdir -p ${{ env.DIR }} && cp ${{ env.FILE }} ${{ env.DIR }}
+        run: mkdir -p ${{ env.DIR }} && cp ${{ env.FILE }}  ${{ env.DIR }}
       - name: LaTeX compile
         working-directory: ${{ env.DIR }}
         run: TEXMFHOME=${PWD} latexmk -pdf -bibtex $(basename ${{ env.FILE }} )
+      - name: Compile notikzfca
+        working-directory: doc/latex/fca
+        run: TEXMFHOME=${PWD} latexmk -pdf -bibtex notikzfca
         #run: pdflatex ${{ env.FILE }}; bibtex ${{ env.FILE }}; pdflatex ${{ env.FILE }}; pdflatex ${{ env.FILE }};
       - name: move
-        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }} ./github_artifacts/
+        run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }}  doc/latex/fca/notikzfca.pdf ./github_artifacts/
       - name: Upload pdf as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PDFFILE }}
+          name: Debian_stable_pdfs
           path: ./github_artifacts
   deploy:
     # Edit here if compiling multiple papers
@@ -68,7 +74,7 @@ jobs:
         with:
           path: github_artifacts
       - name: move
-        run: mkdir -p github_deploy && mv github_artifacts/*/* github_deploy
+        run: mkdir -p github_deploy && mv github_artifacts/* github_deploy
       - name: deploy on orphan branch
         uses: peaceiris/actions-gh-pages@v3
         with:

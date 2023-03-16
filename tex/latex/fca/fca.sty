@@ -79,7 +79,7 @@ Formal Concept Analysis macros]
   \ifpgfmathunitsdeclared
     #1=\pgfmathresult pt\relax
   \else
-    #1=\pgfmathresult#3%
+    #1=\pgfmathresult #3\relax%
   \fi
 }
 \newcommand{\fca@cxt@Kreuz}{$\times$}%
@@ -702,7 +702,7 @@ Formal Concept Analysis macros]
   name suffix/.value required,
   every node/.style = {},
   every concept/.style = {
-    radius = 2,
+    radius = 2mm,
     fill=white,
     draw=black
   },
@@ -726,7 +726,8 @@ Formal Concept Analysis macros]
   outer ysep/.forward to=/pgf/outer ysep,
   outer sep/.forward to=/pgf/outer sep,
   radius/.code={
-    \fca@parselength\@tempdima{#1}\unitlength
+    \@tempdimb\dimexpr\pgf@xx+\pgf@yx\relax
+    \fca@parselength\@tempdima{#1}{\@tempdimb}%
     \@tempdima=.70710678118654752440084436210484\@tempdima
     \edef\@tempa{\noexpand\pgfkeysalso{/pgf/inner sep=\the\@tempdima}}%
     \@tempa
@@ -833,7 +834,7 @@ Formal Concept Analysis macros]
   line width/.store in=\fca@node@thickness,
   line width/.value required,
   radius/.style={
-    /pgf/inner sep=#1
+    /fca/radius=#1
   },
   color/.initial={},
   layer/.code=\fcalayer{node},%

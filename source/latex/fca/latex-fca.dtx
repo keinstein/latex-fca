@@ -654,8 +654,9 @@ Formal Concept Analysis macros]
 %
 % \DescribeMacro{\Node}\parg{nodenumber}\parg{xpos,ypos}
 % Puts a circle at position \texttt{(xpos,ypos)} of the picture. The default
-% diameter of the circles is 4 (times |\unitlength|). It can be changed
-% (for all circles) with |\fcaCircleSize{}|. The argument must be an integer.
+% diameter of the circles is 4mm. It can be changed
+% (for all circles) with |\fcaCircleSize{}|  or using
+% the option |radius|. The argument must be an integer.
 % The node names must be different, but in contrast to previous
 % versions, they do not have to be numbers, although this is
 % recommended for clarity.
@@ -719,7 +720,6 @@ Formal Concept Analysis macros]
 % ready. In most cases it is not a good idea to put text inside the
 % nodes of a diagram.
 %
-% {\color{red} |\Numbers| sollte den Radius vergrößern.}
 %
 % \DescribeMacro{\NoNumbers} can be used to exclude individual nodes
 % from the numbering.
@@ -780,8 +780,11 @@ Formal Concept Analysis macros]
 % environments \env{tikzpicture} or \env{tikzdiagram}).
 %
 % \DescribeMacro{\fcaCircleSize}\marg{size}
-% The diameter of the circles that represent the concept nodes.
-% The default is 4~(times |\unitlength|).
+% The diameter of the circles that represent the concept
+% nodes. \meta{size} can be a dimension or a plain number. If the unit
+% is omitted \cs{unitsize} is used.
+% The default is 4\,mm.
+%
 % Can be changed for single nodes by specifying the radius
 % as an optional parameter (e.g., |[radius=3mm]|).
 %
@@ -1605,7 +1608,7 @@ Formal Concept Analysis macros]
 %    \begin{tikzdiagram}[
 %       conexp style,
 %       every concept/.append style={%
-%         radius=0.2
+%         radius=0.2cm
 %       },
 %       /tikz/documentation/.style={
 %         color=red,
@@ -1678,7 +1681,7 @@ Formal Concept Analysis macros]
 % \begin{tikzdiagram}[
 %     conexp style,
 %     every concept/.append style={%
-%       radius=0.2
+%       radius=0.2cm
 %     },
 %     /tikz/documentation/.style={
 %       color=red,
@@ -1826,7 +1829,7 @@ Formal Concept Analysis macros]
   \ifpgfmathunitsdeclared
     #1=\pgfmathresult pt\relax
   \else
-    #1=\pgfmathresult#3%
+    #1=\pgfmathresult #3\relax%
   \fi
 }
 %    \end{macrocode}
@@ -3867,7 +3870,7 @@ y%
 % Default:
 % \begin{verbatim}
 % {%
-%   radius = 2,
+%   radius = 2mm,
 %   fill=white,
 %   draw=black
 % },
@@ -3924,7 +3927,9 @@ y%
 % node border and the next elements. This is an alias of /pgf/outer ysep.
 % \ItemDescribeOption{/fca/outer sep} Sets both \optn{inner xsep} and
 % \optn{inner ysep}. This is an alias of /pgf/outer sep.
-% \ItemDescribeOption{/fca/radius} Set the radius of circled nodes in |\unitlength|
+% \ItemDescribeOption{/fca/radius} Set the radius of circled nodes. If
+% the unit is omitted the sum of the horizontal coordinate of the
+% first two unit vectors is used.
 % \ItemDescribeOption{/fca/anchor} Determines which anchor should be
 % represented by the given coordinates.
 %   \textbf{value required}
@@ -4118,7 +4123,7 @@ y%
   name suffix/.value required,
   every node/.style = {},
   every concept/.style = {
-    radius = 2,
+    radius = 2mm,
     fill=white,
     draw=black
   },
@@ -4142,7 +4147,8 @@ y%
   outer ysep/.forward to=/pgf/outer ysep,
   outer sep/.forward to=/pgf/outer sep,
   radius/.code={
-    \fca@parselength\@tempdima{#1}\unitlength
+    \@tempdimb\dimexpr\pgf@xx+\pgf@yx\relax
+    \fca@parselength\@tempdima{#1}{\@tempdimb}%
     \@tempdima=.70710678118654752440084436210484\@tempdima
     \edef\@tempa{\noexpand\pgfkeysalso{/pgf/inner sep=\the\@tempdima}}%
     \@tempa
@@ -4249,7 +4255,7 @@ y%
   line width/.store in=\fca@node@thickness,
   line width/.value required,
   radius/.style={
-    /pgf/inner sep=#1
+    /fca/radius=#1
   },
   color/.initial={},
   layer/.code=\fcalayer{node},%

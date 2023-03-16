@@ -25,7 +25,7 @@ jobs:
         run: TEXMFHOME=${PWD} latexmk -pdf -bibtex $(basename ${{ env.FILE }} )
       - name: Compile notikzfca
         working-directory: doc/latex/fca
-        run: TEXMFHOME=${PWD} latexmk -pdf -bibtex notikzfca
+        run: export TEXMFHOME=${PWD} ; cd doc/latex/fca ;  latexmk -pdf -bibtex notikzfca
         #run: pdflatex ${{ env.FILE }}; bibtex ${{ env.FILE }}; pdflatex ${{ env.FILE }}; pdflatex ${{ env.FILE }};
       - name: move
         run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }} doc/latex/fca/notikzfca.pdf ./github_artifacts/
@@ -54,7 +54,7 @@ jobs:
         run: TEXMFHOME=${PWD} latexmk -pdf -bibtex $(basename ${{ env.FILE }} )
       - name: Compile notikzfca
         working-directory: doc/latex/fca
-        run: TEXMFHOME=${PWD} latexmk -pdf -bibtex notikzfca
+        run: export TEXMFHOME=${PWD} ; cd doc/latex/fca ;  latexmk -pdf -bibtex notikzfca
         #run: pdflatex ${{ env.FILE }}; bibtex ${{ env.FILE }}; pdflatex ${{ env.FILE }}; pdflatex ${{ env.FILE }};
       - name: move
         run: mkdir -p github_artifacts && mv ${{ env.DIR }}/${{ env.PDFFILE }}  doc/latex/fca/notikzfca.pdf ./github_artifacts/

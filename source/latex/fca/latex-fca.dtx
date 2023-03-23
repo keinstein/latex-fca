@@ -4380,7 +4380,10 @@ y%
   \ignorespaces
 }% %
 \newcommand*{\fcaEdgeThickness}[1]{%
-  \fcaset{line width={#1}}%
+  \fcaset{every edge/.append style={%
+      line width={#1}%
+    }%
+  }%
   \ignorespaces
 }
 \newcommand*{\fcaNodeColor}[1]{%

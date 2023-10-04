@@ -186,7 +186,7 @@ Formal Concept Analysis macros]
 % This clashes with the tabular environment.
 \newcommand\VertStroke{|}
 \edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|\relax}%
-\documentclass[a4paper]{ltxdoc}
+\documentclass[a4paper,hyperref]{ltxdoc}
 \def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
 %\usepackage{a4}
 \usepackage{dtxdescribe}
@@ -285,6 +285,8 @@ Formal Concept Analysis macros]
 %   allbordercolors={0.9 0.9 0.9},
 %   breaklinks=true,
 %   ]{hyperref}
+\def\subsectionautorefname{Section}
+\def\sectionautorefname{Section}
 
 \RequirePackage{stmaryrd,bm}
 \usepackage[numbered]{hypdoc}
@@ -353,10 +355,16 @@ Formal Concept Analysis macros]
 % \begin{verbatim}\usepackage{fca}\end{verbatim}
 % to the preamble.
 %
-% There is a package option, \texttt{compat}, to be used for files
-% which were written for older versions up to Version 2.1 of
-% \texttt{fca.sty}. See Section~\ref{subsec:compat} for details.
-%
+% The following package options are supported:
+% \begin{description}
+% \item[|compat|,]  to be used for files
+%   which were written for older versions up to Version 2.1 of
+%   \texttt{fca.sty}. See \autoref{subsec:compat} for details.
+% \item[|nocmpat|,] reverts the effect of |compat|
+% \item[|draft|,]   enables draft mode. See \autoref{subsec:draftmode}
+% \item[|final|,]   reverts the effect of |draft|
+% \end{description}
+% 
 % The \texttt{newdrawline.sty} package is no longer needed.
 %
 % \section{Typesetting formal contexts with \env{cxt}}
@@ -589,7 +597,8 @@ Formal Concept Analysis macros]
 %
 % To get non-rotated attribute names, redefine the \texttt{atr} command
 % as in the following example:
-% \begin{dtxexample}{Including contexts with unrotated attributes}
+% \begin{dtxexample}*{Including contexts with unrotated attributes}
+% \makebox{{%
 % \begin{cxt}[b]
 % \renewcommand{\atr}{\att}
 % \cxtinput{formula1.cxt}
@@ -597,7 +606,8 @@ Formal Concept Analysis macros]
 % \begin{cxt}[b]
 % \cxtName{Formula 2}
 % \cxtinput{formula1.cxt}
-% \end{cxt}
+% \end{cxt}%
+% }}
 % \end{dtxexample}
 %
 % \section{Drawing lattices with \env{diagram}}
@@ -634,14 +644,15 @@ Formal Concept Analysis macros]
 % \subsection{Basic usage of the \env{diagram} environment}
 % \label{subsec:diagram-basic}
 % \DescribeEnv{diagram}
+% \DescribeEnv{tikzdiagram}
 %
 % \DescribeMacro{\begin\{diagram\}} begins a \PGF{}-picture.
 % Unlike the previous versions, width and height of the diagram no
-% longer need to be specified. The old syntax
+% longer need to be specified.
 %
-% |\begin{diagram}{width}{height}|
-%
-% is still supported and determines the bounding box, which is                %
+% \DescribeMacro{\begin\{diagram\}}\marg{width}\marg{height}
+% The old syntax
+% is still supported and determines the bounding box, which is
 % otherwise calculated automatically.
 %
 % A major advantage of using \PGF{}-pictures is that one can use the many
@@ -650,29 +661,40 @@ Formal Concept Analysis macros]
 % e.g. for colour, line thickness, etc. These will be described in
 % Section~\ref{subsec:fine}.
 %
+% When |fca.sty| is loaded via |\usetikzlibrary{fca}|, the |diagram|
+% environment can be placed inside a \TikZ{} picture. In that case all
+% diagram commands are internally translated into \TikZ{}
+% lcommands. More details are given in Section~\ref{subsec:pgf-tikz}.
+% The |tikzdiagram| environment is a shortcut to place a |diagram|
+% inside a |tikzpicture| environment.
+%
+% Unit \watchout lengths differ between |diagram| and |tikzdiagram|,
+% more details are given in Section~\ref{subsec:pgf-tikz}.
+%
 % The commands within a \env{diagram} environment (in their basic form) are
 %
-% \DescribeMacro{\Node}\parg{nodenumber}\parg{xpos,ypos}
-% Puts a circle at position \texttt{(xpos,ypos)} of the picture. The default
+% \DescribeMacro{\Node}\parg{nodename}\parg{xpos,ypos}
+% Puts a circle at position \parg{(xpos,ypos} of the picture. The default
 % diameter of the circles is 4mm. It can be changed
 % (for all circles) with |\fcaCircleSize{}|  or using
-% the option |radius|. The argument must be an integer.
-% The node names must be different, but in contrast to previous
-% versions, they do not have to be numbers, although this is
+% the option |radius|. The coordinates must be numbers (in
+% which the deafault unit is used) or lengths. 
+% The node names must be different to each other, but in contrast to
+% versions before 3.0, they do not have to be numbers, although this is
 % recommended for clarity.
 %
-% The old syntax |\Node{nodenumber}{xpos}{ypos}| is also supported.
+% The old syntax |\Node|\marg{nodename}\marg{xpos}\marg{ypos} is also supported.
 %
-% \DescribeMacro{\Edge}\marg{nodenumber1}\marg{nodenumber2}
+% \DescribeMacro{\Edge}\marg{nodename1}\marg{nodename2}
 % Puts a line between the two nodes with the given numbers. These must
 % have been declared earlier with a |\Node|--command.
 %
-% \DescribeMacro{\leftAttbox}\parg{nodenumber}\marg{text}\\
-% \DescribeMacro{\centerAttbox}\parg{nodenumber}\marg{text}\\
-% \DescribeMacro{\rightAttbox}\parg{nodenumber}\marg{text}\\
-% \DescribeMacro{\leftObjbox}\parg{nodenumber}\marg{text}\\
-% \DescribeMacro{\centerObjbox}\parg{nodenumber}\marg{text}\\
-% \DescribeMacro{\rightObjbox}\parg{nodenumber}\marg{text}
+% \DescribeMacro{\leftAttbox}\parg{nodename}\marg{text}\\
+% \DescribeMacro{\centerAttbox}\parg{nodename}\marg{text}\\
+% \DescribeMacro{\rightAttbox}\parg{nodename}\marg{text}\\
+% \DescribeMacro{\leftObjbox}\parg{nodename}\marg{text}\\
+% \DescribeMacro{\centerObjbox}\parg{nodename}\marg{text}\\
+% \DescribeMacro{\rightObjbox}\parg{nodename}\marg{text}
 %
 % These are used to put
 % text to diagram nodes. The |Attbox|--commands place the text above the
@@ -687,7 +709,7 @@ Formal Concept Analysis macros]
 % moves the object label ``Hamilton'' at node number 4 by
 % 3\,|\unitlength| in x-direction and by 5\,|\unitlength| in y-direction.
 %
-% The old syntax |\rightObjbox{nodenumber}{xoffset}{yoffset}{labeltext}|
+% The old syntax |\rightObjbox{nodename}{xoffset}{yoffset}{labeltext}|
 % is also supported. However, there is a small difference: while in
 % the old syntax the shift |{xoffset}{yoffset}| is understood relative
 % to the node, the shift |(xoffset,yoffset)| is interpreted relative
@@ -716,13 +738,18 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 % \fcadocNoDraft
 %
-% We recommend to remove the |\Numbers|--command when the diagram is
-% ready. In most cases it is not a good idea to put text inside the
-% nodes of a diagram.
+% |\Numbers| should be used only to aid the development of
+% diagrams. Thus it is active only in the draft mode. It is activated
+% with the option |draft|. See \autoref{subsec:draftmode} for details.
+% 
+% We recommend to remove the |\Numbers|-command when the diagram is
+% ready.
 %
 %
 % \DescribeMacro{\NoNumbers} can be used to exclude individual nodes
 % from the numbering.
+%
+% |\Numbers| and |\NoNumbers| 
 %
 % \subsection{Changes to the style of the graphics}
 % \label{subsec:diagram-adv}
@@ -771,7 +798,7 @@ Formal Concept Analysis macros]
 % \fi
 %
 % \subsubsection{Fine tuning}\label{subsec:fine}
-% In Version 2.1 and before some macros that allow you to change
+% In Version 2.1 and before some macros allow to change
 % certain parameters of the diagrams.
 %
 % For compatibility reasons these
@@ -1091,6 +1118,7 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 %
 % \subsection{\fcastyle, \PGF, and \TikZ}
+% \label{subsec:pgf-tikz}
 % \fcastyle\ requires \PGF, the \emph{Portable Graphics Format}, but not
 % necessarily its syntax layer \TikZ. That means that \PGF\ will be
 % loaded automatically with \fcastyle, but \TikZ\ is not.  When you do
@@ -1492,6 +1520,22 @@ Formal Concept Analysis macros]
 % has been interrupted or not.
 %
 % \fi
+% \section{Draft mode}\label{subsec:draftmode}
+% In order to assist authors in the creation of diagrams some
+% debugging features have been added to the |fca.sty|. This functions
+% are controlled by package optinos.
+%
+% \DescribeOption{draft} enables the draft mode.
+% \DescribeOption{final} disables the draft mode.
+%
+% In draft mode the macros |\Numbers| and |\NoNumbers| can be used to
+% show the \PGF\ labels on top of the nodes in the diagram. In prior
+% versions these labels had to be numbers, hence the name.
+%
+% The \watchout draft mode must be disabled during final typesetting
+% as it may have a bad impact on the readability of the typeset
+% document.
+%
 % \section{About the current version of \env{fca.sty}}
 % The original version of fca.sty had been written by Bernhard Ganter,
 % mainly for his personal use. With the further development of \TeX,
@@ -1523,7 +1567,7 @@ Formal Concept Analysis macros]
 % \subsection{Other incompatibilities}
 % The default circle size in diagrams has been changed to 4\,mm
 % instead of |4\unitlength|. The old behaviour can be restored by adding
-% |\fcaCircleSize{4}| just after loading the package |fca|.
+% |\fcaCircleSize{4}| just after loading the package |FC|.
 %
 % \subsection{Error messages}
 % Package error messages are not yet implemented.
@@ -1800,6 +1844,7 @@ Formal Concept Analysis macros]
   \fca@compat@macrosfalse
 }
 %    \end{macrocode}
+% \changes{3.0}{2023/03/10}{Added the options \optn{draft} and \optn{final}}.
 %    \begin{macrocode}
 \newif\iffca@draft
 \fca@draftfalse
@@ -2939,11 +2984,11 @@ Formal Concept Analysis macros]
 % \begin{verbatim}
 % \begin{diagram}{width}{height}                                              %
 %                                                                             %
-%   \Node{number}{xcoordinate}{ycoordinate} % (nodenumbers from 0 to 50)      %
+%   \Node{number}{xcoordinate}{ycoordinate} % (nodenames from 0 to 50)      %
 %                                                                             %
-%   \Edge{nodenumber1}{nodenumber2}                                           %
+%   \Edge{nodename1}{nodename2}                                           %
 %                                                                             %
-%   \leftAttbox{nodenumber}{xoffset}{yoffset}{text1 \\ text2 \\ ... }         %
+%   \leftAttbox{nodename}{xoffset}{yoffset}{text1 \\ text2 \\ ... }         %
 %                                                                             %
 %   similarly: \rightAttbox, \centerAttbox,                                   %
 %   \leftObjbox,  \centerObjbox,                                              %
@@ -3141,7 +3186,7 @@ Formal Concept Analysis macros]
 %   layers. The layers are assigned and used in the following way:
 %   \begin{description}
 %  \item[{nodes}]{main}
-%  \item[{nodenumbers}]{\pgfkeysvalueof{/fca/namespace} node numbers}
+%  \item[{nodenames}]{\pgfkeysvalueof{/fca/namespace} node numbers}
 %  \item[{attributes}]{\pgfkeysvalueof{/fca/namespace} attributes}
 %  \item[{objects}]{\pgfkeysvalueof{/fca/namespace} objects}
 %  \item[{attributesconcept}]{%
@@ -3156,7 +3201,7 @@ Formal Concept Analysis macros]
 %    \begin{macrocode}
 \newcommand*{\fcaDeclareLayers}{%
   \fcaLayer{nodes}{main}
-  \fcaNewLayer{nodenumbers}{\pgfkeysvalueof{/fca/namespace} node numbers}
+  \fcaNewLayer{nodenames}{\pgfkeysvalueof{/fca/namespace} node numbers}
   \fcaNewLayer{attributes}{\pgfkeysvalueof{/fca/namespace} attributes}
   \fcaNewLayer{objects}{\pgfkeysvalueof{/fca/namespace} objects}
   \fcaNewLayer{attributesconcept}{%
@@ -3200,7 +3245,7 @@ Formal Concept Analysis macros]
 %    \begin{macrocode}
 \newcommand*\fcaNoLayers{%
   \fcaLayer{nodes}{main}%
-  \fcaLayer{nodenumbers}{main}%
+  \fcaLayer{nodenames}{main}%
   \fcaLayer{attributes}{main}%
   \fcaLayer{objects}{main}%
   \fcaLayer{attributesconcept}{main}%
@@ -3662,7 +3707,7 @@ y%
       \fca@endnodeslayer
     \iffca@draft
       \ifthenelse{\boolean{fca@CircledNumbers}}{%
-        \fca@nodenumberslayer
+        \fca@nodenameslayer
         \path[overlay] (#2)
         node[
         shape=circle,
@@ -3676,7 +3721,7 @@ y%
         draw=none]%
         (#2 number)
         {#2};%
-        \fca@endnodenumberslayer
+        \fca@endnodenameslayer
       }{}%
     \fi
   \end{pgfscope}%
@@ -4503,7 +4548,7 @@ y%
     \fca@endnodeslayer
     \ifthenelse{\boolean{fca@CircledNumbers}}{%
       \begin{pgfscope}
-        \fca@nodenumberslayer
+        \fca@nodenameslayer
         \pgf@relevantforpicturesizefalse
         \def\fca@usepath{}%
         \fcaset{node number}%
@@ -4516,7 +4561,7 @@ y%
           \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name
             suffix} number%
         }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
-        \fca@endnodenumberslayer
+        \fca@endnodenameslayer
       \end{pgfscope}
     }{}%
   \end{pgfscope}%

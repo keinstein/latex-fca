@@ -265,7 +265,7 @@ y%
       \fca@endnodeslayer
     \iffca@draft
       \ifthenelse{\boolean{fca@CircledNumbers}}{%
-        \fca@nodenumberslayer
+        \fca@nodenameslayer
         \path[overlay] (#2)
         node[
         shape=circle,
@@ -279,7 +279,7 @@ y%
         draw=none]%
         (#2 number)
         {#2};%
-        \fca@endnodenumberslayer
+        \fca@endnodenameslayer
       }{}%
     \fi
   \end{pgfscope}%

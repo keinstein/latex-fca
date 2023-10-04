@@ -578,7 +578,7 @@ Formal Concept Analysis macros]
 }
 \newcommand*{\fcaDeclareLayers}{%
   \fcaLayer{nodes}{main}
-  \fcaNewLayer{nodenumbers}{\pgfkeysvalueof{/fca/namespace} node numbers}
+  \fcaNewLayer{nodenames}{\pgfkeysvalueof{/fca/namespace} node numbers}
   \fcaNewLayer{attributes}{\pgfkeysvalueof{/fca/namespace} attributes}
   \fcaNewLayer{objects}{\pgfkeysvalueof{/fca/namespace} objects}
   \fcaNewLayer{attributesconcept}{%
@@ -606,7 +606,7 @@ Formal Concept Analysis macros]
 }
 \newcommand*\fcaNoLayers{%
   \fcaLayer{nodes}{main}%
-  \fcaLayer{nodenumbers}{main}%
+  \fcaLayer{nodenames}{main}%
   \fcaLayer{attributes}{main}%
   \fcaLayer{objects}{main}%
   \fcaLayer{attributesconcept}{main}%
@@ -1049,7 +1049,7 @@ Formal Concept Analysis macros]
     \fca@endnodeslayer
     \ifthenelse{\boolean{fca@CircledNumbers}}{%
       \begin{pgfscope}
-        \fca@nodenumberslayer
+        \fca@nodenameslayer
         \pgf@relevantforpicturesizefalse
         \def\fca@usepath{}%
         \fcaset{node number}%
@@ -1062,7 +1062,7 @@ Formal Concept Analysis macros]
           \pgfkeysvalueof{/fca/name prefix}#2\pgfkeysvalueof{/fca/name
             suffix} number%
         }{\expandafter\pgfusepath\expandafter{\fca@usepath}}%
-        \fca@endnodenumberslayer
+        \fca@endnodenameslayer
       \end{pgfscope}
     }{}%
   \end{pgfscope}%

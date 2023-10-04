@@ -34,7 +34,7 @@ Formal Concept Analysis macros]
   \fcatikzdocfalse
 \newcommand\VertStroke{|}
 \edef\catcodebarlatex{\noexpand\catcode`|=\the\catcode`|\relax}%
-\documentclass[a4paper]{ltxdoc}
+\documentclass[a4paper,hyperref]{ltxdoc}
 \def\catcodebarltxdoc{\noexpand\catcode`|=\active\relax}%
 \usepackage{dtxdescribe}
 \providecommand\TikZ{Ti\emph{k}Z}
@@ -113,6 +113,8 @@ Formal Concept Analysis macros]
 \usepackage[english]{babel}
 \usepackage{lmodern}
 \usepackage{xcolor}
+\def\subsectionautorefname{Section}
+\def\sectionautorefname{Section}
 
 \RequirePackage{stmaryrd,bm}
 \usepackage[numbered]{hypdoc}

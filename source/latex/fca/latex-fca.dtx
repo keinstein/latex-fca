@@ -85,30 +85,30 @@ http://www.latex-project.org/lppl.txt
 
 \usedir{tex/latex/fca}
 \generate{%
-        \file{fca.sty}{%
-                \usepreamble\defaultpreamble
-                \usepostamble\defaultpostamble
-                \from{latex-fca.dtx}{fca.sty,cxtinput.sty,package}}
-            }
+  \file{fca.sty}{%
+    \usepreamble\defaultpreamble
+    \usepostamble\defaultpostamble
+    \from{latex-fca.dtx}{fca.sty,cxtinput.sty,package}}%
+}
 \usedir{tex/generic/fca}
 \generate{%
-        \file{tikzlibraryfca.code.tex}{%
-                \usepreamble\defaultpreamble
-                \usepostamble\defaultpostamble
-                \from{latex-fca.dtx}{tikz,package}}
-            }
+  \file{tikzlibraryfca.code.tex}{%
+    \usepreamble\defaultpreamble
+    \usepostamble\defaultpostamble
+    \from{latex-fca.dtx}{tikz,package}}%
+}
 \usedir{doc/latex/fca}
 \generate{%
   \file{formula0.cxt}{
     \nopreamble\nopostamble
-    \from{latex-fca.dtx}{formula0.cxt}}
+    \from{latex-fca.dtx}{formula0.cxt}}%
   \file{formula1.cxt}{
     \nopreamble\nopostamble
-    \from{latex-fca.dtx}{formula1.cxt}}
+    \from{latex-fca.dtx}{formula1.cxt}}%
   \file{notikzfcadoc.tex}{%
     \usepreamble\defaultpreamble
     \usepostamble\defaultpostamble
-    \from{latex-fca.dtx}{notikzdriver}}
+    \from{latex-fca.dtx}{notikzdriver}}%
 }
 %</install>
 %<install>\endbatchfile

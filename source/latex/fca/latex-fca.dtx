@@ -360,7 +360,14 @@ Formal Concept Analysis macros]
 %
 % The package |fca| is loaded by adding
 % \begin{verbatim}\usepackage{fca}\end{verbatim}
-% to the preamble.
+% or \begin{verbatim}
+% \usepackage{tikz}
+% \usetikzlibrary{fca}
+% \end{verbatim}
+% to the preamble. The first variant provides all features of this
+% package using \PGF{} graphixs, while the latter adds improved
+% support for \TikZ. Details about the differences are documented in
+% \autoref{subsec:pgf-tikz}.
 %
 % The following package options are supported:
 % \begin{description}
@@ -372,12 +379,12 @@ Formal Concept Analysis macros]
 % \item[|final|,]   reverts the effect of |draft|
 % \end{description}
 % 
-% The \texttt{newdrawline.sty} package is no longer needed.
+% Older versions needed the \texttt{newdrawline.sty} package. This is no longer neccessary.
 %
 % \section{Typesetting formal contexts with \env{cxt}}
 % Formal contexts can be typeset using the |cxt| environment. What
 % this (very simple) environment does can be guessed from an example.
-% \begin{dtxexample}{A formal context.}
+% \begin{dtxexample}*{A formal context.}
 %   \begin{cxt}
 %     \cxtName{Formula 1}
 %   %
@@ -390,8 +397,10 @@ Formal Concept Analysis macros]
 %     \obj{.xx}{Leclerc}
 %   \end{cxt}
 % \end{dtxexample}
+% A detailed description follows.
 % \subsection{Basic usage of the \env{cxt} environment}
-% \DescribeEnv{cxt}
+% \DescribeEnv{cxt} Environment \env{cxt} typically consists of the
+% following parts:
 %
 % \DescribeMacro{\begin\{cxt\}} begins typesetting a formal context table.
 %
@@ -426,7 +435,7 @@ Formal Concept Analysis macros]
 % type \texttt{d} (for ``down''), \texttt{u} (``up''), or \texttt{b} (``both'').
 % In the following example, we also change the colour of these symbols:
 %
-% \begin{dtxexample}{Some predefined context characters, colour changed.}
+% \begin{dtxexample}*{Some predefined context characters, colour changed.}
 % \begin{cxt}%
 % \renewcommand{\fcaCxtArrowStyle}{\footnotesize\color{red}}%
 % \cxtName{Formula 1}
@@ -457,7 +466,7 @@ Formal Concept Analysis macros]
 % used).
 % The second example is discussed below.
 %
-% \begin{dtxexample}{(Re-)defining context characters.}
+% \begin{dtxexample}*{(Re-)defining context characters.}
 % \begin{cxt}
 % \fcaNewContextChar{t}{\cxtrlap{$\bm{\times}$}}
 % \cxtName{cxt 1}
@@ -540,7 +549,7 @@ Formal Concept Analysis macros]
 % \texttt{t, c} or \texttt{b}. It is passed to the tabular
 % environment (see there for further documentation).
 %
-% \begin{dtxexample}{Alignment parameter for a \env{cxt}-environment}
+% \begin{dtxexample}*{Alignment parameter for a \env{cxt}-environment}
 %   \makebox{
 %   \begin{cxt}[t]
 %     \cxtName{Formula t}
@@ -587,7 +596,7 @@ Formal Concept Analysis macros]
 % \texttt{.cxt} file name extension) to be included directly in a
 % \LaTeX{} document. Its usage is as simple as possible.
 %
-% \begin{dtxexample}{Including a Burmeister context file}
+% \begin{dtxexample}*{Including a Burmeister context file}
 % \begin{cxt}
 % \cxtinput{formula1.cxt}
 % \end{cxt}
@@ -595,7 +604,7 @@ Formal Concept Analysis macros]
 %
 % The name of the context can be overwritten by using |\cxtName|
 % inside the \env{cxt} environment.
-% \begin{dtxexample}{Overwriting the context name}
+% \begin{dtxexample}*{Overwriting the context name}
 % \begin{cxt}
 % \cxtName{Formula 2}
 % \cxtinput{formula1.cxt}
@@ -617,323 +626,12 @@ Formal Concept Analysis macros]
 % }}
 % \end{dtxexample}
 %
-% \section{Drawing lattices with \env{diagram}}
-% The \texttt{diagram} environment helps typesetting diagrams of concept
-% lattices, but can be used for ordered sets and graphs as well.
-% As of version 3.0, the \env{diagram} environment uses the
-% \emph{Portable Graphics Format} \PGF\ and, if loaded, its
-% user-friendly syntax layer called \TikZ.
-%
-% Again we start with a small example (for which we set |\unitlength 1.2mm|):
-%
-% \begin{dtxexample}{A lattice diagram\label{dtx:diagram}}
-%   {\unitlength 1.2mm
-%   \begin{diagram}
-%   \Node(1)(20,10)
-%   \Node(2)(35,20)
-%   \Node(3)(5,30)
-%   \Node(4)(35,40)
-%   \Node(5)(20,50)
-%   \Edge(1)(2)
-%   \Edge(1)(3)
-%   \Edge(2)(4)
-%   \Edge(3)(5)
-%   \Edge(4)(5)
-%   \leftAttbox(3){1.}
-%   \rightAttbox(2){disqualified}
-%   \rightAttbox(4){2.}
-%   \leftObjbox(3){Verstappen}
-%   \rightObjbox(2){Leclerc}
-%   \rightObjbox(4){Hamilton}
-% \end{diagram}}
-% \end{dtxexample}
-%
-% \subsection{Basic usage of the \env{diagram} environment}
-% \label{subsec:diagram-basic}
-% \DescribeEnv{diagram}
-% \DescribeEnv{tikzdiagram}
-%
-% \DescribeMacro{\begin\{diagram\}} begins a \PGF{}-picture.
-% Unlike the previous versions, width and height of the diagram no
-% longer need to be specified.
-%
-% \DescribeMacro{\begin\{diagram\}}\marg{width}\marg{height}
-% The old syntax
-% is still supported and determines the bounding box, which is
-% otherwise calculated automatically.
-%
-% A major advantage of using \PGF{}-pictures is that one can use the many
-% possibilities offered by \PGF, even without knowing much about \PGF.
-% The |diagram| environment and its macros allow  optional parameters,
-% e.g. for colour, line thickness, etc. These will be described in
-% Section~\ref{subsec:fine}.
-%
-% When |fca.sty| is loaded via |\usetikzlibrary{fca}|, the |diagram|
-% environment can be placed inside a \TikZ{} picture. In that case all
-% diagram commands are internally translated into \TikZ{}
-% lcommands. More details are given in Section~\ref{subsec:pgf-tikz}.
-% The |tikzdiagram| environment is a shortcut to place a |diagram|
-% inside a |tikzpicture| environment.
-%
-% Unit \watchout lengths differ between |diagram| and |tikzdiagram|,
-% more details are given in Section~\ref{subsec:pgf-tikz}.
-%
-% The commands within a \env{diagram} environment (in their basic form) are
-%
-% \DescribeMacro{\Node}\parg{nodename}\parg{xpos,ypos}
-% Puts a circle at position \parg{(xpos,ypos} of the picture. The default
-% diameter of the circles is 4mm. It can be changed
-% (for all circles) with |\fcaCircleSize{}|  or using
-% the option |radius|. The coordinates must be numbers (in
-% which the deafault unit is used) or lengths. 
-% The node names must be different to each other, but in contrast to
-% versions before 3.0, they do not have to be numbers, although this is
-% recommended for clarity.
-%
-% The old syntax |\Node|\marg{nodename}\marg{xpos}\marg{ypos} is also supported.
-%
-% \DescribeMacro{\Edge}\marg{nodename1}\marg{nodename2}
-% Puts a line between the two nodes with the given numbers. These must
-% have been declared earlier with a |\Node|--command.
-%
-% \DescribeMacro{\leftAttbox}\parg{nodename}\marg{text}\\
-% \DescribeMacro{\centerAttbox}\parg{nodename}\marg{text}\\
-% \DescribeMacro{\rightAttbox}\parg{nodename}\marg{text}\\
-% \DescribeMacro{\leftObjbox}\parg{nodename}\marg{text}\\
-% \DescribeMacro{\centerObjbox}\parg{nodename}\marg{text}\\
-% \DescribeMacro{\rightObjbox}\parg{nodename}\marg{text}
-%
-% These are used to put
-% text to diagram nodes. The |Attbox|--commands place the text above the
-% corresponding node, the |Objbox| below. Similarly, the text can be placed
-% to the left, be centered, or be placed to the right of the labelled node.
-%
-% For a better positioning of the label text an optional shift can be
-% specified. For example,
-%
-% |\rightObjbox(4)(3,5){Hamilton}|
-%
-% moves the object label ``Hamilton'' at node number 4 by
-% 3\,|\unitlength| in x-direction and by 5\,|\unitlength| in y-direction.
-%
-% The old syntax |\rightObjbox{nodename}{xoffset}{yoffset}{labeltext}|
-% is also supported. However, there is a small difference: while in
-% the old syntax the shift |{xoffset}{yoffset}| is understood relative
-% to the node, the shift |(xoffset,yoffset)| is interpreted relative
-% to the diagram. This means that, e.g., |\leftAttbox{4}{3}{5}{text}|
-% corresponds to |\leftAttbox(4)(-3,5){text}|.
-%
-% \DescribeMacro{\end\{diagram\}} This concludes the diagram.
-%
-%
-% A helpful command when fine tuning a diagram is
-%
-% \DescribeMacro{\Numbers} Puts numbers inside circles.  While working on a
-%  diagram it can be helpful to have a picture with numbered nodes.
-%
-% \fcadocDraft
-% \begin{dtxexample}{Plotting numbers inside of nodes}
-%   \fbox{\unitlength .7mm
-%   \begin{diagram}{40}{55}
-%     \Numbers
-%     \Node{5}{20}{10}
-%     \Node{6}{35}{20}
-%     \Node{4}{5}{30}
-%     \Node{8}{35}{40}
-%     \Node{7}{20}{50}
-%   \end{diagram}}
-% \end{dtxexample}
-% \fcadocNoDraft
-%
-% |\Numbers| should be used only to aid the development of
-% diagrams. Thus it is active only in the draft mode. It is activated
-% with the option |draft|. See \autoref{subsec:draftmode} for details.
+% As an undocumented feature, \cs{cxtinput} uses the same mechanism to
+% parse context lines as \cs{obj} does. So specital entries (special
+% symbols or special formatting) can be requested with the help of a
+% simple text editor by changing the corresponding characters in the
+% context matrix of the |.cxt| file.
 % 
-% We recommend to remove the |\Numbers|-command when the diagram is
-% ready.
-%
-%
-% \DescribeMacro{\NoNumbers} can be used to exclude individual nodes
-% from the numbering.
-%
-% |\Numbers| and |\NoNumbers| 
-%
-% \subsection{Changes to the style of the graphics}
-% \label{subsec:diagram-adv}
-% The connection with \PGF\  and \TikZ\ results in many design tools,
-% some of which will be presented in Section~\ref{sec:advanced}.
-% Before that we show how to change colour and other graphics
-% parameters in simple diagrams.
-%
-% \subsubsection{Optional parameters}
-% All macros of the \env{diagram} environment, except for
-% |\end{diagram}|, allow optional parameter. These can be specified
-% within square brackets. For example,
-%
-% |\Node[draw=red, fill=blue](4)(20,10)|
-%
-% specifies that a red circle, filled with blue, is to be drawn
-% at position (20,10), representing the node with nodenumber 4.
-%
-% The impatient reader may infer some of the possibilities from
-% Example~10. For details see Subsection~\ref{subsec:fine}.
-%
-% \iffcatikzdoc
-% \begin{dtxexample}{A \env{diagram} with some optional \TikZ{}
-% parameters}
-% {\unitlength 1.2mm
-% \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
-% \begin{diagram}
-%  \Node[draw=red, fill=green,line width=.5mm](1)(20,10)
-%  \Node[fill=black, radius=1.5mm](2)(35,20)
-%  \Node[opacity=0.3,fill=red](3)(5,30)
-%  \Node[fill=darkgreen](4)(35,40)
-%  \Node[/tikz/rectangle](5)(20,50)
-%  {\color{red}\Edge(1)(2)}
-%  \Edge[draw=blue,dotted,line width=1.5pt](1)(3)
-%  \Edge(2)(4)
-%  \Edge[draw=green,line width=1mm](3)(5)
-%  \Edge(4)(5)
-%   \leftAttbox(3){1.}
-%   \rightAttbox(2){disqualified}
-%   \rightAttbox(4){2.}
-%   \leftObjbox(3){Verstappen}
-%   \rightObjbox(2){Leclerc}
-%   \rightObjbox(4){Hamilton}
-% \end{diagram}}
-% \end{dtxexample}
-% \fi
-%
-% \subsubsection{Fine tuning}\label{subsec:fine}
-% In Version 2.1 and before some macros allow to change
-% certain parameters of the diagrams.
-%
-% For compatibility reasons these
-% still do work in diagrams that use bare \PGF\ (i.e., that are not
-% inside the argument to the \cs{tikz} macro or one of the
-% environments \env{tikzpicture} or \env{tikzdiagram}).
-%
-% \DescribeMacro{\fcaCircleSize}\marg{size}
-% The diameter of the circles that represent the concept
-% nodes. \meta{size} can be a dimension or a plain number. If the unit
-% is omitted \cs{unitsize} is used.
-% The default is 4\,mm.
-% The old behaviour can be restored by adding |\fcaCircleSize{4}|
-% after loading the package |fca|.
-%
-% Can be changed for single nodes by specifying the radius
-% as an optional parameter (e.g., |[radius=3mm]|).
-%
-% \DescribeMacro {\fcaNodeColor}\marg{color} The color with which the
-% concept nodes are filled.  The default is \textit{white}. Can be
-% changed for single nodes by using |fill=|\textit{color} as an option.
-%
-% \DescribeMacro {\NodeColor}\marg{color} is an alias to
-% \cs{fcaNodeColor} inside the \env{diagram} environment.
-%
-% \DescribeMacro {\fcaNodeThickness}\marg{thickness}
-% The width of the annulus representing the circumferential line of a
-% concept node. The default is 1.2pt.
-% Can be changed for single nodes by specifying the line width
-% as an optional parameter (e.g., |[line width=3pt]|).
-%
-% \DescribeMacro {\NodeThickness}\marg{thickness} an alias to
-% \cs{fcaNodeThickness} inside a \env{diagram} environment.
-%
-% \DescribeMacro {\fcaEdgeThickness}\marg{thickness}
-% The default is .8pt. It can be changed for all or for single edges by
-% specifying |line width| as an optional parameter.
-%
-% \DescribeMacro {\EdgeThickness}\marg{thickness} an alias to
-% \cs{fcaEdgeThickness} inside a \env{diagram} environment.
-%
-% These \watchout macros do not work reliably inside the \env{tikzpicture}
-% and  \env{tikzdiagram} envronments. Please use the key/value syntax
-% there.
-%
-% \subsection{Labels}
-% Some of the nodes in a concept lattice diagram have text labels.
-% Typically, object and attibute concepts are labeled with the
-% associated object or attibute names. This is done using the
-% |\**box(){}|-macros, which were introduced in
-% Subsection~\ref{subsec:diagram-basic}.  Font size and font colour of
-% such labels can be
-% changed, and the label boxes as well. By default each label box is
-% connected to the respective concept node by a dotted line. This can
-% be switched off:
-%
-% \DescribeMacro {\fcaNoDots} Causes no dotted line to be drawn  from
-% the concept node to the label boxes.
-%
-% \DescribeMacro {\NoDots} is an alias to
-% \cs{fcaNoDots} inside a \env{diagram} environment.
-%
-% These macros can be focussed to single instances, using braces. For
-% example,
-% \begin{center}
-% |{\fcaNoDots\centerObjbox(node){labeltext}}|
-% \end{center}
-% generates a single centered object label without a dotted line.
-%
-% Usually the label text is put into a
-% one-line box  (i.e. hbox), the width of which is automatically
-% detected. To allow  for line breaks, the parameter |text width| can
-% be used. It affects  the type and size of the label boxes.
-%
-% When |text width| is set to a length, then the text of the label is put
-% in a |\parbox|. It can be broken into several lines using |\\|. The
-% width of the |\parbox| is the value of the |text width|
-% parameter. It is unset by default.
-%
-% Setting |text width| to a length can either be done as an optional
-% parameter to the diagram, such as
-%
-% |\begin{diagram}[text width=6mm]|
-%
-% or globally (for all diagrams) by
-%
-% |\fcaset{text width=6mm}|
-%
-% or for single labels only, again as an optional parameter.
-%
-% Label boxes may be framed with the \texttt{draw} option, which may also
-% be used to set a color for the text and the frame. Their
-% background color can be set with \texttt{fill}.
-%
-% The text properties of the lables are given by the next two
-% commands, which  can be changed with |\renewcommand|.
-%
-%   \DescribeMacro{\fcaObjectLabelStyle} Used to define the font
-%   of object labels \emph{outside} of \env{diagram} environments.
-%   Default: |\small\baselineskip1em\rmfamily\upshape|
-%
-%   \DescribeMacro{\fcaAttributeLabelStyle} Used to define the font
-%   of object labels \emph{outside} of \env{diagram} environments.
-%   Default: |\small\baselineskip1em\rmfamily\itshape|.
-%
-%   \DescribeMacro{\ObjectLabelStyle} and
-%   \DescribeMacro{\AttributeLabelStyle}
-%
-%   are aliases of the above commands which can only be used
-%   \emph{inside} of \env{diagram} environments.
-%
-% {\unitlength .7mm
-% \begin{dtxexample}{Concept node labels\label{ex:concept node
-%   labels}}
-%   \begin{diagram}[text width=3.4cm]
-%     \Node(0)(20,10)
-%     \leftAttbox[draw](0)(-1,1){left\\ attribute\\ label}
-%     \rightAttbox[fill=red!50!blue!20](0)(10,10){right
-%     attri-\\ bute label}
-%     \rightObjbox[draw=brown](0)(20,5){right\\ object\\ label}
-%     {\fcaNoDots\centerObjbox(0)(0,-5){centered\\ object label}}
-%   \end{diagram}
-% \end{dtxexample}
-% }
-%
-%
-%
-%
 % \section{Some macros for text}
 % \label{sec:macros}
 % Abbreviating macros are defined for some strings that occur
@@ -1053,6 +751,437 @@ Formal Concept Analysis macros]
 %  \end{minipage}
 % \end{center}
 %
+% \section{Drawing lattices with \env{tikzdiagram} and \env{diagram}}
+% The \env{tikzdiagram} and  \env{diagram} environment helps typesetting diagrams of concept
+% lattices, but can be used for ordered sets and graphs as well.
+% As of version 3.0, the \env{diagram} environment uses the
+% \emph{Portable Graphics Format} \PGF\ and, if loaded, its
+% user-friendly syntax layer called \TikZ.
+%
+% Again we start with a small example of each type:
+%
+% \begin{dtxexample}*{A lattice diagram drawn using \TikZ{}\label{dtx:tikzdiagram}}
+%   \begin{tikzdiagram}
+%     \Node(1)(2,1)
+%     \Node(2)(3.5,2)
+%     \Node(3)(.5,3)
+%     \Node(4)(3.5,4)
+%     \Node(5)(2,5)
+%     \Edge(1)(2)
+%     \Edge(1)(3)
+%     \Edge(2)(4)
+%     \Edge(3)(5)
+%     \Edge(4)(5)
+%     \leftAttbox(3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox(3){Verstappen}
+%     \rightObjbox(2){Leclerc}
+%     \rightObjbox(4){Hamilton}
+%   \end{tikzdiagram}
+% \end{dtxexample}
+% 
+% \begin{dtxexample}*{A lattice diagram drawn in the classical way
+%   with the unit length of 1mm.\label{dtx:diagram}}
+%   \begingroup
+%   \unitlength=1mm.
+%   \begin{diagram}
+%     \Node(1)(20,10)
+%     \Node(2)(35,20)
+%     \Node(3)(5,30)
+%     \Node(4)(35,40)
+%     \Node(5)(20,50)
+%     \Edge(1)(2)
+%     \Edge(1)(3)
+%     \Edge(2)(4)
+%     \Edge(3)(5)
+%     \Edge(4)(5)
+%     \leftAttbox(3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox(3){Verstappen}
+%     \rightObjbox(2){Leclerc}
+%     \rightObjbox(4){Hamilton}
+%   \end{diagram}
+%   \endgroup
+% \end{dtxexample}
+%
+%
+% \subsection{Basic usage of the \env{tikzdiagram} and the \env{diagram} environment}
+% \label{subsec:diagram-basic}
+% \DescribeEnv{tikzdiagram}
+% \DescribeEnv{diagram}
+%
+% |\begin{tikzdiagram}| begins a \TikZ{}-picture. This environment is
+% only available if |fca.sty| is loaded via |\usetikzlibrary{fca}|.
+%
+% |\begin{diagram}| begins a \PGF{}-picture.
+% Unlike the previous versions, width and height of the diagram no
+% longer need to be specified.
+%
+% |\begin{diagram}|\marg{width}\marg{height}
+% The old syntax
+% is still supported and determines the bounding box, which is
+% otherwise calculated automatically.
+%
+% A major advantage of using \PGF{} and \TikZ-pictures is that one can use the many
+% possibilities offered by \PGF{} or \TikZ, even without knowing much
+% about \PGF{} and \TikZ.
+% The |diagram| environment and its macros allow  optional parameters,
+% e.g. for colour, line thickness, etc. These will be described in
+% Section~\ref{subsec:fine}.
+%
+% When |fca.sty| is loaded via |\usetikzlibrary{fca}|, the |diagram|
+% environment can be placed inside a \TikZ{} picture. In that case all
+% diagram commands are internally translated into \TikZ{}
+% lcommands. More details are given in Section~\ref{subsec:pgf-tikz}.
+% The |tikzdiagram| environment is a shortcut to place a |diagram|
+% inside a |tikzpicture| environment.
+%
+% Unit \watchout lengths differ between |diagram| and |tikzdiagram|,
+% more details are given in Section~\ref{subsec:pgf-tikz}.
+%
+% The commands within a \env{diagram} environment (in their basic form) are
+%
+% \DescribeMacro{\Node}\parg{nodename}\parg{xpos,ypos}
+% Puts a circle at position \parg{(xpos,ypos} of the picture. The default
+% diameter of the circles is 4mm. It can be changed
+% (for all circles) with |\fcaCircleSize{}|  or using
+% the option |radius|. The coordinates must be numbers (in
+% which the deafault unit is used) or lengths. 
+% The node names must be different to each other, but in contrast to
+% versions before 3.0, they do not have to be numbers, although this is
+% recommended for clarity.
+%
+% The old syntax |\Node|\marg{nodename}\marg{xpos}\marg{ypos} is also supported.
+%
+% \DescribeMacro{\Edge}\marg{nodename1}\marg{nodename2}
+% Puts a line between the two nodes with the given numbers. These must
+% have been declared earlier with a |\Node|--command.
+%
+% \DescribeMacro{\leftAttbox}\cs{leftAttbox}\parg{nodename}\marg{text}\\
+% \DescribeMacro{\centerAttbox}\cs{centerAttbox}\parg{nodename}\marg{text}\\
+% \DescribeMacro{\rightAttbox}\cs{rightAttbox}\parg{nodename}\marg{text}\\
+% \DescribeMacro{\leftObjbox}\cs{leftObjbox}\parg{nodename}\marg{text}\\
+% \DescribeMacro{\centerObjbox}\cs{centerObjbox}\parg{nodename}\marg{text}\\
+% \DescribeMacro{\rightObjbox}\cs{rightObjbox}\parg{nodename}\marg{text}
+%
+% These are used to put
+% text to diagram nodes. The |Attbox|--commands place the text above the
+% corresponding node, the |Objbox| below. Similarly, the text can be placed
+% to the left, be centered, or be placed to the right of the labelled node.
+%
+% For a better positioning of the label text an optional shift can be
+% specified. For example,
+%
+% |\rightObjbox(4)(3,5){Hamilton}|
+%
+% moves the object label ``Hamilton'' at node named “4” by
+% 3\,|\unitlength| in x-direction and by 5\,|\unitlength| in y-direction.
+%
+% The old syntax |\rightObjbox{nodename}{xoffset}{yoffset}{labeltext}|
+% is also supported. However, there is a small difference: while in
+% the old syntax the shift |{xoffset}{yoffset}| is understood relative
+% to the node, the shift |(xoffset,yoffset)| is interpreted relative
+% to the diagram. This means that, e.g., |\leftAttbox{4}{3}{5}{text}|
+% corresponds to |\leftAttbox(4)(-3,5){text}|.
+%
+% \DescribeMacro{\end\{diagram\}} This concludes the diagram.
+%
+% Helpful commands when fine tuning a diagram are discussed in
+% \autoref{subsec:draftmode}.
+%
+% \subsection{Changing the size of the generated
+% diagram}\label{sec:diagram units}%
+% By default, \env{diagram} und \env{tikzpicture} use the same units
+% that the underlying graphics environment used when they were first
+% defined. These units can always be overridden by providing a proper
+% unit such as |pt| |in| |mm| or |cm|. Any unit can be used that is
+% known to \TeX.
+%
+% The \env{tikzdiagram} (or \env{diagram} inside of \env{tikzpicture})
+% uses the default unit length of the \env{tikzpicture}
+% environment. This is usually $1$\,cm. 
+%
+%
+% \begin{dtxexample}*{A lattice diagram drawn using \TikZ{} and its
+% default unit length\label{dtx:tikzdiagram-defaultunit}}
+%   \begin{tikzdiagram}
+%     \Node(1)(2,1)
+%     \Node(2)(3.5,2)
+%     \Node(3)(.5,3)
+%     \Node(4)(3.5,4)
+%     \Node(5)(2,5)
+%     \Edge(1)(2)
+%     \Edge(1)(3)
+%     \Edge(2)(4)
+%     \Edge(3)(5)
+%     \Edge(4)(5)
+%     \leftAttbox(3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox(3){Verstappen}
+%     \rightObjbox(2){Leclerc}
+%     \rightObjbox(4){Hamilton}
+%   \end{tikzdiagram}
+% \end{dtxexample}
+%
+% The unit length can be easily changed using the \optn{x} and
+% \optn{y} options to \env{tikzdiagram}
+% \begin{dtxexample}*{A lattice diagram drawn using \TikZ{} and
+% setting all units to $1$\,mm\label{dtx:tikzdiagram-defaultunit}}
+%   \begin{tikzdiagram}[x=1mm,y=1mm]
+%     \Node(1)(20,10)
+%     \Node(2)(35,20)
+%     \Node(3)(5,30)
+%     \Node(4)(35,40)
+%     \Node(5)(20,50)
+%     \Edge(1)(2)
+%     \Edge(1)(3)
+%     \Edge(2)(4)
+%     \Edge(3)(5)
+%     \Edge(4)(5)
+%     \leftAttbox(3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox(3){Verstappen}
+%     \rightObjbox(2){Leclerc}
+%     \rightObjbox(4){Hamilton}
+%   \end{tikzdiagram}
+% \end{dtxexample}
+% 
+% \DescribeLength{\unitlength} The \env{diagram} environment uses
+% \cs{unitlengh} as its default unit length. It's original value is
+% $1$\,pt so it is often changed at the beginning of the diagram. That
+% is the reason why most examples of \env{diagram} environments also
+% change \cs{unitlength}.
+%
+% \begin{dtxexample}*{A lattice diagram drawn in the classical way
+% with the default unit length of \the\unitlength.\label{dtx:diagram-defaultunit}}
+%   \begin{diagram}
+%     \Node(1)(60,30)
+%     \Node(2)(105,60)
+%     \Node(3)(15,90)
+%     \Node(4)(105,120)
+%     \Node(5)(60,150)
+%     \Edge(1)(2)
+%     \Edge(1)(3)
+%     \Edge(2)(4)
+%     \Edge(3)(5)
+%     \Edge(4)(5)
+%     \leftAttbox(3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox(3){Verstappen}
+%     \rightObjbox(2){Leclerc}
+%     \rightObjbox(4){Hamilton}
+%   \end{diagram}
+% \end{dtxexample}
+%
+% Changing the unit length can make the units more handier.
+% \begin{dtxexample}*{A lattice diagram drawn in the classical way
+%   with the unit length of 1mm.\label{dtx:diagram-1mmunit}}
+%   \begingroup
+%   \unitlength=1mm.
+%   \begin{diagram}
+%     \Node(1)(20,10)
+%     \Node(2)(35,20)
+%     \Node(3)(5,30)
+%     \Node(4)(35,40)
+%     \Node(5)(20,50)
+%     \Edge(1)(2)
+%     \Edge(1)(3)
+%     \Edge(2)(4)
+%     \Edge(3)(5)
+%     \Edge(4)(5)
+%     \leftAttbox(3){1.}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \leftObjbox(3){Verstappen}
+%     \rightObjbox(2){Leclerc}
+%     \rightObjbox(4){Hamilton}
+%   \end{diagram}
+%   \endgroup
+% \end{dtxexample}
+%
+%
+% \subsection{Changes to the style of the graphics}
+% \label{subsec:diagram-adv}
+% The connection with \PGF\  and \TikZ\ results in many design tools,
+% some of which will be presented in Section~\ref{sec:advanced}.
+% Before that we show how to change colour and other graphics
+% parameters in simple diagrams.
+%
+% \subsubsection{Optional parameters}
+% All macros of the \env{diagram} environment, except for
+% |\end{diagram}|, allow optional parameters. These can be specified
+% within square brackets. For example,
+%
+% |\Node[draw=red, fill=blue](4)(20,10)|
+%
+% specifies that a red circle, filled with blue, is to be drawn
+% at position (20,10), representing the node with nodenumber 4.
+%
+% The impatient reader may infer some of the possibilities from
+% Example~10. For details see Subsection~\ref{subsec:fine}.
+%
+% \iffcatikzdoc
+% \begin{dtxexample}*{A \env{diagram} with some optional \TikZ{}
+% parameters}
+% {\unitlength 1.2mm
+% \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
+% \begin{diagram}
+%  \Node[draw=red, fill=green,line width=.5mm](1)(20,10)
+%  \Node[fill=black, radius=1.5mm](2)(35,20)
+%  \Node[opacity=0.3,fill=red](3)(5,30)
+%  \Node[fill=darkgreen](4)(35,40)
+%  \Node[/tikz/rectangle](5)(20,50)
+%  {\color{red}\Edge(1)(2)}
+%  \Edge[draw=blue,dotted,line width=1.5pt](1)(3)
+%  \Edge(2)(4)
+%  \Edge[draw=green,line width=1mm](3)(5)
+%  \Edge(4)(5)
+%   \leftAttbox(3){1.}
+%   \rightAttbox(2){disqualified}
+%   \rightAttbox(4){2.}
+%   \leftObjbox(3){Verstappen}
+%   \rightObjbox(2){Leclerc}
+%   \rightObjbox(4){Hamilton}
+% \end{diagram}}
+% \end{dtxexample}
+% \fi
+%
+% \subsubsection{Fine tuning}\label{subsec:fine}
+% In Version 2.1 and before some macros allow to change
+% certain parameters of the diagrams.
+%
+% For compatibility reasons these
+% still do work in diagrams that use bare \PGF\ (i.e., that are not
+% inside the argument to the \cs{tikz} macro or one of the
+% environments \env{tikzpicture} or \env{tikzdiagram}).
+%
+% \DescribeMacro{\fcaCircleSize}\marg{size}
+% The diameter of the circles that represent the concept
+% nodes. \meta{size} can be a dimension or a plain number. If the unit
+% is omitted \cs{unitsize} is used.
+% The default is 4\,mm.
+% The old behaviour can be restored by adding |\fcaCircleSize{4}|
+% after loading the package |fca|.
+%
+% Can be changed for single nodes by specifying the radius
+% as an optional parameter (e.g., |[radius=3mm]|).
+%
+% \DescribeMacro {\fcaNodeColor}\marg{color} The color with which the
+% concept nodes are filled.  The default is \textit{white}. Can be
+% changed for single nodes by using |fill=|\textit{color} as an option.
+%
+% \DescribeMacro {\NodeColor}\marg{color} is an alias to
+% \cs{fcaNodeColor} inside the \env{diagram} environment.
+%
+% \DescribeMacro{\fcaNodeThickness} The width of the annulus
+% representing the circumferential line of a concept node can be
+% changed using \cs{fcaNodeThickness}\marg{thickness}. The default is
+% $1.2$\,pt.  Can be changed for single nodes by specifying the line width
+% as an optional parameter (e.g., |[line width=3pt]|).
+%
+% \DescribeMacro{\NodeThickness}\cs{NodeThickness}\marg{thickness} is
+% an alias to \cs{fcaNodeThickness} inside a \env{diagram}
+% environment.
+%
+% \DescribeMacro{\fcaEdgeThickness}\cs{fcaEdgeThickness}\marg{thickness}.
+% The default is .8pt. It can be changed for all or for single edges by
+% specifying |line width| as an optional parameter.
+%
+% \DescribeMacro{\EdgeThickness}\cs{EdgeThickness}\marg{thickness} is
+% an alias to \cs{fcaEdgeThickness} inside a \env{diagram}
+% environment.
+%
+% These \watchout macros do not work reliably inside the \env{tikzpicture}
+% and  \env{tikzdiagram} envronments. Please use the key/value syntax
+% there.
+%
+% \subsection{Labels}
+% Some of the nodes in a concept lattice diagram have text labels.
+% Typically, object and attibute concepts are labeled with the
+% associated object or attibute names. This is done using the
+% |\**box(){}|-macros, which were introduced in
+% Subsection~\ref{subsec:diagram-basic}.  Font size and font colour of
+% such labels can be
+% changed, and the label boxes as well. By default each label box is
+% connected to the respective concept node by a dotted line. This can
+% be switched off:
+%
+% \DescribeMacro {\fcaNoDots} Causes no dotted line to be drawn  from
+% the concept node to the label boxes.
+%
+% \DescribeMacro {\NoDots} is an alias to
+% \cs{fcaNoDots} inside a \env{diagram} environment.
+%
+% These macros can be focussed to single instances, using braces. For
+% example,
+% \begin{center}
+% |{\fcaNoDots\centerObjbox(node){labeltext}}|
+% \end{center}
+% generates a single centered object label without a dotted line.
+%
+% Usually the label text is put into a
+% one-line box  (i.e. hbox), the width of which is automatically
+% detected. To allow  for line breaks, the parameter |text width| can
+% be used. It affects  the type and size of the label boxes.
+%
+% When |text width| is set to a length, then the text of the label is put
+% in a |\parbox|. It can be broken into several lines using |\\|. The
+% width of the |\parbox| is the value of the |text width|
+% parameter. It is unset by default.
+%
+% Setting |text width| to a length can either be done as an optional
+% parameter to the diagram, such as
+%
+% |\begin{diagram}[text width=6mm]|
+%
+% or globally (for all diagrams) by
+%
+% |\fcaset{text width=6mm}|
+%
+% or for single labels only, again as an optional parameter.
+%
+% Label boxes may be framed with the \texttt{draw} option, which may also
+% be used to set a color for the text and the frame. Their
+% background color can be set with \texttt{fill}.
+%
+% The text properties of the lables are given by the next two
+% commands, which  can be changed with |\renewcommand|.
+%
+%   \DescribeMacro{\fcaObjectLabelStyle} Used to define the font
+%   of object labels \emph{outside} of \env{diagram} environments.
+%   Default: |\small\baselineskip1em\rmfamily\upshape|
+%
+%   \DescribeMacro{\fcaAttributeLabelStyle} Used to define the font
+%   of object labels \emph{outside} of \env{diagram} environments.
+%   Default: |\small\baselineskip1em\rmfamily\itshape|.
+%
+%   \DescribeMacro{\ObjectLabelStyle} and
+%   \DescribeMacro{\AttributeLabelStyle}
+%
+%   are aliases of the above commands which can only be used
+%   \emph{inside} of \env{diagram} environments.
+%
+% {\unitlength .7mm
+% \begin{dtxexample}*{Concept node labels\label{ex:concept node labels}}
+%   \begin{diagram}[text width=3.4cm]
+%     \Node(0)(20,10)
+%     \leftAttbox[draw](0)(-1,1){left\\ attribute\\ label}
+%     \rightAttbox[fill=red!50!blue!20](0)(10,10){right
+%     attri-\\ bute label}
+%     \rightObjbox[draw=brown](0)(20,5){right\\ object\\ label}
+%     {\fcaNoDots\centerObjbox(0)(0,-5){centered\\ object label}}
+%   \end{diagram}
+% \end{dtxexample}
+% }
+%
+%
+%
+%
 % \section{Advanced usage of the \env{diagram}
 % environment} \label{sec:advanced}
 % \subsection{Make your own diagram style}
@@ -1067,7 +1196,7 @@ Formal Concept Analysis macros]
 % semicircle, respectively. The version presented in this example does
 % not behave well when the radius of concept nodes is changed.
 %
-% \begin{dtxexample}{Defining a \env{diagram} style}
+% \begin{dtxexample}*{Defining a \env{diagram} style}
 % \fcaset{conexp style/.style={%
 %     every attributes/.append style={
 %       label concept/.append style={
@@ -1101,7 +1230,7 @@ Formal Concept Analysis macros]
 % single nodes only, as an optional argument for the respective node
 % declarations.
 %
-% \begin{dtxexample}{Using a \env{diagram} style}
+% \begin{dtxexample}*{Using a \env{diagram} style}
 % {\unitlength 1.2mm
 % \begin{diagram}[conexp style]
 %   \Node(1)(20,10)
@@ -1124,8 +1253,8 @@ Formal Concept Analysis macros]
 % }
 % \end{dtxexample}
 %
-% \subsection{\fcastyle, \PGF, and \TikZ}
-% \label{subsec:pgf-tikz}
+% \subsection{\fcastyle, PGF, and \TikZ}
+% \label{subsec:pgf-tikz}%
 % \fcastyle\ requires \PGF, the \emph{Portable Graphics Format}, but not
 % necessarily its syntax layer \TikZ. That means that \PGF\ will be
 % loaded automatically with \fcastyle, but \TikZ\ is not.  When you do
@@ -1543,6 +1672,63 @@ Formal Concept Analysis macros]
 % as it may have a bad impact on the readability of the typeset
 % document.
 %
+% \DescribeOption{/fca/node/numbers} The option \optn{/fca/node/numbers} or the cammand
+% \DescribeMacro{\Numbers} \cs{Numbers} put the node labels into the nodes.
+% While working on a diagram it can be helpful to have a picture with
+% numbered nodes.
+%
+% \fcadocDraft
+% \begin{dtxexample}*{Plotting labels inside of nodes}
+%   {\unitlength .7mm
+%   \begin{diagram}
+%     \Numbers
+%     \Node(5)(20,10)
+%     \Node(6)(35,20)
+%     \Node(4)(5,30)
+%     \Node(8)(35,40)
+%     \Node(7)(20,50)
+%   \end{diagram}
+%   \begin{diagram}[node/numbers]
+%     \Node(9)(20,10)
+%     \Node(10)(35,20)
+%     \Node(11r)(5,30)
+%     \Node(12)(35,40)
+%     \Node(13)(20,50)
+%   \end{diagram}}
+% \end{dtxexample}
+% \fcadocNoDraft
+%
+% |\Numbers| should be used only to aid the development of
+% diagrams. Thus it is active only in the draft mode. It is activated
+% with the option |draft|.
+% 
+% We recommend to remove the |\Numbers|-command when the diagram is
+% ready.
+%
+%
+% \DescribeMacro{\NoNumbers} When the
+% current or following nodes shall be excluded from showing their
+% internal node label the option \optn{/fca/node/numbers} can be set to 
+% |false|. This can be achieved also with the command \cs{NoNumbers}.
+% 
+% 
+% \fcadocDraft
+% \begin{dtxexample}*{\cs{Numbers} and \cs{NoNumbers}}
+%   {\unitlength .7mm
+%   \begin{diagram}
+%     \Numbers
+%     \Node(5)(20,10)
+%     \Node[node/numbers=false](6)(35,20)
+%     \NoNumbers
+%     \Node(4)(5,30)
+%     \Node[node/numbers](8)(35,40)
+%     \Numbers
+%     \Node(7)(20,50)
+%   \end{diagram}}
+% \end{dtxexample}
+% \fcadocNoDraft
+%
+%
 % \section{About the current version of \env{fca.sty}}
 % The original version of fca.sty had been written by Bernhard Ganter,
 % mainly for his personal use. With the further development of \TeX,
@@ -1612,7 +1798,7 @@ Formal Concept Analysis macros]
 % \section{Some demonstrations}
 % \iffcatikzdoc
 % \fcadocDraft
-% % \begin{dtxexample}{Changes of the bounding box with big numbers}
+% % \begin{dtxexample}*{Changes of the bounding box with big numbers}
 %   \fbox{\unitlength .7mm
 %   \begin{diagram}
 %     \Numbers
@@ -2204,7 +2390,7 @@ Formal Concept Analysis macros]
 %
 %   Here we test empty contexts. They should work, but don't need to
 %   be documented:
-% \begin{dtxexample}{A formal context without objects.}
+% \begin{dtxexample}*{A formal context without objects.}
 %   \begin{cxt}
 %     \cxtName{Formula 1}
 %   %
@@ -2214,7 +2400,7 @@ Formal Concept Analysis macros]
 %   %
 %   \end{cxt}
 % \end{dtxexample}
-% \begin{dtxexample}{A formal context without attributes.}
+% \begin{dtxexample}*{A formal context without attributes.}
 %   \begin{cxt}
 %     \cxtName{Formula 1}
 %   %
@@ -2224,13 +2410,13 @@ Formal Concept Analysis macros]
 %   \end{cxt}
 % \end{dtxexample}
 %
-% \begin{dtxexample}{An empty named context.}
+% \begin{dtxexample}*{An empty named context.}
 %   \begin{cxt}
 %     \cxtName{Formula 0}
 %   \end{cxt}
 % \end{dtxexample}
 %
-% \begin{dtxexample}{An empty \env{cxt} environment.}
+% \begin{dtxexample}*{An empty \env{cxt} environment.}
 %   \begin{cxt}
 %   \end{cxt}
 % \end{dtxexample}
@@ -2962,7 +3148,7 @@ Formal Concept Analysis macros]
 % context above, try this:
 %
 %
-% \begin{dtxexample}{A lattice diagram}
+% \begin{dtxexample}*{A lattice diagram}
 % {\unitlength 1.2mm
 % \begin{diagram}{40}{55}
 %   \Node{1}{20}{10}
@@ -3738,7 +3924,7 @@ y%
 %    \end{macrocode}
 %
 % \iffcatikzdoc
-% \begin{dtxexample}{Testing lines with \TikZ{}}
+% \begin{dtxexample}*{Testing lines with \TikZ{}}
 %   \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
 % \begin{tikzdiagram}[x=1.2mm,y=1.2mm]
 %  \Node(1)(20,10)
@@ -4596,7 +4782,7 @@ y%
   \fca@parse@parenlabel{\fca@oldedge{#1}{#2}}%
 }
 %    \end{macrocode}
-% \begin{dtxexample}{Testing lines}
+% \begin{dtxexample}*{Testing lines}
 % {\unitlength 1.2mm
 % \definecolor{darkgreen}{rgb}{0.05,0.5,0.}
 % \begin{diagram}
@@ -4652,7 +4838,7 @@ y%
 \newcommand{\fcaNoDots}{\setboolean{fca@connectors}{false}}
 \newcommand{\fcaDots}{\setboolean{fca@connectors}{true}}
 %    \end{macrocode}
-%\begin{dtxexample}{Testing nodots}
+%\begin{dtxexample}*{Testing nodots}
 %   \begin{diagram}[text width=3.4cm]
 %     \Node(0)(20,10)
 %     \NoDots
@@ -4718,7 +4904,7 @@ y%
 % \begin{macro}{\fca@labelBox}\oarg{options}\marg{label}\parg{xoffset,yoffset}\marg{content}
 % \begin{macro}{\fca@labelBox}\oarg{options}\parg{label}\marg{content}
 % \begin{macro}{\fca@labelBox}\oarg{options}\parg{label}\parg{xoffset,yoffset}\marg{content}
-% \begin{dtxexample}{Syntax test for labels}
+% \begin{dtxexample}*{Syntax test for labels}
 %   {\unitlength 1.2mm\relax
 %   \fcadocDraft
 %   \begin{diagram}{40}{55}
@@ -5040,7 +5226,7 @@ y%
 %   \rightObjbox(4)(20,-2){Hamilton}
 % \end{diagram}
 %
-% \begin{dtxexample}{testing label lines}
+% \begin{dtxexample}*{testing label lines}
 % \unitlength=1.2mm
 % \begin{diagram}[conexpstyle]
 %   \Node(1)(20,10)
@@ -5316,7 +5502,7 @@ y%
 }
 %    \end{macrocode}
 % \iffcatikzdoc
-%   \begin{dtxexample}{Using \textbackslash unitlength in \TikZ{} pictures}
+%   \begin{dtxexample}*{Using \textbackslash unitlength in \TikZ{} pictures}
 %     \begin{tikzpicture}
 %       \begin{diagram}[copy unitlength]
 %         \Node(1)(20,10)
@@ -5334,7 +5520,7 @@ y%
 %   \end{dtxexample}
 %
 % 
-%   \begin{dtxexample}{Using \textbackslash unitlength in \TikZ{} diagrams}
+%   \begin{dtxexample}*{Using \textbackslash unitlength in \TikZ{} diagrams}
 %     \begin{tikzdiagram}[copy unitlength]
 %         \Node(1)(20,10)
 %         \Node(2)(35,20)

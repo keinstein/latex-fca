@@ -676,7 +676,7 @@ Formal Concept Analysis macros]
   {text height}{}{\tikz@text@height},
   {text depth}{}{\tikz@text@depth},
   {text action}{}{\tikz@text@action},
-  {options}{}{\tikz@options},%\newcommand*{\fca@node@fill}{white}%
+  {options}{}{\tikz@options},%\newcommand*{\fca@node@}{white}%
   {anchor}{}{\tikz@anchor},
   {shape}{}{\tikz@shape}
   \do {
@@ -693,6 +693,8 @@ Formal Concept Analysis macros]
   \expandafter\fca@append\expandafter#1\expandafter{#2}%
 }
 
+\newcommand\fca@node@fill{white}
+
 \fcaset{%
   connector/.is if=fca@connectors,
   namespace/.initial=fca,
@@ -704,7 +706,7 @@ Formal Concept Analysis macros]
   every node/.style = {},
   every concept/.style = {
     radius = 2mm,
-    fill=white,
+    fill=\fca@node@fill,
     draw=black
   },
   every attributes/.style = {
@@ -837,9 +839,10 @@ Formal Concept Analysis macros]
   radius/.style={
     /fca/radius=#1
   },
-  color/.initial={},
+  color/.forward to=/fca/fill,
   layer/.code=\fcalayer{node},%
   numbers/.is if=fca@CircledNumbers,
+  numbers/.default=true,
   number prefix/.store in=\fca@node@number@prefix,
   number prefix/.value required,
   number suffix/.store in=\fca@node@number@suffix,
@@ -955,7 +958,7 @@ Formal Concept Analysis macros]
   \ignorespaces
 }
 \newcommand*{\fcaNodeColor}[1]{%
-  \pgfkeyssetvalue{/fca/node/color}{#1}%
+  \def\fca@node@fill{#1}%
   \ignorespaces
 }%
 \iffca@draft
@@ -997,11 +1000,6 @@ Formal Concept Analysis macros]
 \def\fca@adjNode#1{%
   \ifthenelse{#1<\value{fca@minNode}}{\setcounter{fca@minNode}{#1}}{}%
   \ifthenelse{\value{fca@maxNode}<#1}{\setcounter{fca@maxNode}{#1}}{}}%
-\newcommand\fca@node[1][]{%
-  \@ifnextchar\bgroup{\fca@oldnode{#1}}{%
-      \@ifnextchar({\fca@pictnode{#1}}{\fca@tikznode{#1}}%)
-    }%
-}
 \newcommand\fca@typeset@node@content[1]{%
   \pgfkeysgetvalue{/fca/text width}\@tempa
   \edef\@tempb{\@tempa}%
@@ -1021,22 +1019,40 @@ Formal Concept Analysis macros]
   #1%
   \fca@node@end@content%
 }
+\newcommand\fca@node[1][]{%
+  \@ifnextchar\bgroup{\fca@oldnode{#1}}{%
+      \@ifnextchar({\fca@pictnode{#1}}{\fca@tikznode{#1}}%)
+    }%
+}
+\newcommand\fca@pictnode[1]{%
+  \fca@parse@parenlabel{\fca@pictn@de{#1}}%
+}
+\newcommand\fca@pictn@de[2]{%
+  \fca@parse@paren@vector{%
+    \edef\fca@tempa{{\the\@tempdima}{\the\@tempdimb}}%
+    \def\fca@tempb{\fca@oldnode{#1}{#2}}%
+    \expandafter\fca@tempb\fca@tempa
+  }\@tempdima\@tempdimb
+}
 \newcommand\fca@oldnode[4]{%
+  \typeout{fca@oldnode}%
   \begin{pgfscope}%
     \fcaset{shape=circle,
-      line width=\fca@node@thickness}%
+      line width=\fca@node@thickness,
+      color/.forward to=/fca/fill}%
     \fcaset{every node/.try}%
-    \pgfkeysgetvalue{/fca/node/color}{\fca@node@color}%
-    \expandafter\fca@testoption\expandafter{\fca@node@color}{%
+    \fcaset{every concept/.try}%
+    \fcaset{#1}%
+    \iffalse
+    \expandafter\fca@testoption\expandafter{\fca@node@fill}{%
       \fca@append\fca@options{%
-        \expandafter\pgfsetfillcolor\expandafter{\fca@node@color}%
+        \expandafter\pgfsetfillcolor\expandafter{\fca@node@fill}%
       }%
       \fca@append\fca@usepath{fill,}%
     }{% none
     }{% empty or \pgfkeysnovalue
     }%
-    \fcaset{every concept/.try}%
-    \fcaset{#1}%
+    \fi
     \fca@nodeslayer
     \pgfkeysvalueof{/fca/node font}%
     \fca@parselength\@tempdima{#3}\unitlength
@@ -1068,16 +1084,6 @@ Formal Concept Analysis macros]
     }{}%
   \end{pgfscope}%
   \ignorespaces
-}
-\newcommand\fca@pictnode[1]{%
-  \fca@parse@parenlabel{\fca@pictn@de{#1}}%
-}
-\newcommand\fca@pictn@de[2]{%
-  \fca@parse@paren@vector{%
-    \edef\fca@tempa{{\the\@tempdima}{\the\@tempdimb}}%
-    \def\fca@tempb{\fca@oldnode{#1}{#2}}%
-    \expandafter\fca@tempb\fca@tempa
-  }\@tempdima\@tempdimb
 }
 \newcommand{\fca@edge}[1][]{%
   \@ifnextchar\bgroup{\fca@oldedge{#1}}{\fca@newedge{#1}}%

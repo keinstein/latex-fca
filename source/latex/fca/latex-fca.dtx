@@ -180,6 +180,13 @@ Formal Concept Analysis macros]
 %<*driver>
 % Check whether we should disable \TikZ for documentation generation
 \fcatikzdoctrue
+\iffalse
+%</driver>
+%<*notikzdriver>
+\NewDocumentEnvironment{tikzdiagram}{+b}{}{}
+%</notikzdriver>
+%<*driver>
+\fi
 %</driver>
 %<*driver|notikzdriver>
 % Hack around the convention to use the vertical bar for macro names.

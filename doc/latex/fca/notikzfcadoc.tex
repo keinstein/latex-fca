@@ -64,6 +64,12 @@ Formal Concept Analysis macros]
 \makeatletter
 \newcommand\fcadocNoDraft{\fca@draftfalse}
 \newcommand\fcadocDraft  {\fca@drafttrue }
+\let\fca@pgfkeys@@normal\pgfkeys@@normal
+\long\def\pgfkeys@@normal#1,{%
+  \edef\ts@pgfprint@tempa{\expandafter\detokenize\expandafter{#1}}%
+  \typeout{pgfkeys: \meaning\ts@pgfprint@tempa}%
+  \fca@pgfkeys@@normal#1,%
+}%
 \makeatother
 \fcadocNoDraft
 \makeatletter

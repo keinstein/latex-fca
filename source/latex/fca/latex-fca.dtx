@@ -226,6 +226,14 @@ Formal Concept Analysis macros]
 \makeatletter
 \newcommand\fcadocNoDraft{\fca@draftfalse}
 \newcommand\fcadocDraft  {\fca@drafttrue }
+\let\fca@pgfkeys@@normal@save\pgfkeys@@normal
+\long\def\fca@pgfkeys@@normal@debug#1,{%
+  \edef\ts@pgfprint@tempa{\expandafter\detokenize\expandafter{#1}}%
+  \typeout{pgfkeys: \meaning\ts@pgfprint@tempa}%
+  \fca@pgfkeys@@normal@save#1,%
+}%
+\def\pgfkeystrace{\let\pgfkeys@@normal\fca@pgfkeys@@normal@debug}
+\def\pgfkeysnotrace{\let\pgfkeys@@normal\fca@pgfkeys@@normal@save}
 \makeatother
 \fcadocNoDraft
 %

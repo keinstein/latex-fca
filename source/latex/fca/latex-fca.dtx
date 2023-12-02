@@ -1124,6 +1124,8 @@ Formal Concept Analysis macros]
 %     \Node[fill=orange](1)(30,60)
 %     \Node[color=blue](4)(60,30)
 %     \Node[node/color=red](5)(90,30)
+%     \fcaNodeColor{black}
+%     \Node(6)(90,60)
 %   \end{diagram}
 %   \begin{tikzdiagram}
 %     \Node(3)(2,2)
@@ -1132,6 +1134,8 @@ Formal Concept Analysis macros]
 %     \Node[fill=orange](1)(1,2)
 %     \Node[color=blue](4)(2,1)
 %     \Node[node/color=red](5)(3,1)
+%     \fcaNodeColor{black}
+%     \Node(6)(3,2)
 %   \end{tikzdiagram}
 %   \endgroup
 % \end{dtxexample}
@@ -1154,12 +1158,16 @@ Formal Concept Analysis macros]
 %     \NodeThickness{2pt}
 %     \Node(2)(30,30)
 %     \Node[line width=3pt](1)(30,60)
+%     \fcaNodeThickness{4pt}
+%     \Node(4)(60,30)
 %   \end{diagram}
 %   \begin{tikzdiagram}
 %     \Node(3)(2,2)
 %     \NodeThickness{2pt}
 %     \Node(2)(1,1)
 %     \Node[line width=3pt](1)(1,2)
+%     \fcaNodeThickness{4pt}
+%     \Node(4)(2,1)
 %   \end{tikzdiagram}
 %   \endgroup
 % \end{dtxexample}
@@ -1176,22 +1184,28 @@ Formal Concept Analysis macros]
 %   \begingroup
 %   \fcaEdgeThickness{1pt}
 %   \begin{diagram}
-%     \Node(3)(60,60)
-%     \Node(2)(30,30)
-%     \Node(1)(30,60)
+%     \Node(1)(60,60)
+%     \Node(2)(30,60)
+%     \Node(3)(60,30)
+%     \Node(4)(30,30)
 %     \Edge(1)(2)
 %     \EdgeThickness{2pt}
+%     \Edge(1)(3)
+%     \fcaEdgeThickness{3pt}
 %     \Edge(2)(3)
-%     \Edge[line width=3pt](1)(3)
+%     \Edge[line width=4pt](1)(4)
 %   \end{diagram}
 %   \begin{tikzdiagram}
-%     \Node(3)(2,2)
-%     \Node(2)(1,1)
-%     \Node(1)(1,2)
+%     \Node(1)(2,2)
+%     \Node(2)(1,2)
+%     \Node(3)(2,1)
+%     \Node(4)(1,1)
 %     \Edge(1)(2)
 %     \EdgeThickness{2pt}
+%     \Edge(1)(3)
+%     \fcaEdgeThickness{3pt}
 %     \Edge(2)(3)
-%     \Edge[line width=3pt](1)(3)
+%     \Edge[line width=4pt](1)(4)
 %   \end{tikzdiagram}
 %   \endgroup
 % \end{dtxexample}
@@ -1230,18 +1244,22 @@ Formal Concept Analysis macros]
 % they cannot work properly if a brace follows them. In that case you
 % should add \cs{relax} before the grouping brace or \cs{bgroup}.
 %
-% \begin{dtxexample}*{Usage of \cs{EdgeThickness} and \optn{line width}}
+% \begin{dtxexample}*{Usage of \cs{NoDots} and \cs{fcaNoDots}}
 %   \begingroup
 %   \fcaEdgeThickness{1pt}
 %   \begin{diagram}
 %     \Node(1)(30,60)
 %     \leftObjbox[shift={(0,-10)}](1){dotted}\relax
 %     {\NoDots\rightObjbox[shift={(0,-10)}](1){undotted}}
+%     \leftAttbox[shift={(0,10)}](1){dotted}\relax
+%     {\fcaNoDots\rightAttbox[shift={(0,10)}](1){undotted}}
 %   \end{diagram}
 %   \begin{tikzdiagram}
 %     \Node(1)(1,2)
-%     \leftObjbox[shift={(0,-.3)}](1){dotted}\relax
-%     \bgroup\NoDots\rightObjbox[shift={(0,-.3)}](1){undotted}\egroup
+%     \leftObjbox[shift={(0,-1)}](1){dotted}\relax
+%     {\NoDots\rightObjbox[shift={(0,-1)}](1){undotted}}
+%     \leftAttbox[shift={(0,1)}](1){dotted}\relax
+%     {\fcaNoDots\rightAttbox[shift={(0,1)}](1){undotted}}
 %   \end{tikzdiagram}
 %   \endgroup
 % \end{dtxexample}
@@ -4011,9 +4029,9 @@ y%
 }
 
 \newcommand\fca@tikz@oldnode[4]{%
-  \typeout{fca@tikz@oldnode}%
   \begin{pgfscope}%
     \fca@nodeslayer
+    \let\tikz@text@width\pgfutil@empty
     \path (#3,#4) node[
       anchor=center,
       shape=circle,
@@ -4850,7 +4868,6 @@ y%
   }\@tempdima\@tempdimb
 }
 \newcommand\fca@oldnode[4]{%
-  \typeout{fca@oldnode}%
   \begin{pgfscope}%
     \fcaset{shape=circle,
       line width=\fca@node@thickness, 

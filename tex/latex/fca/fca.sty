@@ -468,7 +468,7 @@ Formal Concept Analysis macros]
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\fca@Defaults}{% Do not change this line!  %
+\newcommand{\fca@notikz@Defaults}{% Do not change this line!  %
   \newcommand{\fcaObjectLabelStyle}{%
     \small\baselineskip1em\rmfamily\upshape%
   }% %
@@ -500,6 +500,7 @@ Formal Concept Analysis macros]
   \let\centerObjbox\fca@centerObjbox
   \let\rightObjbox\fca@rightObjbox
 }% %
+\let\fca@Defaults\fca@notikz@Defaults
 \newboolean{fca@connectors}\setboolean{fca@connectors}{true}% %
 \iffca@compat@macros
   \newcommand{\diagramXoffset}{0}% %
@@ -740,8 +741,8 @@ Formal Concept Analysis macros]
   node number/.style = { node font=\tiny, font=\tiny },
   color/.code={\fca@append\fca@options{\color{#1}}},
   line width/.code={%
-    \fca@append\fca@options{\pgfsetlinewidth{#1}}%
     \pgfmathsetlength\pgflinewidth{#1}%
+    \fca@append\fca@options{\pgfsetlinewidth{#1}}%
   },
   stroke/.code={%
     \fca@testoption{#1}{%
@@ -834,7 +835,7 @@ Formal Concept Analysis macros]
 }
 
 \pgfqkeys{/fca/node}{%
-  line width/.store in=\fca@node@thickness,
+  line width/.forward to=/fca/line width
   line width/.value required,
   radius/.style={
     /fca/radius=#1
@@ -947,7 +948,7 @@ Formal Concept Analysis macros]
 }
 
 \newcommand*{\fcaNodeThickness}[1]{%
-  \fcaset{node/line width={#1}}%
+  \def\fca@node@thickness{#1}%
   \ignorespaces
 }% %
 \newcommand*{\fcaEdgeThickness}[1]{%
@@ -1035,7 +1036,6 @@ Formal Concept Analysis macros]
   }\@tempdima\@tempdimb
 }
 \newcommand\fca@oldnode[4]{%
-  \typeout{fca@oldnode}%
   \begin{pgfscope}%
     \fcaset{shape=circle,
       line width=\fca@node@thickness,
@@ -1043,16 +1043,6 @@ Formal Concept Analysis macros]
     \fcaset{every node/.try}%
     \fcaset{every concept/.try}%
     \fcaset{#1}%
-    \iffalse
-    \expandafter\fca@testoption\expandafter{\fca@node@fill}{%
-      \fca@append\fca@options{%
-        \expandafter\pgfsetfillcolor\expandafter{\fca@node@fill}%
-      }%
-      \fca@append\fca@usepath{fill,}%
-    }{% none
-    }{% empty or \pgfkeysnovalue
-    }%
-    \fi
     \fca@nodeslayer
     \pgfkeysvalueof{/fca/node font}%
     \fca@parselength\@tempdima{#3}\unitlength

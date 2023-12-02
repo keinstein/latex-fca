@@ -254,9 +254,11 @@ y%
 \newcommand\fca@tikz@oldnode[4]{%
   \begin{pgfscope}%
     \fca@nodeslayer
+    \let\tikz@text@width\pgfutil@empty
     \path (#3,#4) node[
       anchor=center,
       shape=circle,
+      line width=\fca@node@thickness,
       /fca/.cd,
       /fca/every node/.try,
       /fca/every concept/.try,
@@ -386,7 +388,6 @@ y%
 \tikzaddtikzonlycommandshortcutlet\fca@oldedge\fca@tikz@oldedge
 \tikzaddtikzonlycommandshortcutlet\fca@@labelBox\fca@tikz@labelBox
 \tikzaddtikzonlycommandshortcutlet\fca@parse@paren@vector\fca@tikz@parse@paren@vector
-\tikzaddtikzonlycommandshortcutlet\fca@notikz@Defaults\fca@Defaults
 \tikzaddtikzonlycommandshortcutlet\fca@Defaults\fca@tikz@Defaults
 \newenvironment{tikzdiagram}[1][]{%
   \def\fca@begindiagram{%

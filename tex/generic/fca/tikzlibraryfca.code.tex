@@ -179,6 +179,7 @@ text badly ragged left,%
 text justified,%
 text centered,%
 text badly centered,%
+align,%
 even odd rule,%
 nonzero rule,%
 fill opacity,%
@@ -222,27 +223,38 @@ y%
 \@ifundefined{tikz@transform}{\let\tikz@transform\empty}{}
 \let\fca@ifintikz\@secondoftwo
 \tikzaddtikzonlycommandshortcutlet\fca@ifintikz\@firstoftwo
-\fcaset{%
+\pgfqkeys{/fca/label}{%
   attributes left/.append style={
-    align=flush right
+    /tikz/.cd,
+    align=flush right,
+    /fca/.cd
   },
-  attributes center/.append style={
-    align=flush center
+  attributes center/.append style={%
+    /tikz/.cd,
+    align=flush center,
+    /fca/.cd%
   },
   attributes right/.append style={
-    align=flush left
+    /tikz/.cd,
+    align=flush left,
+    /fca/.cd
   },
   objects left/.append style={
-    align=flush right
+    /tikz/.cd,
+    align=flush right,
+    /fca/.cd
   },
   objects center/.append style={
-    align=flush center
+    /tikz/.cd,
+    align=flush center,
+    /fca/.cd
   },
   objects right/.append style={
-    align=flush left
+    /tikz/.cd,
+    align=flush left,
+    /fca/.cd
   }
 }
-
 \let\fca@notikz@parse@paren@vector\fca@parse@paren@vector
 \newcommand\fca@tikz@parse@paren@vector[3]{%
   \def\tikz@coordinate@caller{%
@@ -294,37 +306,70 @@ y%
   \ignorespaces
 }
 
+\newcommand\fca@tikz@labelBox@label[1]{%
+  \typeout{fca@tikz@labelBox@label: |attributes\space \fca@label@position|}%
+  \fca@labelslayer
+  \path[/fca/.cd,every node/.try,every label/.try,#1]
+  (\fca@temp@node@name.\fca@label@at)
+  ++(\fca@label@shift@x,\fca@label@shift@y)
+  node[/fca/.cd,every node/.try,/tikz/.cd,shape=rectangle,/fca/.cd,every label/.try,#1] (%
+  \pgfkeysvalueof{/fca/label/name prefix}%
+  \pgfkeysvalueof{/fca/node}%
+  \pgfkeysvalueof{/fca/label/name suffix}%
+  ){%
+    \pgfkeysvalueof{/fca/node contents}%
+  };%
+  \fca@endlabelslayer
+}
+
+\newcommand\fca@tikz@labelBox@connector[1]{%
+  \typeout{fca@tikz@labelBox@connector}%
+  \begin{scope}
+    \fca@connectorslayer
+    \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
+    (\pgfkeysvalueof{/fca/node}) --
+    (%
+    \pgfkeysvalueof{/fca/label/name prefix}%
+    \pgfkeysvalueof{/fca/node}%
+    \pgfkeysvalueof{/fca/label/name suffix}%
+    .\pgfkeysvalueof{/fca/anchor}) ;
+    \fca@endconnectorslayer
+  \end{scope}%
+}
+
+\newcommand\fca@tikz@labelBox@concept[1]{%
+  \typeout{fca@tikz@labelBox@concept}%
+  \fca@labelconceptslayer
+  % \edef\fca@tempa{
+  \path
+  (\fca@temp@node@name.\fca@label@at)%
+  node[draw,
+  /fca/.cd,
+  shape=coordinate,
+  #1,
+  every label concept/.try,
+  label concept/.try]
+  (\pgfkeysvalueof{/fca/label/name prefix}%
+  \pgfkeysvalueof{/fca/node}%
+  \pgfkeysvalueof{/fca/label/name suffix}%
+  ){};
+  % \pgfsetstrokecolor{\fca@node@color}%
+  % \pgfnode{}{\pgfkeysvalueof{/fca/anchor}}{}{}%
+  \fca@endlabelconceptslayer
+}
+
 \newcommand\fca@tikz@labelBox[1]{%
   \begin{scope}%
-    \fcaset{every node/.try,every label/.try,#1}%
+    \fcaset{%
+      draw/.forward to=/tikz/draw,
+      every node/.try,every label/.try,#1}%
     \edef\@tempa{\pgfkeysvalueof{/fca/pgfnode}}%
     \xdef\fca@temp@node@name{%
       \expandafter\fca@remove@anchor\expandafter{\@tempa}%
     }%
-    \fca@labelslayer
-      \path[/fca/.cd,every node/.try,every label/.try,#1]
-      (\fca@temp@node@name.\fca@label@at)
-      ++(\fca@label@shift@x,\fca@label@shift@y)
-      node[shape=rectangle] (%
-        \pgfkeysvalueof{/fca/label/name prefix}%
-        \pgfkeysvalueof{/fca/node}%
-        \pgfkeysvalueof{/fca/label/name suffix}%
-      ){%
-        \pgfkeysvalueof{/fca/node contents}%
-      };%
-    \fca@endlabelslayer
+    \fca@tikz@labelBox@label{#1}%
     \iffca@connectors
-      \begin{scope}
-        \fca@connectorslayer
-        \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
-        (\pgfkeysvalueof{/fca/node}) --
-        (%
-        \pgfkeysvalueof{/fca/label/name prefix}%
-        \pgfkeysvalueof{/fca/node}%
-        \pgfkeysvalueof{/fca/label/name suffix}%
-        .\pgfkeysvalueof{/fca/anchor}) ;
-        \fca@endconnectorslayer
-      \end{scope}%
+      \fca@tikz@labelBox@connector{#1}%
     \fi
     \begin{scope}
       \fcaset{shape=coordinate,#1}%
@@ -336,26 +381,11 @@ y%
       \def\@tempa{coordinate}%
       \ifx\@tempa\tikz@shape
       \else
-        \fca@labelconceptslayer
-        %\edef\fca@tempa{
-        \path
-          (\fca@temp@node@name.\fca@label@at)%
-          node[draw,
-          /fca/.cd,
-          shape=coordinate,
-          #1,
-          every label concept/.try,
-          label concept/.try]
-        (\pgfkeysvalueof{/fca/label/name prefix}%
-          \pgfkeysvalueof{/fca/node}%
-          \pgfkeysvalueof{/fca/label/name suffix}%
-          ){};
-        % \pgfsetstrokecolor{\fca@node@color}%
-        %\pgfnode{}{\pgfkeysvalueof{/fca/anchor}}{}{}%
-        \fca@endlabelconceptslayer
+        \fca@tikz@labelBox@concept{#1}%
       \fi
     \end{scope}
   \end{scope}%
+  \typeout{end fca@tikz@labelBox}%
   \ignorespaces
 }
 \newcommand\fca@tikz@startdiagram[1][]{%

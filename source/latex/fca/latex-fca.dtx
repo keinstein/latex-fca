@@ -465,6 +465,27 @@ Formal Concept Analysis macros]
 % \subsection{Advanced usage of the \env{cxt} environment}
 % \subsubsection{Defining context characters}
 %
+% The following letters and numbers are predefined by \fcastyle.
+% \begin{description}
+% \ItemDescribeOther[context character]{.} An empty context cell.
+% \ItemDescribeOther[context character]{x} A cross in the context.
+% \ItemDescribeOther[context character]{X} Alternative sign for a cross.
+% \ItemDescribeOther[context character]{u} An up-arrow in the context.
+% \ItemDescribeOther[context character]{d} A down-arrow in the context.
+% \ItemDescribeOther[context character]{b} A cell containing both an
+% up- and a down-arrow.
+% \ItemDescribeOther[context character]{0} A zero in a many-valued context.
+% \ItemDescribeOther[context character]{1} A one in a many-valued context.
+% \ItemDescribeOther[context character]{2} Two in a many-valued context.
+% \ItemDescribeOther[context character]{3} Three in a many-valued context.
+% \ItemDescribeOther[context character]{4} Four in a many-valued context.
+% \ItemDescribeOther[context character]{5} Five in a many-valued context.
+% \ItemDescribeOther[context character]{6} Six in a many-valued context.
+% \ItemDescribeOther[context character]{7} Seven in a many-valued context.
+% \ItemDescribeOther[context character]{8} Eight in a many-valued context.
+% \ItemDescribeOther[context character]{9} Nine in a many-valued context.
+% \end{description}
+%
 % You can define your own markers using |\fcaNewContextChar|. It
 % works like |\newcommand| but defines a single character. For
 % single signs use |\cxtrlap| in order to give it an appropriate
@@ -639,7 +660,7 @@ Formal Concept Analysis macros]
 % symbols or special formatting) can be requested with the help of a
 % simple text editor by changing the corresponding characters in the
 % context matrix of the |.cxt| file.
-% 
+%
 % \section{Some macros for text}
 % \label{sec:macros}
 % Abbreviating macros are defined for some strings that occur
@@ -903,7 +924,7 @@ Formal Concept Analysis macros]
 % Helpful commands when fine tuning a diagram are discussed in
 % \autoref{subsec:draftmode}.
 %
-% \subsection{Changing the size of the generated
+% \subsection{Changing the unit size of the generated
 % diagram}\label{sec:diagram units}%
 % By default, \env{diagram} und \env{tikzpicture} use the same units
 % that the underlying graphics environment used when they were first
@@ -1063,7 +1084,7 @@ Formal Concept Analysis macros]
 % \end{dtxexample}
 % \fi
 %
-% \subsubsection{Fine tuning}\label{subsec:fine}
+% \subsubsection{Fine tuning concept nodes}\label{subsec:fine}
 % In Version 2.1 and before some macros allow to change
 % certain parameters of the diagrams.
 %
@@ -1172,6 +1193,8 @@ Formal Concept Analysis macros]
 %   \endgroup
 % \end{dtxexample}
 %
+% \subsection{Modifying edges}
+%
 % \DescribeMacro{\fcaEdgeThickness}\cs{fcaEdgeThickness}\marg{thickness}.
 % The default is .8pt. It can be changed for all or for single edges by
 % specifying |line width| as an optional parameter.
@@ -1223,7 +1246,149 @@ Formal Concept Analysis macros]
 % |\**box(){}|-macros, which were introduced in
 % Subsection~\ref{subsec:diagram-basic}.  Font size and font colour of
 % such labels can be
-% changed, and the label boxes as well. By default each label box is
+% changed, and the label boxes as well.
+% Usually the label text is put into a
+% one-line box  (i.e. hbox), the width of which is automatically
+% detected. To allow  for line breaks, the parameter |text width| can
+% be used. It affects  the type and size of the label boxes.
+%
+% When |text width| is set to a length, then the text of the label is put
+% in a |\parbox|. It can be broken into several lines using |\\|. The
+% width of the |\parbox| is the value of the |text width|
+% parameter. It is unset by default.
+%
+% Setting |text width| to a length can either be done as an optional
+% parameter to the diagram, such as
+%
+% |\begin{diagram}[text width=6mm]|
+%
+% or globally (for all diagrams) by
+%
+% |\fcaset{text width=6mm}|
+%
+% or for single labels only, again as an optional parameter.
+%
+% \begin{dtxexample}*{Concept node labels\label{ex:concept node labels}}
+%   \begin{diagram}
+%     \Node(0)(0,0)
+%     \centerAttbox[draw=black](0){much much longer label text}
+%     \centerObjbox[draw=black](0){much much longer label text}
+%   \end{diagram}
+%   \begin{tikzdiagram}
+%     \Node(0)(0,0)
+%     \centerAttbox[draw=black](0){much much longer label text}
+%     \centerObjbox[draw=black](0){much much longer label text}
+%   \end{tikzdiagram}\\
+%   \begin{diagram}[text width=3.4cm]
+%     \Node(0)(0,0)
+%     \centerAttbox[draw](0){much much longer label text}
+%     \centerObjbox[draw,text width=2cm](0){much much longer label text}
+%   \end{diagram}
+%   \begin{tikzdiagram}[text width=3.4cm]
+%     \Node(0)(0,0)
+%     \centerAttbox[draw](0){much much longer label text}
+%     \centerObjbox[draw,text width=2cm](0){much much longer label text}
+%   \end{tikzdiagram}\\
+%   \begingroup
+%   \fcaset{text width=2.7cm}
+%   \begin{diagram}
+%     \Node(0)(0,0)
+%     \centerAttbox[draw](0){much much longer label text}
+%     \centerObjbox[draw,text width=2cm](0){much much longer label text}
+%   \end{diagram}
+%   \begin{tikzdiagram}
+%     \Node(0)(0,0)
+%     \centerAttbox[draw](0){much much longer label text}
+%     \centerObjbox[draw,text width=2cm](0){much much longer label text}
+%   \end{tikzdiagram}
+%   \endgroup
+% \end{dtxexample}
+%
+% \DescribeOption{draw}
+% Label boxes may be framed with the \texttt{draw} option, which may also
+% be used to set a color for the text and the frame. Their
+% background color can be set with \DescribeOption{fill}\texttt{fill}.
+%
+% {\unitlength .7mm
+% \begin{dtxexample}*{Concept node labels\label{ex:concept node labels}}
+%   \begin{diagram}[text width=3.4cm]
+%     \Node(0)(20,10)
+%     \leftAttbox[draw](0)(-1,1){left\\ attribute\\ label}
+%     \rightAttbox[fill=red!50!blue!20](0)(10,10){right
+%     attri-\\ bute label}
+%     \rightObjbox[draw=brown](0)(20,5){right\\ object\\ label}
+%     {\fcaNoDots\centerObjbox(0)(0,-5){centered\\ object label}}
+%   \end{diagram}
+% \end{dtxexample}
+% }
+%
+% \DescribeOption{font} \sloppypar Font settings of the object and attribute
+% label can be given with the option \optn{font}. For compatibility
+% reasons with prior versions of |fca.sty| Its default value is
+% either \DescribeMacro{\ObjectLabelStyle}\cs{ObjecktLabelStyle} or
+% \DescribeMacro{\AttributeLabelStyle}\cs{AttributeLabelStyle}.
+% They can be changed using |\renewcommand|. Similarly, The default
+% value of \cs{ObjecktLabelStyle} is \cs{fcaObjectLabelStyle} and
+% \cs{AttributeLabelStyle} defaults to \cs{fcaAttributeLabelStyle}.
+% So either of them can be changed in order to modify the appearence
+% of the labels.
+%   
+% \DescribeMacro{\fcaObjectLabelStyle} The macro
+% \cs{fcaObjectLabelStyle} used to define the font of object labels
+% \emph{outside} of \env{diagram} environments.  Default:
+% |\small\baselineskip1em\rmfamily\upshape|
+%
+% \DescribeMacro{\fcaAttributeLabelStyle} In the same way
+% \cs{fcaAttributeLabelStyle} used to define the font of object labels
+% \emph{outside} of \env{diagram} environments.  Default:
+% |\small\baselineskip1em\rmfamily\itshape|.
+%
+% \sloppypar The four macros \cs{ObjectLabelStyle}, \cs{AttributeLabelStyle},
+% \cs{fcaObjectLabelStyle} and \cs{fcaAttributeLabelStyle} are defined
+% only inside of the \env{diagram} environment.
+%
+% \watchout  Care must be taken when different approaches are mixed. Setting the
+% option \optn{font} on an attribute label will remove the call to
+% \cs{AttributeLabelStyle}. So also \cs{fcaAttributeLabelStyle} will
+% not be called anymore. Object labels will behave similarely.
+%
+% Therefore, it is recommended to modify only the \optn{font} option
+% and leave the macros for only for compatibility with older diagrams.
+% 
+% \begin{dtxexample}*{Changing the concept label font\label{ex:concept node labels}}
+%   \begingroup
+%   \begin{diagram}
+%     \renewcommand\fcaObjectLabelStyle{\huge}%
+%     \renewcommand\fcaAttributeLabelStyle{\tiny}%
+%     \Node(0)(0,0)
+%     \leftAttbox(0){tiny}
+%     \leftObjbox(0){huge}
+%     \renewcommand\ObjectLabelStyle{\tiny}%
+%     \renewcommand\AttributeLabelStyle{\huge}%
+%     \rightAttbox(0){tiny}
+%     \rightObjbox(0){huge}
+%     \centerAttbox[font=\bfseries](0){bf}
+%     \centerObjbox[font=\itshape](0){it}
+%   \end{diagram}
+%   \begin{tikzdiagram}
+%     \renewcommand\fcaObjectLabelStyle{\huge}%
+%     \renewcommand\fcaAttributeLabelStyle{\tiny}%
+%     \Node(0)(0,0)
+%     \leftAttbox(0){tiny}
+%     \leftObjbox(0){huge}
+%     \renewcommand\ObjectLabelStyle{\tiny}%
+%     \renewcommand\AttributeLabelStyle{\huge}%
+%     \rightAttbox(0){tiny}
+%     \rightObjbox(0){huge}
+%     \centerAttbox[font=\bfseries](0){bf}
+%     \centerObjbox[font=\itshape](0){it}
+%   \end{tikzdiagram}
+%   \endgroup
+% \end{dtxexample}
+%
+% \subsection{Configuring the help lines for labels}
+%
+% By default each label box is
 % connected to the respective concept node by a dotted line. This can
 % be switched off:
 %
@@ -1263,99 +1428,6 @@ Formal Concept Analysis macros]
 %   \end{tikzdiagram}
 %   \endgroup
 % \end{dtxexample}
-%
-% Usually the label text is put into a
-% one-line box  (i.e. hbox), the width of which is automatically
-% detected. To allow  for line breaks, the parameter |text width| can
-% be used. It affects  the type and size of the label boxes.
-%
-% When |text width| is set to a length, then the text of the label is put
-% in a |\parbox|. It can be broken into several lines using |\\|. The
-% width of the |\parbox| is the value of the |text width|
-% parameter. It is unset by default.
-%
-% Setting |text width| to a length can either be done as an optional
-% parameter to the diagram, such as
-%
-% |\begin{diagram}[text width=6mm]|
-%
-% or globally (for all diagrams) by
-%
-% |\fcaset{text width=6mm}|
-%
-% or for single labels only, again as an optional parameter.
-%
-% \begin{dtxexample}*{Concept node labels\label{ex:concept node labels}}
-%   \begin{diagram}
-%     \Node(0)(0,0)
-%     \centerAttbox[draw=black](0){much much longer label text}
-%     \centerObjbox[draw=black](0){much much longer label text}
-%   \end{diagram}
-%   \begin{tikzdiagram}
-%     \Node(0)(0,0)
-%     \centerAttbox[draw=black](0){much much longer label text}
-%     \centerObjbox[draw=black](0){much much longer label text}
-%   \end{tikzdiagram}
-%   \begin{diagram}[text width=3.4cm]
-%     \Node(0)(0,0)
-%     \centerAttbox[draw](0){much much longer label text}
-%     \centerObjbox[draw,text width=2cm](0){much much longer label text}
-%   \end{diagram}
-%   \begin{tikzdiagram}[text width=3.4cm]
-%     \Node(0)(0,0)
-%     \centerAttbox[draw](0){much much longer label text}
-%     \centerObjbox[draw,text width=2cm](0){much much longer label text}
-%   \end{tikzdiagram}
-%   \begingroup
-%   \fcaset{text width=2.7cm}
-%   \begin{diagram}
-%     \Node(0)(0,0)
-%     \centerAttbox[draw](0){much much longer label text}
-%     \centerObjbox[draw,text width=2cm](0){much much longer label text}
-%   \end{diagram}
-%   \begin{tikzdiagram}
-%     \Node(0)(0,0)
-%     \centerAttbox[draw](0){much much longer label text}
-%     \centerObjbox[draw,text width=2cm](0){much much longer label text}
-%   \end{tikzdiagram}
-%   \endgroup
-% \end{dtxexample}
-%
-% Label boxes may be framed with the \texttt{draw} option, which may also
-% be used to set a color for the text and the frame. Their
-% background color can be set with \texttt{fill}.
-%
-% The text properties of the lables are given by the next two
-% commands, which  can be changed with |\renewcommand|.
-%
-%   \DescribeMacro{\fcaObjectLabelStyle} Used to define the font
-%   of object labels \emph{outside} of \env{diagram} environments.
-%   Default: |\small\baselineskip1em\rmfamily\upshape|
-%
-%   \DescribeMacro{\fcaAttributeLabelStyle} Used to define the font
-%   of object labels \emph{outside} of \env{diagram} environments.
-%   Default: |\small\baselineskip1em\rmfamily\itshape|.
-%
-%   \DescribeMacro{\ObjectLabelStyle} and
-%   \DescribeMacro{\AttributeLabelStyle}
-%
-%   are aliases of the above commands which can only be used
-%   \emph{inside} of \env{diagram} environments.
-%
-% {\unitlength .7mm
-% \begin{dtxexample}*{Concept node labels\label{ex:concept node labels}}
-%   \begin{diagram}[text width=3.4cm]
-%     \Node(0)(20,10)
-%     \leftAttbox[draw](0)(-1,1){left\\ attribute\\ label}
-%     \rightAttbox[fill=red!50!blue!20](0)(10,10){right
-%     attri-\\ bute label}
-%     \rightObjbox[draw=brown](0)(20,5){right\\ object\\ label}
-%     {\fcaNoDots\centerObjbox(0)(0,-5){centered\\ object label}}
-%   \end{diagram}
-% \end{dtxexample}
-% }
-%
-%
 %
 %
 % \section{Advanced usage of the \env{diagram}
@@ -1562,9 +1634,9 @@ Formal Concept Analysis macros]
 %     }%
 %       \tempa
 %       \pgfmoveto{\pgfpoint{0pt}{0pt}}%
-%       \pgflineto{\pgfpoint{4\unitlength}{0pt}}
-%       \pgfsetstrokecolor{blue}
-%       \pgfusepath{stroke}
+%       \pgflineto{\pgfpoint{4\unitlength}{0pt}}%
+%       \pgfsetstrokecolor{blue}%
+%       \pgfusepath{stroke}%
 %     \end{pgfscope}%
 %     {
 %       \pgfmoveto{\pgfpointanchor{fca node 5}{west}}
@@ -1578,219 +1650,11 @@ Formal Concept Analysis macros]
 %
 % \fi
 %
-% \textcolor{red}{\bf Bernhards Arbeitsende}
-%
 % \iffalse
+% \textcolor{red}{\bf Bernhards Arbeitsende}
+% \fi
+% 
 %
-% \section {weiter im normalen Text}
-%
-% \begin{dtxexample}*{A \protect\TikZ diagram}
-%   \begin{tikzpicture}[x=0.1cm, y=0.1cm]
-%    %     x and y should have the same size, here
-%     \node[red,shape=circle,anchor=center,draw=red] (example
-%     text) at (20,30) {\Huge Example};
-%     \begin{diagram}[
-%       every attributes/.append style={
-%         label concept/.append style={
-%           shape=semicircle,
-%           fill=blue,
-%           anchor=south,
-%           minimum height=2\unitlength,%
-%           label/name suffix=attribute concept,
-%           label/at=center,%
-%           solid
-%         }
-%       },
-%       every objects/.append style={%
-%         label concept/.append style={%
-%           shape=semicircle,
-%           fill=black,
-%           anchor=south,
-%           minimum height=2\unitlength,
-%           rotate=180,
-%           label/name suffix=attribute concept,
-%           label/at=center,
-%           solid,
-%         }
-%       },
-%         shift={(0pt,0pt)}]
-%       \Node[/tikz/draw=orange](1)(20,10)
-%       \Node(2)(35,20)
-%       \Node[/tikz/opacity=0.3](3)(5,30)%
-%       \Node(4)(35,40)
-%       \Node(5)(20,50)
-%       \Edge(1)(2)
-%       \Edge[/tikz/opacity=0.3](1)(3)
-%       \Edge[/tikz/arrows=<->](2)(4)
-%       \Edge[/tikz/opacity=0.3](3)(5)
-%       \Edge(4)(5)
-%       \leftAttbox[/tikz/opacity=0.3](3){1.}
-%       \rightAttbox(2){disqualified}
-%       \rightAttbox(4){2.}
-%       \leftObjbox[/tikz/opacity=0.3](3){Hamilton}
-%       \rightObjbox(2){Massa}
-%       \rightObjbox(4){Alonso}
-%       \path[draw,red] (\pgfkeysvalueof{/fca/name
-%       prefix}2\pgfkeysvalueof{/fca/name suffix}.west)
-%       -- +(4\unitlength,0pt);
-%       \path[draw,red!50!yellow] (2.west)
-%       -- +(4\unitlength,0pt);
-%       \draw[green] (fca node 5.west)--(fca node 1.north east);
-%     \end{diagram}
-%   \end{tikzpicture}
-% \end{dtxexample}
-%
-% The same diagram can be typeset using \PGF:
-%
-% {\unitlength 1.2mm\relax
-% \begin{dtxexample}*{A \PGF\  enhanced diagram}
-%   \begin{diagram}[
-%     every attributes/.append style={
-%       label concept/.append style={
-%         shape=semicircle,
-%         fill=blue,
-%         anchor=south,
-%         minimum height=2\unitlength,
-%         label/name suffix=attribute concept,
-%         label/at=center,
-%         solid
-%       }
-%     },
-%     every objects/.append style={
-%       label concept/.append style={
-%         shape=semicircle,
-%         fill=black,
-%         anchor=south,
-%         minimum height=2\unitlength,
-%         label/name suffix=attribute concept,
-%         label/at=center,
-%         solid,
-%         rotate=180
-%       }
-%       }]
-%     \begin{pgfscope}
-%       \color{red}
-%       \pgftransformshift{\pgfpoint{20\unitlength}{30\unitlength}}%
-%       \pgfnode{circle}{center}{\Huge Example}{example
-%       text}{\pgfusepath{stroke}}%
-%     \end{pgfscope}
-%     \Node(1)(20,10)
-%     \Node(2)(35,20)
-%     \begin{pgfscope}
-%       \pgfsetstrokeopacity{0.3}
-%       \pgfsetfillopacity{0.3}
-%       \Node(3)(5,30)
-%     \end{pgfscope}
-%     \Node(4)(35,40)
-%     \Node(5)(20,50)
-%     \Edge(1)(2)
-%     \begin{pgfscope}
-%       \pgfsetstrokeopacity{0.3}
-%       \Edge(1)(3)
-%     \end{pgfscope}
-%     \begin{pgfscope}
-%       \pgfsetarrows{<->}
-%       \Edge(2)(4)
-%     \end{pgfscope}
-%     \begin{pgfscope}
-%       \pgfsetstrokeopacity{0.3}
-%       \Edge(3)(5)
-%     \end{pgfscope}
-%     \Edge(4)(5)
-%     \begin{pgfscope}
-%       \pgfsetstrokeopacity{0.3}
-%       \pgfsetfillopacity{0.3}
-%       \leftAttbox(3){1.}
-%     \end{pgfscope}
-%     \rightAttbox(2){disqualified}
-%     \rightAttbox(4){2.}
-%     \begin{pgfscope}
-%       \pgfsetstrokeopacity{0.3}
-%       \pgfsetfillopacity{0.3}
-%       \leftObjbox(3){Verstappen}
-%    \end{pgfscope}
-%     \rightObjbox(2){Leclerc}
-%     \rightObjbox(4){Hamilton}
-%     \begin{pgfscope}%
-%       \edef\tempa{%
-%       \noexpand\pgftransformshift{%
-%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%
-%     }%
-%       \tempa
-%       \pgfmoveto{\pgfpoint{0pt}{0pt}}%
-%       \pgflineto{\pgfpoint{4\unitlength}{0pt}}
-%       \pgfsetstrokecolor{red}
-%       \pgfusepath{stroke}
-%     \end{pgfscope}%
-%     {
-%       \pgfmoveto{\pgfpointanchor{fca node 5}{west}}
-%       \pgflineto{\pgfpointanchor{fca node 1}{north east}}
-%       \pgfsetstrokecolor{green}
-%       \pgfusepath{stroke}
-%     }
-%   \end{diagram}
-% \end{dtxexample}
-% }
-%
-%
-%   The old syntax is also supported:
-%
-%   {\unitlength 1.2mm\relax
-% \fcadocDraft
-% \begin{dtxexample}*{A diagram}
-%   \begin{diagram}[
-%     every attributes/.append style={
-%       label concept/.append style={
-%         shape=semicircle,
-%         fill=blue,
-%         anchor=south,
-%         minimum height=2\unitlength,
-%         label/name suffix=attribute concept,
-%         solid
-%       }
-%     },
-%     every objects/.append style={
-%       label concept/.append style={
-%         shape=semicircle,
-%         fill=black,
-%         anchor=south,
-%         minimum height=2\unitlength,
-%         label/name suffix=attribute concept,
-%         solid,
-%         rotate=180
-%       }
-%     }]{40}{55}
-%     \Node{1}{20}{10}
-%     \Node{2}{35}{20}
-%     \Node{3}{5}{30}
-%     \Node{4}{35}{40}
-%     \Node{5}{20}{50}
-%     \Edge{1}{2}
-%     \Edge{1}{3}
-%     \Edge{2}{4}
-%     \Edge{3}{5}
-%     \Edge{4}{5}
-%     \Numbers
-%     \leftAttbox{3}{2}{2}{1.}
-%     \rightAttbox{2}{2}{2}{disqualified}
-%     \rightAttbox{4}{2}{2}{2.}
-%     \leftObjbox{3}{2}{2}{Verstappen}
-%     \rightObjbox{2}{2}{2}{Leclerc}
-%     \rightObjbox{4}{2}{2}{Hamilton}
-%     \begin{pgfscope}%
-%       \edef\tempa{%
-%       \noexpand\pgftransformshift{%
-%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%
-%     }%
-%       \tempa
-%       \pgfmoveto{\pgfpoint{0pt}{0pt}}%
-%       \pgflineto{\pgfpoint{4\unitlength}{0pt}}
-%       \pgfsetstrokecolor{red}
-%       \pgfusepath{stroke}
-%     \end{pgfscope}%
-%   \end{diagram}
-% \end{dtxexample}
-% }
 %
 % \subsection{Which environment to choose?}
 % There are several options how to start and end a \env{diagram}
@@ -1831,7 +1695,7 @@ Formal Concept Analysis macros]
 % processd as \TikZ{} graphics, independent from whether the graphics
 % has been interrupted or not.
 %
-% \fi
+% 
 % \section{Draft mode}\label{subsec:draftmode}
 % In order to assist authors in the creation of diagrams some
 % debugging features have been added to the |fca.sty|. This functions
@@ -2170,6 +2034,213 @@ Formal Concept Analysis macros]
 %   \end{tikzdiagram}
 % \end{fsourceverb}
 %
+% \begin{dtxexample}*{A \protect\TikZ diagram}
+%   \begin{tikzpicture}[x=0.1cm, y=0.1cm]
+%    %     x and y should have the same size, here
+%     \node[red,shape=circle,anchor=center,draw=red] (example
+%     text) at (20,30) {\Huge Example};
+%     \begin{diagram}[
+%       every attributes/.append style={
+%         label concept/.append style={
+%           shape=semicircle,
+%           fill=blue,
+%           anchor=south,
+%           minimum height=2\unitlength,%
+%           label/name suffix=attribute concept,
+%           label/at=center,%
+%           solid
+%         }
+%       },
+%       every objects/.append style={%
+%         label concept/.append style={%
+%           shape=semicircle,
+%           fill=black,
+%           anchor=south,
+%           minimum height=2\unitlength,
+%           rotate=180,
+%           label/name suffix=attribute concept,
+%           label/at=center,
+%           solid,
+%         }
+%       },
+%         shift={(0pt,0pt)}]
+%       \Node[/tikz/draw=orange](1)(20,10)
+%       \Node(2)(35,20)
+%       \Node[/tikz/opacity=0.3](3)(5,30)%
+%       \Node(4)(35,40)
+%       \Node(5)(20,50)
+%       \Edge(1)(2)
+%       \Edge[/tikz/opacity=0.3](1)(3)
+%       \Edge[/tikz/arrows=<->](2)(4)
+%       \Edge[/tikz/opacity=0.3](3)(5)
+%       \Edge(4)(5)
+%       \leftAttbox[/tikz/opacity=0.3](3){1.}
+%       \rightAttbox(2){disqualified}
+%       \rightAttbox(4){2.}
+%       \leftObjbox[/tikz/opacity=0.3](3){Hamilton}
+%       \rightObjbox(2){Massa}
+%       \rightObjbox(4){Alonso}
+%       \path[draw,red] (\pgfkeysvalueof{/fca/name
+%       prefix}2\pgfkeysvalueof{/fca/name suffix}.west)
+%       -- +(4\unitlength,0pt);
+%       \path[draw,red!50!yellow] (2.west)
+%       -- +(4\unitlength,0pt);
+%       \draw[green] (fca node 5.west)--(fca node 1.north east);
+%     \end{diagram}
+%   \end{tikzpicture}
+% \end{dtxexample}
+%
+% The same diagram can be typeset using \PGF:
+%
+% {\unitlength 1.2mm\relax
+% \begin{dtxexample}*{A \PGF\  enhanced diagram}
+%   \begin{diagram}[
+%     every attributes/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=blue,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         label/at=center,
+%         solid
+%       }
+%     },
+%     every objects/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=black,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         label/at=center,
+%         solid,
+%         rotate=180
+%       }
+%       }]
+%     \begin{pgfscope}
+%       \color{red}
+%       \pgftransformshift{\pgfpoint{20\unitlength}{30\unitlength}}%
+%       \pgfnode{circle}{center}{\Huge Example}{example
+%       text}{\pgfusepath{stroke}}%
+%     \end{pgfscope}
+%     \Node(1)(20,10)
+%     \Node(2)(35,20)
+%     \begin{pgfscope}
+%       \pgfsetstrokeopacity{0.3}
+%       \pgfsetfillopacity{0.3}
+%       \Node(3)(5,30)
+%     \end{pgfscope}
+%     \Node(4)(35,40)
+%     \Node(5)(20,50)
+%     \Edge(1)(2)
+%     \begin{pgfscope}
+%       \pgfsetstrokeopacity{0.3}
+%       \Edge(1)(3)
+%     \end{pgfscope}
+%     \begin{pgfscope}
+%       \pgfsetarrows{<->}
+%       \Edge(2)(4)
+%     \end{pgfscope}
+%     \begin{pgfscope}
+%       \pgfsetstrokeopacity{0.3}
+%       \Edge(3)(5)
+%     \end{pgfscope}
+%     \Edge(4)(5)
+%     \begin{pgfscope}
+%       \pgfsetstrokeopacity{0.3}
+%       \pgfsetfillopacity{0.3}
+%       \leftAttbox(3){1.}
+%     \end{pgfscope}
+%     \rightAttbox(2){disqualified}
+%     \rightAttbox(4){2.}
+%     \begin{pgfscope}
+%       \pgfsetstrokeopacity{0.3}
+%       \pgfsetfillopacity{0.3}
+%       \leftObjbox(3){Verstappen}
+%    \end{pgfscope}
+%     \rightObjbox(2){Leclerc}
+%     \rightObjbox(4){Hamilton}
+%     \begin{pgfscope}%
+%       \edef\tempa{%
+%       \noexpand\pgftransformshift{%
+%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%
+%     }%
+%       \tempa
+%       \pgfmoveto{\pgfpoint{0pt}{0pt}}%
+%       \pgflineto{\pgfpoint{4\unitlength}{0pt}}
+%       \pgfsetstrokecolor{red}
+%       \pgfusepath{stroke}
+%     \end{pgfscope}%
+%     {
+%       \pgfmoveto{\pgfpointanchor{fca node 5}{west}}
+%       \pgflineto{\pgfpointanchor{fca node 1}{north east}}
+%       \pgfsetstrokecolor{green}
+%       \pgfusepath{stroke}
+%     }
+%   \end{diagram}
+% \end{dtxexample}
+% }
+%
+%
+%   The old syntax is also supported:
+%
+%   {\unitlength 1.2mm\relax
+% \fcadocDraft
+% \begin{dtxexample}*{A diagram}
+%   \begin{diagram}[
+%     every attributes/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=blue,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         solid
+%       }
+%     },
+%     every objects/.append style={
+%       label concept/.append style={
+%         shape=semicircle,
+%         fill=black,
+%         anchor=south,
+%         minimum height=2\unitlength,
+%         label/name suffix=attribute concept,
+%         solid,
+%         rotate=180
+%       }
+%     }]{40}{55}
+%     \Node{1}{20}{10}
+%     \Node{2}{35}{20}
+%     \Node{3}{5}{30}
+%     \Node{4}{35}{40}
+%     \Node{5}{20}{50}
+%     \Edge{1}{2}
+%     \Edge{1}{3}
+%     \Edge{2}{4}
+%     \Edge{3}{5}
+%     \Edge{4}{5}
+%     \Numbers
+%     \leftAttbox{3}{2}{2}{1.}
+%     \rightAttbox{2}{2}{2}{disqualified}
+%     \rightAttbox{4}{2}{2}{2.}
+%     \leftObjbox{3}{2}{2}{Verstappen}
+%     \rightObjbox{2}{2}{2}{Leclerc}
+%     \rightObjbox{4}{2}{2}{Hamilton}
+%     \begin{pgfscope}%
+%       \edef\tempa{%
+%       \noexpand\pgftransformshift{%
+%       \noexpand\pgfpointanchor{\pgfkeysvalueof{/fca/name prefix}2\pgfkeysvalueof{/fca/name suffix}}{west}}%
+%     }%
+%       \tempa
+%       \pgfmoveto{\pgfpoint{0pt}{0pt}}%
+%       \pgflineto{\pgfpoint{4\unitlength}{0pt}}
+%       \pgfsetstrokecolor{red}
+%       \pgfusepath{stroke}
+%     \end{pgfscope}%
+%   \end{diagram}
+% \end{dtxexample}
+% }
 % \StopEventually{\PrintChanges}
 % \clearpage
 % \section{The Code}\label{sec:the-code}
@@ -2183,9 +2254,6 @@ Formal Concept Analysis macros]
 %                                                                             %
 % This is file `fca.sty' : LaTeX macros for Formal Concept Analysis           %
 %                                                                             %
-% Copyright  Bernhard Ganter   5/03                                           %
-% Version of                   10/07                                          %
-%                                                                             %
 % This program is provided under the terms of the                             %
 % LaTeX Project Public License distributed from CTAN                          %
 % archives in directory macros/latex/base/lppl.txt.                           %
@@ -2194,15 +2262,18 @@ Formal Concept Analysis macros]
 % for typesetting formal contexts and order diagrams,                         %
 % and a few macros for frequently used symbols in FCA.                        %
 %                                                                             %
-% Short descriptions are given below. A recent version of this file           %
-% as well as a file named fcadoc.tex                                          %
-% should be available at http://tu-dresden.de/Members/bernhard.ganter         %
-%                                                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %
 %
 % \subsection{Package options for fca.sty}
 %
+% \DescribeOption{compat}
+% \DescribeOption{nocompat}
+% \DescribeBoolean{\iffca@compat@macros}
+% \changes{3.0}{2023/03/10}{Added the options \optn{compat} and
+% \optn{nocompat}}.
+%
+% Activation of ancient parts that don't have a proper prefix.
 %    \begin{macrocode}
 \newif\iffca@compat@macros
 \fca@compat@macrosfalse
@@ -2213,7 +2284,13 @@ Formal Concept Analysis macros]
   \fca@compat@macrosfalse
 }
 %    \end{macrocode}
-% \changes{3.0}{2023/03/10}{Added the options \optn{draft} and \optn{final}}.
+%
+% \changes{3.0}{2023/03/10}{Added the options \optn{draft} and
+% \optn{final}}.
+% \DescribeOption{draft}
+% \DescribeBoolean{\iffca@draft}
+% Enable draft mode. Some features are available only in draft mode as
+% the should not be used in final diagrams.
 %    \begin{macrocode}
 \newif\iffca@draft
 \fca@draftfalse
@@ -2224,15 +2301,26 @@ Formal Concept Analysis macros]
   \fca@draftfalse
 }
 %    \end{macrocode}
+%
+% Evaluate the packages options.
+%
 %    \begin{macrocode}
 \ProcessOptions\relax
 %    \end{macrocode}
 %
 % \subsection{Loading other packages and general helpers}
+%
+% We use |pgf| for graphics either direct or – when \TikZ\ is loaded
+% indirect via that package. For semicircles its geometric shapes
+% library is used. |amssymb| is used for spacial symbols, |graphics|
+% for \cs{rotatebox} and similar macros. The package |color| provides
+% colrouring features. |ifthen| is used for some of the boolean
+% variables.
+%
 %    \begin{macrocode}
 \RequirePackage{pgf}
 \usepgflibrary{shapes.geometric}
-\RequirePackage{amssymb,graphics,color,ifthen,rotating,xspace}%%
+\RequirePackage{amssymb,graphics,color,ifthen,xspace}%%
 \@ifundefined{AfterPackage}{%
   \RequirePackage{afterpackage}%
 }{}%
@@ -2260,15 +2348,17 @@ Formal Concept Analysis macros]
 % \subsection{The context environment \env{cxt}}
 % \subsubsection{Some configurations}
 %
+% \changes{2.2}{2022/03/8}{rename \cs{cxtArrowStyle} to \cs{fcaCxtArrowStyle}}
 % \begin{macro}{\fca@cxt@Kreuz}
 % \begin{macro}{\fca@cxt@Punkt}
 % \begin{macro}{\fcaCxtArrowStyle}
 % \begin{macro}{\cxtArrowStyle}
-% \changes{2.2}{2022/03/8}{rename \cs{cxtArrowStyle} to \cs{fcaCxtArrowStyle}}
 % \begin{macro}{\fca@cxt@down}
 % \begin{macro}{\fca@cxt@up}
 % \begin{macro}{\fca@cxt@both}
+%
 %   First we define some symbols that are used in formal contexts.
+%
 %    \begin{macrocode}
 \newcommand{\fca@cxt@Kreuz}{$\times$}%
 \newcommand{\fca@cxt@Punkt}{}%
@@ -2282,6 +2372,7 @@ Formal Concept Analysis macros]
 \newcommand{\fca@cxt@up}{\fcaCxtArrowStyle$\Hochpfeil$}%
 \newcommand{\fca@cxt@both}{\fcaCxtArrowStyle$\Doppelpfeil$}%
 %    \end{macrocode}
+%
 % \end{macro}
 % \end{macro}
 % \end{macro}
@@ -2684,7 +2775,7 @@ Formal Concept Analysis macros]
 }
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\fca@cxt@Makechar@newcommand}\oarg{letter}
+% \begin{macro}{\fca@cxt@Makechar@newcommand}\marg{letter}
 %   Defines a macro for the \meta{letter} to be used as a single token in the \env{cxt} environment. It is equivalent to
 % \cs{newcommand*\{letter\}} and can take all additional arguments that \cs{newcommand} takes.
 %
@@ -2749,7 +2840,10 @@ Formal Concept Analysis macros]
 }
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\fca@cxt@Makechar@providecommand}\oarg{letter}
+%
+%
+%
+% \begin{macro}{\fca@cxt@Makechar@providecommand}\marg{letter}
 %   Defines a macro for the \meta{letter} to be used as a single token in the \env{cxt} environment. It is equivalent to
 % \cs{providecommand*{letter}} and can take all additional arguments that \cs{providecommand} takes.
 %
@@ -2891,6 +2985,9 @@ Formal Concept Analysis macros]
   \fca@cxt@tmp }
 %    \end{macrocode}
 % \end{macro}
+%
+%
+%
 % \begin{macro}{\fca@cxt@read@line}\marg{character}
 %   Start processing a context line. We look only at the first
 %   character. If it is \cs{fca@cxt@stop}, then the line is empty and
@@ -2973,15 +3070,8 @@ Formal Concept Analysis macros]
 % \subsection{Reading Burmeister context files}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                                             %
-% This is the part `cxtinput.sty' : LaTeX macros for Formal Concept Analysis      %
+% LaTeX macros for Formal Concept Analysis      %
 %     input of Burmeister format contexts                                     %
-%                                                                             %
-%      Copyright  Tobias Schlemmer 5/09                                       %
-%      Version of                  1/12                                       %
-%                                                                             %
-%  This program is provided under the terms of the                            %
-%  LaTeX Project Public License distributed from CTAN                         %
-%  archives in directory macros/latex/base/lppl.txt.                          %
 %                                                                             %
 %  This package defines the macro |\cxtinput|, which can input a context        %
 %  file in Burmeister format                                                  %
@@ -3004,6 +3094,15 @@ Formal Concept Analysis macros]
 %                                                                             %
 % used counters
 %
+% \DescribeCounter{fca@cxt@input@obj}
+% This counter is used to store the number of objects in a |.cxt| file.
+% \DescribeCounter{fca@cxt@input@attr}
+% This counter is used to store the number of attributes in a |.cxt| file.
+% \DescribeCounter{fca@cxt@input@line}
+% This counter is used to count the input lines in a formal context.
+% \DescribeOther{fca@cxt@input@contextlines}
+% In this register the content of a \env{cxt} environment is collected
+% before the environment is actually inserted into the \LaTeX{} stream.
 %    \begin{macrocode}
 \newcount\fca@cxt@input@obj
 \newcount\fca@cxt@input@attr
@@ -3013,8 +3112,10 @@ Formal Concept Analysis macros]
 \fca@cxt@input@contextlines{}%
 %    \end{macrocode}
 %
-% The end user macro
 %
+% \DescribeMacro\oarg{file name}
+% The end user macro. It inclues the context from \meta{file
+% name}. The context must be stored in Burmeister format.
 %    \begin{macrocode}%
 \newcommand\cxtinput[1]{%
 %  \begingroup
@@ -3030,6 +3131,7 @@ Formal Concept Analysis macros]
 }
 %    \end{macrocode}
 %
+% \DescribeMacro{\fca@cxt@input@newline}
 % Macro holding the command for the next line
 %
 %    \begin{macrocode}
@@ -3206,7 +3308,7 @@ Formal Concept Analysis macros]
 %    \end{macrocode}
 %
 % add some stuff to the token register
-% needed to have some tool, which can be used with |\expandierter|
+% needed to have some tool, which can be used with |\expandafter|
 %
 %    \begin{macrocode}
 \def\fca@cxt@input@appendtotok#1#2{%
@@ -5894,4 +5996,5 @@ X..
 % Local Variables:
 % mode: doctex
 % TeX-master: t
+% ispell-local-dictionary: british
 % End:

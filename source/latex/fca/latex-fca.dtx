@@ -2269,7 +2269,7 @@ Formal Concept Analysis macros]
 %
 % \DescribeOption{compat}
 % \DescribeOption{nocompat}
-% \DescribeBoolean{\iffca@compat@macros}
+% \DescribeMacro{\iffca@compat@macros}
 % \changes{3.0}{2023/03/10}{Added the options \optn{compat} and
 % \optn{nocompat}}.
 %
@@ -2288,7 +2288,7 @@ Formal Concept Analysis macros]
 % \changes{3.0}{2023/03/10}{Added the options \optn{draft} and
 % \optn{final}}.
 % \DescribeOption{draft}
-% \DescribeBoolean{\iffca@draft}
+% \DescribeMacro{\iffca@draft}
 % Enable draft mode. Some features are available only in draft mode as
 % the should not be used in final diagrams.
 %    \begin{macrocode}
@@ -4244,6 +4244,7 @@ y%
 }
 
 \newcommand\fca@tikz@labelBox@label[1]{%
+  \typeout{fca@tikz@labelBox@label: |attributes\space \fca@label@position|}%
   \fca@labelslayer
   \path[/fca/.cd,every node/.try,every label/.try,#1]
   (\fca@temp@node@name.\fca@label@at)
@@ -4259,6 +4260,7 @@ y%
 }
 
 \newcommand\fca@tikz@labelBox@connector[1]{%
+  \typeout{fca@tikz@labelBox@connector}%
   \begin{scope}
     \fca@connectorslayer
     \path[draw,/fca/.cd,#1,every label edge/.try,/tikz/.cd]
@@ -4273,6 +4275,7 @@ y%
 }
 
 \newcommand\fca@tikz@labelBox@concept[1]{%
+  \typeout{fca@tikz@labelBox@concept}%
   \fca@labelconceptslayer
   % \edef\fca@tempa{
   \path
@@ -4319,6 +4322,7 @@ y%
       \fi
     \end{scope}
   \end{scope}%
+  \typeout{end fca@tikz@labelBox}%
   \ignorespaces
 }
 \newcommand\fca@tikz@startdiagram[1][]{%
